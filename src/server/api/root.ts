@@ -1,6 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { productRouter } from "./routers/products";
-import { contactRouter } from "./routers/post";
+import { contactRouter } from "./routers/contact";
 
 /**
  * This is the primary router for your server.

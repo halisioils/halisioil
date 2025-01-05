@@ -10,16 +10,66 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Product {
+    id                     String            @id @default(cuid())
+    name                   String
+    description            String
+    price                  Int
+    imagePaths             String[]          @default([])
+    isAvailableForPurchase Boolean           @default(true)
+    createdAt              DateTime          @default(now())
+    updatedAt              DateTime          @updatedAt
+    properties             Json?
+    orders                 Order[]           @relation("ProductOrders")
+    categories             ProductCategory[]
+    Order                  Order[]
 
-    @@index([name])
+    @@map("products")
 }
 
-/**
- * We need models to manage
- * All Sales, Customers, products
- */
+model Category {
+    id       String            @id @default(cuid())
+    name     String
+    products ProductCategory[]
+
+    @@map("categories")
+}
+
+model ProductCategory {
+    productId  String
+    categoryId String
+
+    product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+    category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+    @@id([productId, categoryId])
+    @@map("product_categories")
+}
+
+model User {
+    id        String   @id @default(cuid())
+    email     String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    orders    Order[]  @relation("UserOrders")
+    Order     Order[]
+
+    @@map("users")
+}
+
+model Order {
+    id        String   @id @default(cuid())
+    pricePaid Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String
+    productId String
+
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+    Product Product[] @relation("ProductOrders")
+    User    User[]    @relation("UserOrders")
+
+    @@map("orders")
+}
