@@ -1,9 +1,10 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import Products from "./Products";
+import LoadingComponent from "~/utils/LoadingComponent";
 
-const Dashboard = () => {
+const DashboardComponent = () => {
   const searchParams = useSearchParams();
   const active_section = searchParams.get("section");
 
@@ -26,6 +27,14 @@ const Dashboard = () => {
   };
 
   return <section>{renderComponent()}</section>;
+};
+
+const Dashboard = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <DashboardComponent />
+    </Suspense>
+  );
 };
 
 export default Dashboard;

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { productSchema } from "~/lib/types";
 
 import {
   createTRPCRouter,
@@ -8,20 +9,7 @@ import {
 
 export const productRouter = createTRPCRouter({
   create: privateAdminProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        description: z.string().min(1),
-        price: z.number().min(0),
-        imagePaths: z
-          .array(z.string())
-          .min(1, "At least one image path is required"),
-        isAvailable: z.boolean().optional().default(true),
-        categoryIds: z
-          .array(z.string())
-          .min(1, "At least one category is required"),
-      }),
-    )
+    .input(productSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.product.create({
         data: {

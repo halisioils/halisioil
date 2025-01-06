@@ -1,3 +1,4 @@
+import { categorySchema } from "./../../../lib/types";
 import { z } from "zod";
 
 import {
@@ -8,12 +9,7 @@ import {
 
 export const categoryRouter = createTRPCRouter({
   create: privateAdminProcedure
-    .input(
-      z.object({
-        name: z.string().min(1, "Category name is required"), // Ensure the category name is provided
-        productIds: z.array(z.string()).optional(), // Optionally pass an array of product IDs to associate
-      }),
-    )
+    .input(categorySchema)
     .mutation(async ({ ctx, input }) => {
       try {
         // Create the category

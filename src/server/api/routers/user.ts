@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
+import { userSchema } from "~/lib/types";
 
 import {
   createTRPCRouter,
@@ -9,7 +10,7 @@ import {
 
 export const userRouter = createTRPCRouter({
   create: privateProcedure
-    .input(z.object({ email: z.string().email("Invalid email format") }))
+    .input(userSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         const newUser = await ctx.db.user.create({

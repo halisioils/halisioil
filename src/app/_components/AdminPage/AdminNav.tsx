@@ -1,9 +1,10 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import DashboardHeader from "./DashboardHeader";
+import LoadingComponent from "~/utils/LoadingComponent";
 
-const AdminNav = () => {
+const AdminNavComponent = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -32,7 +33,7 @@ const AdminNav = () => {
   return (
     <aside
       className={
-        "bg-bgGray fixed left-0 top-0 hidden h-full w-full p-4 text-gray-500 transition-all md:static md:block md:w-auto"
+        "fixed left-0 top-0 hidden h-full w-full bg-bgGray p-4 text-gray-500 transition-all md:static md:block md:w-auto"
       }
     >
       <div className="mb-4 mr-4">
@@ -173,6 +174,14 @@ const AdminNav = () => {
         </button>
       </nav>
     </aside>
+  );
+};
+
+const AdminNav = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <AdminNavComponent />
+    </Suspense>
   );
 };
 

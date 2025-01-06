@@ -1,21 +1,13 @@
 import { privateAdminProcedure, privateProcedure } from "./../trpc";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
+import { orderSchema } from "~/lib/types";
 
 import { createTRPCRouter } from "~/server/api/trpc";
 
 export const orderRouter = createTRPCRouter({
   create: privateProcedure
-    .input(
-      z.object({
-        pricePaid: z
-          .number()
-          .min(0, "Price paid must be greater than or equal to 0"),
-        status: z.string().optional().default("pending"),
-        userId: z.string(),
-        productId: z.string(),
-      }),
-    )
+    .input(orderSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         const newOrder = await ctx.db.order.create({

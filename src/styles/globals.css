@@ -11,3 +11,22 @@ body {
   margin: 0;
   padding: 0;
 }
+
+input,
+textarea,
+select {
+  @apply w-full rounded-sm border border-gray-200 px-3 py-2 placeholder:text-sm focus:outline-none;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  @apply border-blue-900;
+}
+
+label {
+  @apply text-sm text-gray-600;
+}
+
+.btn-primary {
+  @apply rounded-sm bg-primary px-4 py-1 text-white shadow-sm hover:brightness-75;
+}
