@@ -1,6 +1,6 @@
-import { type FieldValues, useForm } from "react-hook-form";
+import Select from "react-select";
+import { Controller, type FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactSortable } from "react-sortablejs";
 import { api } from "~/trpc/react";
 import { productSchema } from "~/lib/types";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import Uploader from "../Uploader";
 import { useImageContext } from "~/context/ImageFormContext";
 import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
+import { capitalizeFirstLetter } from "~/utils/capitalizeFirstLetter";
 
 const availability = [true, false];
 
@@ -18,7 +19,10 @@ interface Image {
 }
 
 const ProductForm = () => {
+  const [categories, isPending] =
+    api.category.getAllCategories.useSuspenseQuery();
   const [images, setImages] = useState<Image[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string[]>([]);
 
   const {
     setIsUploading,
@@ -34,6 +38,7 @@ const ProductForm = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
@@ -46,6 +51,18 @@ const ProductForm = () => {
   };
 
   console.log(errors);
+
+  // Transform the array to match React Select's structure
+  const categoryOptions = categories.map((category) => ({
+    value: category.id, // Set value to the category ID
+    label: capitalizeFirstLetter(category.name), // Set label to the category name
+  }));
+
+  // Transform the availability array to match React Select's structure
+  const availabilityOptions = [
+    { value: true, label: "True" },
+    { value: false, label: "False" },
+  ];
 
   const uploadImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e);
@@ -64,13 +81,11 @@ const ProductForm = () => {
     setImages(newImages);
   };
 
-  console.log(images);
-
   return (
     <section>
       <BackButton />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-2">
+        <div className="mb-[1rem]">
           <label>Product Name</label>
           <input
             type="text"
@@ -86,7 +101,7 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-2">
+        <div className="mb-[1rem]">
           <label>Description</label>
           <textarea
             placeholder="Enter product description"
@@ -101,12 +116,12 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-2">
+        <div className="mb-[1rem]">
           <label>Price (in Pounds)</label>
           <input
             type="number"
             placeholder="Enter price"
-            {...register("price")}
+            {...register("price", { valueAsNumber: true })}
           />
           {errors.price && (
             <p className="mt-1 text-sm text-red-500">
@@ -117,14 +132,32 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-2">
+        <div className="mb-[1rem]">
           <label>Category</label>
-          <select {...register("category")}>
-            <option value="">Select a category</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
-          </select>
+
+          <Controller
+            name="categoryIds"
+            control={control}
+            defaultValue={[]} // Default to an empty array
+            render={({ field }) => (
+              <Select
+                {...selectedOption}
+                options={categoryOptions} // Ensure this has valid `value` and `label`
+                isMulti
+                className="z-30 text-[0.875rem]"
+                placeholder="Select categories"
+                onChange={(selected) => {
+                  const ids = selected.map(
+                    (option: { value: string }) => option.value,
+                  ); // Extract IDs
+                  const values = selected.map((option) => option.label); // Extract IDs
+                  setSelectedOption(values);
+                  field.onChange(ids); // Update the form state
+                }}
+              />
+            )}
+          />
+
           {errors.categoryIds && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.categoryIds.message === "string"
@@ -146,18 +179,26 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-2">
+        <div className="mb-[1rem]">
           <label>Is Available</label>
-          <select {...register("isAvailable")}>
-            <option disabled selected>
-              Select availability
-            </option>
-            {availability.map((status, index) => (
-              <option key={index} value={status.toString()}>
-                {status ? "Available" : "Unavailable"}
-              </option>
-            ))}
-          </select>
+
+          <Controller
+            name="isAvailable" // Field name
+            control={control}
+            defaultValue={{ isAvailable: true }} // Default to an true
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={availabilityOptions} // True/False options
+                className="z-30 text-[0.875rem]"
+                placeholder="Select availability"
+                onChange={(selected) => field.onChange(selected?.value)} // Extract value
+                value={availabilityOptions.find(
+                  (option) => option.value === field.value,
+                )} // Map value back to option
+              />
+            )}
+          />
           {errors.isAvailable && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.isAvailable.message === "string"

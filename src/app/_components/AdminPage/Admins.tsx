@@ -1,11 +1,12 @@
 import React, { Suspense } from "react";
-import ProductForm from "./ProductForm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
+import AdminForm from "./AdminForm";
+import AdminUsers from "./AdminUsers";
 
-const ProductsComponent = () => {
+const AdminsComponent = () => {
   const searchParams = useSearchParams();
-  const active_section = searchParams.get("product_action");
+  const active_section = searchParams.get("admin_action");
 
   const pathname = usePathname();
   const router = useRouter();
@@ -21,16 +22,21 @@ const ProductsComponent = () => {
   const renderComponent = () => {
     switch (active_section) {
       case "create":
-        return <ProductForm />;
+        return (
+          <div>
+            <AdminForm />
+            <AdminUsers />
+          </div>
+        );
       default:
         return (
           <div>
             <button
-              onClick={() => updateQueryParams("product_action", "create")}
+              onClick={() => updateQueryParams("admin_action", "create")}
               className="flex items-center gap-[1rem] rounded-full bg-blue-500 px-[1rem] py-2 text-white"
               type="button"
             >
-              Add Product
+              Add Admin
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -54,12 +60,12 @@ const ProductsComponent = () => {
   return <section>{renderComponent()}</section>;
 };
 
-const Products = () => {
+const Admins = () => {
   return (
     <Suspense fallback={<LoadingComponent />}>
-      <ProductsComponent />
+      <AdminsComponent />
     </Suspense>
   );
 };
 
-export default Products;
+export default Admins;

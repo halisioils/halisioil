@@ -3,6 +3,8 @@ import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import Products from "./Products";
 import LoadingComponent from "~/utils/LoadingComponent";
+import Categories from "./Categories";
+import Admins from "./Admins";
 
 const DashboardComponent = () => {
   const searchParams = useSearchParams();
@@ -16,9 +18,11 @@ const DashboardComponent = () => {
       case "products":
         return <Products />;
       case "categories":
-        return <div>categories</div>;
+        return <Categories />;
       case "orders":
         return <p>orders</p>;
+      case "admins":
+        return <Admins />;
       case "settings":
         return <p>settings</p>;
       default:

@@ -30,3 +30,7 @@ label {
 .btn-primary {
   @apply rounded-sm bg-primary px-4 py-1 text-white shadow-sm hover:brightness-75;
 }
+
+.btn-admin {
+  @apply rounded-sm bg-primary px-4 py-2 text-white shadow-sm hover:brightness-75;
+}

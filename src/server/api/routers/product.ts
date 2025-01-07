@@ -19,12 +19,9 @@ export const productRouter = createTRPCRouter({
           imagePaths: input.imagePaths, // Ensured it has at least one image path
           isAvailable: input.isAvailable,
           productCategories: {
-            create:
-              input.categoryIds?.map((categoryId) => ({
-                category: {
-                  connect: { id: categoryId },
-                },
-              })) ?? [],
+            create: input.categoryIds.map((categoryId) => ({
+              category: { connect: { id: categoryId } },
+            })),
           },
         },
       });

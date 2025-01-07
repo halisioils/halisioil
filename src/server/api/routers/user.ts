@@ -5,35 +5,34 @@ import { userSchema } from "~/lib/types";
 import {
   createTRPCRouter,
   privateAdminProcedure,
+  publicProcedure,
   privateProcedure,
 } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  create: privateProcedure
-    .input(userSchema)
-    .mutation(async ({ ctx, input }) => {
-      try {
-        const newUser = await ctx.db.user.create({
-          data: {
-            email: input.email,
-          },
-          select: {
-            id: true,
-            email: true,
-          },
-        });
-        return newUser;
-      } catch (error) {
-        // Type guard to narrow the error type
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          // Check if it's a unique constraint violation (e.g., for email)
-          if (error.code === "P2002") {
-            throw new Error("Email already in use.");
-          }
+  create: publicProcedure.input(userSchema).mutation(async ({ ctx, input }) => {
+    try {
+      const newUser = await ctx.db.user.create({
+        data: {
+          email: input.email,
+        },
+        select: {
+          id: true,
+          email: true,
+        },
+      });
+      return newUser;
+    } catch (error) {
+      // Type guard to narrow the error type
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Check if it's a unique constraint violation (e.g., for email)
+        if (error.code === "P2002") {
+          throw new Error("Email already in use.");
         }
-        throw error;
       }
-    }),
+      throw error;
+    }
+  }),
 
   delete: privateAdminProcedure
     .input(

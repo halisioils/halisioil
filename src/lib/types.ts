@@ -22,5 +22,10 @@ export const categorySchema = z.object({
 });
 
 export const userSchema = z.object({
-  email: z.string().email("Invalid email format"),
+  email: z.string().email("Must enter a valid email"),
 });
+
+export type IProductSchema = z.infer<typeof productSchema>;
+export type IOrderSchema = z.infer<typeof orderSchema>;
+export type ICategorySchema = z.infer<typeof categorySchema>;
+export type IUserSchema = z.infer<typeof userSchema>;

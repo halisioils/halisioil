@@ -54,7 +54,7 @@ export default function Uploader() {
   }
 
   return (
-    <section>
+    <section className="mb-[1rem]">
       <div>
         <label
           htmlFor="image-upload"
@@ -130,7 +130,7 @@ export default function Uploader() {
             id="image-upload"
             name="image"
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/jpg, image/png"
             multiple // Allow multiple files
             className="sr-only"
             onChange={(event) => {
