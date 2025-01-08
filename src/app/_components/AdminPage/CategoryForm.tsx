@@ -24,7 +24,7 @@ const CategoryForm = () => {
   const createCategory = api.category.create.useMutation({
     onSuccess: async (data) => {
       await utils.category.invalidate();
-      toast.success(`Category ${data.name} added successfully`);
+      toast.success(`Category - ${data.name} added successfully`);
       reset();
     },
     onError: (error) => {

@@ -2,55 +2,83 @@ import Select from "react-select";
 import { Controller, type FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { productSchema } from "~/lib/types";
+import { clientProductSchema } from "~/lib/types";
 import { useState } from "react";
 import Uploader from "../Uploader";
 import { useImageContext } from "~/context/ImageFormContext";
 import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import { capitalizeFirstLetter } from "~/utils/capitalizeFirstLetter";
-
-const availability = [true, false];
-
-// Define the type for the image object
-interface Image {
-  id: number;
-  link: string;
-}
+import toast from "react-hot-toast";
+import { useUploadThing } from "~/utils/uploadthing";
+import { useRouter } from "next/navigation";
 
 const ProductForm = () => {
   const [categories, isPending] =
     api.category.getAllCategories.useSuspenseQuery();
-  const [images, setImages] = useState<Image[]>([]);
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
 
-  const {
-    setIsUploading,
-    setProgress,
-    files,
-    setFiles,
-    previews,
-    setPreviews,
-  } = useImageContext();
+  const [selectedOption, setSelectedOption] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
+
+  const { setIsUploading, isUploading, setProgress, setFiles, files } =
+    useImageContext();
+
+  const router = useRouter();
 
   const utils = api.useUtils();
 
   const {
     register,
     handleSubmit,
+    setError,
     control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(clientProductSchema),
   });
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    reset();
-  };
+  const createProduct = api.product.create.useMutation({
+    onSuccess: async (data) => {
+      await utils.product.invalidate();
+      toast.success(`Product - ${data.name} added successfully`);
+      reset();
+      setSelectedOption([]);
+      setFiles([]);
 
-  console.log(errors);
+      router.back();
+    },
+    onError: (error) => {
+      const zodErrorMessages = error.data?.zodError?.fieldErrors;
+
+      if (zodErrorMessages && typeof zodErrorMessages === "object") {
+        const errorData = Object.fromEntries(
+          Object.entries(zodErrorMessages).map(([key, value]) => [
+            key,
+            Array.isArray(value) ? value[0] : "", // Extract the first error message if it's an array
+          ]),
+        );
+
+        if (errorData.name) {
+          setError("name", {
+            type: "manual",
+            message: errorData.name, // Pass the extracted error message
+          });
+        }
+
+        if (errorData.description) {
+          setError("description", {
+            type: "manual",
+            message: errorData.description, // Pass the extracted error message
+          });
+        }
+      } else {
+        setErrorMessage(
+          error.message || "Something went wrong. Please try again.",
+        );
+      }
+    },
+  });
 
   // Transform the array to match React Select's structure
   const categoryOptions = categories.map((category) => ({
@@ -64,26 +92,51 @@ const ProductForm = () => {
     { value: false, label: "False" },
   ];
 
-  const uploadImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
+  const { startUpload } = useUploadThing("imageUploader", {
+    onClientUploadComplete: () => {
+      setProgress(100);
+    },
+    onUploadError: (e) => {
+      toast.error(`Error occurred while uploading Product Image`);
+      return;
+    },
+    onUploadBegin: () => {
+      setIsUploading(true);
+      setProgress(50);
+    },
+  });
 
-    const newImageFile = e.target.files?.[0];
-    if (newImageFile) {
-      const newImageData: Image = {
-        id: Date.now(), // Generate a unique ID for the image
-        link: URL.createObjectURL(newImageFile), // Generate a temporary URL for the uploaded image
-      };
-      setImages((prevImages) => [...prevImages, newImageData]);
+  const onSubmit = async (data: FieldValues) => {
+    console.log(data);
+
+    try {
+      const imageUploadResult = await startUpload(files); // Upload images before submitting the form
+
+      if (imageUploadResult) {
+        createProduct.mutate({
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          categoryIds: data.categoryIds,
+          imagePaths: imageUploadResult.map((d) => d.url),
+          isAvailable: data.isAvailable,
+        });
+      }
+    } catch (error) {
+      toast(`Unknown error occured`);
+    } finally {
+      setIsUploading(true);
     }
-  };
-
-  const updateImagesOrder = (newImages: Image[]) => {
-    setImages(newImages);
   };
 
   return (
     <section>
       <BackButton />
+      {errorMessage && (
+        <p className="my-4 w-full rounded-sm bg-red-100 p-[0.5rem] text-center text-sm text-red-500">
+          {errorMessage}
+        </p>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-[1rem]">
           <label>Product Name</label>
@@ -121,7 +174,13 @@ const ProductForm = () => {
           <input
             type="number"
             placeholder="Enter price"
-            {...register("price", { valueAsNumber: true })}
+            {...register("price", {
+              valueAsNumber: true,
+              min: {
+                value: 1,
+                message: "Price must be positve",
+              },
+            })}
           />
           {errors.price && (
             <p className="mt-1 text-sm text-red-500">
@@ -135,28 +194,32 @@ const ProductForm = () => {
         <div className="mb-[1rem]">
           <label>Category</label>
 
-          <Controller
-            name="categoryIds"
-            control={control}
-            defaultValue={[]} // Default to an empty array
-            render={({ field }) => (
-              <Select
-                {...selectedOption}
-                options={categoryOptions} // Ensure this has valid `value` and `label`
-                isMulti
-                className="z-30 text-[0.875rem]"
-                placeholder="Select categories"
-                onChange={(selected) => {
-                  const ids = selected.map(
-                    (option: { value: string }) => option.value,
-                  ); // Extract IDs
-                  const values = selected.map((option) => option.label); // Extract IDs
-                  setSelectedOption(values);
-                  field.onChange(ids); // Update the form state
-                }}
-              />
-            )}
-          />
+          {isPending.isPending ? (
+            <LoadingComponent />
+          ) : (
+            <Controller
+              name="categoryIds"
+              control={control}
+              defaultValue={[]} // Default to an empty array
+              render={({ field }) => (
+                <Select
+                  {...selectedOption}
+                  options={categoryOptions} // Ensure this has valid `value` and `label`
+                  isMulti
+                  className="z-30 text-[0.875rem]"
+                  placeholder="Select categories"
+                  onChange={(selected) => {
+                    const ids = selected.map(
+                      (option: { value: string }) => option.value,
+                    ); // Extract IDs
+                    const values = selected.map((option) => option.label); // Extract IDs
+                    setSelectedOption(values);
+                    field.onChange(ids); // Update the form state
+                  }}
+                />
+              )}
+            />
+          )}
 
           {errors.categoryIds && (
             <p className="mt-1 text-sm text-red-500">
@@ -213,7 +276,7 @@ const ProductForm = () => {
           type="submit"
           className={`btn-primary ${isSubmitting && "cursor-not-allowed opacity-50"}`}
         >
-          {isSubmitting ? <LoadingComponent /> : "Submit"}
+          {isSubmitting || isUploading ? <LoadingComponent /> : "Submit"}
         </button>
       </form>
     </section>

@@ -9,6 +9,14 @@ export const productSchema = z.object({
   categoryIds: z.array(z.string()).min(1, "At least one category is required"),
 });
 
+export const clientProductSchema = z.object({
+  name: z.string().min(1, "Product name is required"),
+  description: z.string().min(1, "Product description is required"),
+  price: z.number().min(0.01, "Price is required, must be a positive number"),
+  isAvailable: z.boolean().optional().default(true),
+  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+});
+
 export const orderSchema = z.object({
   pricePaid: z.number().min(0, "Price paid must be greater than or equal to 0"),
   status: z.string().optional().default("pending"),
@@ -29,3 +37,19 @@ export type IProductSchema = z.infer<typeof productSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;
 export type ICategorySchema = z.infer<typeof categorySchema>;
 export type IUserSchema = z.infer<typeof userSchema>;
+
+export type TImage = {
+  id: number;
+  link: string;
+};
+
+export type TablePaginationProps = {
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  totalEntries: any;
+};
+
+export type TableProps = {
+  page: number | string;
+  per_page: number;
+};

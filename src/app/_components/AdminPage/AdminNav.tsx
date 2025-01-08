@@ -12,7 +12,7 @@ const AdminNavComponent = () => {
   const updateQueryParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(key, value);
-    const newUrl = `${pathname}?${params.toString()}`;
+    const newUrl = `${pathname}?section=${params.get("section")}`;
     router.replace(newUrl);
   };
 

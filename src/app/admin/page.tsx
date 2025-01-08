@@ -4,7 +4,7 @@ import Dashboard from "../_components/AdminPage/Dashboard";
 
 const AdminPage = async () => {
   return (
-    <section className="min-h-screen bg-bgGray">
+    <section className="mx-auto h-[100%] min-h-screen w-[100%] max-w-[1400px] bg-bgGray px-[1rem] md:px-[2rem] lg:px-[5rem]">
       <div className="flex items-center p-4 md:hidden">
         <button>
           <svg

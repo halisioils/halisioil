@@ -2,10 +2,13 @@ import React, { Suspense } from "react";
 import ProductForm from "./ProductForm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
+import Table from "~/utils/Table";
 
 const ProductsComponent = () => {
   const searchParams = useSearchParams();
   const active_section = searchParams.get("product_action");
+  const page = parseInt(searchParams.get("page") ?? "1", 10); // Ensure page is a number
+  const per_page = 10;
 
   const pathname = usePathname();
   const router = useRouter();
@@ -46,6 +49,8 @@ const ProductsComponent = () => {
                 />
               </svg>
             </button>
+
+            <Table page={page} per_page={per_page} />
           </div>
         );
     }

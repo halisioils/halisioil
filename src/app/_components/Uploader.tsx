@@ -32,8 +32,8 @@ export default function Uploader() {
       return;
     }
 
-    if (file.size / 1024 / 1024 > 50) {
-      toast.error("File size too big (max 50MB)");
+    if (file.size / 1024 / 1024 > 4) {
+      toast.error("File size too big (max 4MB)");
       return;
     }
 
