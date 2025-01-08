@@ -6,9 +6,17 @@ import LoadingComponent from "./LoadingComponent";
 
 interface DashboardProps {
   id: string;
+  viewL: string;
+  updateL: string;
+  deleteL: string;
 }
 
-const DropdownComponent: FC<DashboardProps> = ({ id }) => {
+const DropdownComponent: FC<DashboardProps> = ({
+  id,
+  viewL,
+  updateL,
+  deleteL,
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -58,7 +66,7 @@ const DropdownComponent: FC<DashboardProps> = ({ id }) => {
                   />
                 </svg>
               </span>
-              View Product
+              {viewL}
             </Link>
           </li>
           <li>
@@ -89,7 +97,7 @@ const DropdownComponent: FC<DashboardProps> = ({ id }) => {
                   </defs>
                 </svg>
               </span>
-              Update Product
+              {updateL}
             </button>
           </li>
 
@@ -126,7 +134,7 @@ const DropdownComponent: FC<DashboardProps> = ({ id }) => {
                   />
                 </svg>
               </span>
-              Delete Product
+              {deleteL}
             </button>
           </li>
         </ul>
@@ -135,10 +143,15 @@ const DropdownComponent: FC<DashboardProps> = ({ id }) => {
   );
 };
 
-const Dropdown: FC<DashboardProps> = ({ id }) => {
+const Dropdown: FC<DashboardProps> = ({ id, viewL, updateL, deleteL }) => {
   return (
     <Suspense fallback={<LoadingComponent />}>
-      <DropdownComponent id={id} />
+      <DropdownComponent
+        id={id}
+        viewL={viewL}
+        updateL={updateL}
+        deleteL={deleteL}
+      />
     </Suspense>
   );
 };

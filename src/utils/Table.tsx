@@ -186,7 +186,12 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                               </svg>
                             </button>
                             {dropdownId === data.id && (
-                              <Dropdown id={data.id} />
+                              <Dropdown
+                                id={data.id}
+                                viewL="View Product"
+                                updateL="Update Product"
+                                deleteL="Product Product"
+                              />
                             )}
                           </div>
                         </div>
