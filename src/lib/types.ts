@@ -55,7 +55,7 @@ export type TImage = {
 export type TablePaginationProps = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
-  totalEntries: string[];
+  totalEntries: IProductSchema[] | ICategorySchema[];
 };
 
 export type TableProps = {
