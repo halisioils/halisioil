@@ -15,7 +15,7 @@ model Product {
     name        String
     description String
     price       Decimal
-    imagePaths  String[] @default([])
+    imagePaths  Json
     isAvailable Boolean  @default(true)
     properties  Json?
     createdAt   DateTime @default(now())

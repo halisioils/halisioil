@@ -4,7 +4,16 @@ export const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
   price: z.number().min(0.01, "Price is required, must be a positive number"),
-  imagePaths: z.array(z.string()).min(1, "At least one image is required"),
+  imagePaths: z
+    .array(
+      z.object({
+        key: z.string().min(1, "Image key is required"),
+        url: z.string().min(1, "Image url is required"),
+        size: z.string().min(1, "Image size is required"),
+        name: z.string().min(1, "Image name is required"),
+      }),
+    )
+    .min(1, "At least one image is required"),
   isAvailable: z.boolean().optional().default(true),
   categoryIds: z.array(z.string()).min(1, "At least one category is required"),
 });
@@ -52,4 +61,10 @@ export type TablePaginationProps = {
 export type TableProps = {
   page: number | string;
   per_page: number;
+};
+
+export type ImageContent = {
+  id: string;
+  key: string;
+  url: string;
 };

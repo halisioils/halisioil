@@ -1,7 +1,7 @@
 "use client";
 import React, { FC } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { TablePaginationProps } from "~/lib/types";
+import { type TablePaginationProps } from "~/lib/types";
 
 const TablePagination: FC<TablePaginationProps> = ({
   hasNextPage,

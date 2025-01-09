@@ -14,8 +14,7 @@ import { useUploadThing } from "~/utils/uploadthing";
 import { useRouter } from "next/navigation";
 
 const ProductForm = () => {
-  const [categories, isPending] =
-    api.category.getAllCategories.useSuspenseQuery();
+  const categories = api.category.getAllCategories.useQuery();
 
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
@@ -81,10 +80,13 @@ const ProductForm = () => {
   });
 
   // Transform the array to match React Select's structure
-  const categoryOptions = categories.map((category) => ({
-    value: category.id, // Set value to the category ID
-    label: capitalizeFirstLetter(category.name), // Set label to the category name
-  }));
+  const categoryOptions =
+    categories &&
+    categories.data &&
+    categories.data.map((category) => ({
+      value: category.id, // Set value to the category ID
+      label: capitalizeFirstLetter(category.name), // Set label to the category name
+    }));
 
   // Transform the availability array to match React Select's structure
   const availabilityOptions = [
@@ -113,12 +115,19 @@ const ProductForm = () => {
       const imageUploadResult = await startUpload(files); // Upload images before submitting the form
 
       if (imageUploadResult) {
+        const imageShape = imageUploadResult.map((d) => ({
+          key: d.key,
+          url: d.url,
+          size: d.size,
+          name: d.name,
+        }));
+
         createProduct.mutate({
           name: data.name,
           description: data.description,
           price: data.price,
           categoryIds: data.categoryIds,
-          imagePaths: imageUploadResult.map((d) => d.url),
+          imagePaths: imageShape,
           isAvailable: data.isAvailable,
         });
       }
@@ -194,7 +203,7 @@ const ProductForm = () => {
         <div className="mb-[1rem]">
           <label>Category</label>
 
-          {isPending.isPending ? (
+          {categories.isPending ? (
             <LoadingComponent />
           ) : (
             <Controller

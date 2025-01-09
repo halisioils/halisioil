@@ -1,18 +1,18 @@
 "use client";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { TableProps } from "~/lib/types";
+import { type TableProps } from "~/lib/types";
 import { api } from "~/trpc/react";
 import LoadingComponent from "./LoadingComponent";
 import TablePagination from "./TablePagination";
 import Skeleton from "./Skeleton";
 import Dropdown from "./Dropdown";
+import { useDropdown } from "~/hooks/useDropdown";
 
 const Table: FC<TableProps> = ({ page, per_page }) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
-  const [dropdownId, setDropdownId] = useState<string>("");
-
   const products = api.product.getAllProducts.useQuery();
+
+  const { dropdownId, setDropdownId, dropdownRef } = useDropdown();
 
   // Calculate pagination values
   const start = (Number(page) - 1) * Number(per_page);
@@ -54,23 +54,6 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
     // // Call your bulk delete function with the selected items
     console.log("Delete these items: ", Array.from(selectedItems));
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      // Check if the click occurred outside of the profile dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownId("");
-      }
-    };
-
-    // Add event listener to handle clicks outside of the profile dropdown
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      // Cleanup: remove event listener when the component is unmounted
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   if (products.isPending)
     return (
@@ -123,7 +106,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                   </button>
                 )}
               </section>
-              <section className="z-10 pb-[6rem] pt-[2rem]">
+              <section className="z-10 min-h-[70vh] pb-[6rem] pt-[2rem]">
                 <div className="relative z-10 mb-[1rem] h-auto w-[100%] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
                   <div className="table-grid h-[40px]">
                     <p className="flex items-center justify-center">

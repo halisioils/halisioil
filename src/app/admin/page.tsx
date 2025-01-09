@@ -4,7 +4,7 @@ import Dashboard from "../_components/AdminPage/Dashboard";
 
 const AdminPage = async () => {
   return (
-    <section className="mx-auto h-[100%] min-h-screen w-[100%] max-w-[1400px] bg-bgGray px-[1rem] md:px-[2rem] lg:px-[5rem]">
+    <section className="mx-auto h-[100%] min-h-screen w-[100%] max-w-[1400px] bg-bgGray px-[0.5rem] md:px-[2rem] lg:px-[5rem]">
       <div className="flex items-center p-4 md:hidden">
         <button>
           <svg
@@ -23,7 +23,7 @@ const AdminPage = async () => {
       </div>
       <div className="flex">
         <AdminNav />
-        <section className="my-2 mr-2 flex-grow rounded-lg p-4">
+        <section className="my-2 mr-2 flex-grow rounded-lg md:p-4">
           <Dashboard />
         </section>
       </div>

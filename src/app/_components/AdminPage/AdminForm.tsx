@@ -14,9 +14,7 @@ const AdminForm = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<IUserSchema>({
     resolver: zodResolver(userSchema),
   });

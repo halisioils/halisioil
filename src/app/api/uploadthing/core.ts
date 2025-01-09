@@ -32,7 +32,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { imagePaths: file.url };
+      return { key: file.key, url: file.url, size: file.size, name: file.name };
     }),
 } satisfies FileRouter;
 
