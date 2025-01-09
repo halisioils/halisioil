@@ -46,12 +46,39 @@ export const productRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, key } = input;
       // Execute both operations in parallel
-      const [deleteFileResponse, deleteProductResponse] = await Promise.all([
+      const [_, deleteProductResponse] = await Promise.all([
         // Delete the file using the external API
         utapi.deleteFiles(key),
 
         // Delete the product from the database
         ctx.db.product.delete({
+          where: {
+            id,
+          },
+        }),
+      ]);
+
+      return deleteProductResponse;
+    }),
+
+  deleteMany: privateAdminProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Product ID is required"), // Validate 'name' is non-empty
+        key: z
+          .array(z.string().min(1, "Image key is required"))
+          .min(1, "At least one image is required"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, key } = input;
+      // Execute both operations in parallel
+      const [_, deleteProductResponse] = await Promise.all([
+        // Delete the file using the external API
+        utapi.deleteFiles(key),
+
+        // Delete the product from the database
+        ctx.db.product.deleteMany({
           where: {
             id,
           },

@@ -7,6 +7,7 @@ import { AuthProvider } from "./auth/AuthProvider";
 import { poppins } from "~/utils/font";
 import { Toaster } from "react-hot-toast";
 import { ImageProvider } from "~/context/ImageFormContext";
+import Modal from "~/utils/Modal";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,6 +25,7 @@ export default function RootLayout({
           <body>
             <TRPCReactProvider>
               <Toaster position="top-center" />
+              <Modal />
               {children}
             </TRPCReactProvider>
           </body>

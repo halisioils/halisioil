@@ -13,14 +13,18 @@ body {
 }
 
 input,
-textarea,
 select {
-  @apply w-full rounded-sm border border-gray-200 px-3 py-2 placeholder:text-sm focus:outline-none;
+  @apply w-full rounded-[6.25rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[1rem] placeholder:text-sm focus:outline-none;
 }
+
+textarea {
+  @apply w-full rounded-[1rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[1rem] placeholder:text-sm focus:outline-none;
+}
+
 input:focus,
 textarea:focus,
 select:focus {
-  @apply border-blue-900;
+  @apply border-gray-900;
 }
 
 label {
@@ -28,11 +32,11 @@ label {
 }
 
 .btn-primary {
-  @apply rounded-sm bg-primary px-4 py-1 text-white shadow-sm hover:brightness-75;
+  @apply flex h-[44px] w-[150px] flex-1 items-center justify-center rounded-[6.25rem] border-[1px] border-[#D0D5DD] bg-black px-[1.25rem] py-[0.875rem] text-white shadow-sm transition-all duration-75 ease-in-out hover:brightness-50;
 }
 
 .btn-admin {
-  @apply rounded-sm bg-primary px-4 py-2 text-white shadow-sm hover:brightness-75;
+  @apply rounded-[6.25rem] border-[1px] border-[#D0D5DD] bg-[#0D2F3F] px-[1.25rem] py-[0.875rem] text-white shadow-sm hover:brightness-75;
 }
 
 .table-grid {

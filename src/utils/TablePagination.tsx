@@ -12,7 +12,8 @@ const TablePagination: FC<TablePaginationProps> = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const page = parseInt(searchParams.get("page") ?? "1");
+  const url_page = searchParams.get("page");
+  const page = url_page ? parseInt(url_page) : parseInt("1");
   const per_page = 10;
 
   const totalPages = Math.ceil(totalEntries.length / per_page);

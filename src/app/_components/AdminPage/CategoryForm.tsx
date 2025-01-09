@@ -1,7 +1,7 @@
-import { type FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { categorySchema, ICategorySchema } from "~/lib/types";
+import { categorySchema, type ICategorySchema } from "~/lib/types";
 import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import toast from "react-hot-toast";
@@ -67,13 +67,15 @@ const CategoryForm = () => {
         </p>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Category Name</label>
+        <label className="text-[1rem] font-bold text-[#0D2F3F] md:text-[1.5rem]">
+          Category Name
+        </label>
         <div className="mb-2 mt-4 flex flex-wrap items-center gap-[1rem]">
           <input
             type="text"
             placeholder="Enter category name"
             {...register("name")}
-            className="flex-1"
+            className="flex-1 rounded-full"
           />
           <button
             disabled={isSubmitting}

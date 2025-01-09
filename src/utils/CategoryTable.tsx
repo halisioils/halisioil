@@ -1,30 +1,29 @@
 "use client";
 import React, { type FC, useState } from "react";
-import type { ImageContent, TableProps } from "~/lib/types";
+import type { TableProps } from "~/lib/types";
 import { api } from "~/trpc/react";
 import LoadingComponent from "./LoadingComponent";
 import TablePagination from "./TablePagination";
 import Skeleton from "./Skeleton";
-import Dropdown from "./Dropdown";
-import { useDropdown } from "~/hooks/useDropdown";
+import { useCategoryDropdown } from "~/hooks/useDropdown";
+import CategoryDropdown from "./CategoryDropdown";
 
-const Table: FC<TableProps> = ({ page, per_page }) => {
+const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
-  const products = api.product.getAllProducts.useQuery();
+  const categories = api.category.getAllCategories.useQuery();
 
-  const { dropdownId, setDropdownId, dropdownRef } = useDropdown();
+  const { dropdownId, setDropdownId, dropdownRef } = useCategoryDropdown();
 
   // Calculate pagination values
   const start = (Number(page) - 1) * Number(per_page);
   const end = start + Number(per_page);
 
   const entries =
-    products &&
-    products.data &&
-    products.data.slice(start, end).map((entry) => ({
+    categories &&
+    categories.data &&
+    categories.data.slice(start, end).map((entry) => ({
       id: entry.id,
       name: entry.name,
-      imagePaths: entry.imagePaths as ImageContent[],
     }));
 
   const toggleSelectAll = () => {
@@ -54,7 +53,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
     console.log("Delete these items: ", Array.from(selectedItems));
   };
 
-  if (products.isPending)
+  if (categories.isPending)
     return (
       <div className="mx-auto flex w-[100%] max-w-[1440px] items-center justify-center p-4">
         <LoadingComponent />
@@ -63,7 +62,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
 
   return (
     <>
-      {products && products.data && products.data.length > 0 ? (
+      {categories && categories.data && categories.data.length > 0 ? (
         <>
           <section>
             <section>
@@ -105,7 +104,10 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                   </button>
                 )}
               </section>
-              <section className="z-10 min-h-[70vh] pb-[6rem] pt-[2rem]">
+              <div
+                ref={dropdownRef}
+                className="z-10 min-h-[70vh] pb-[6rem] pt-[2rem]"
+              >
                 <div className="relative z-10 mb-[1rem] h-auto w-[100%] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
                   <div className="table-grid h-[40px]">
                     <p className="flex items-center justify-center">
@@ -120,7 +122,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                       S/N
                     </p>
                     <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
-                      Product Name
+                      Category Name
                     </p>
                     <p className="truncate p-[0.75rem] text-center text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
                   </div>
@@ -142,10 +144,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                             {data.name}
                           </p>
 
-                          <div
-                            ref={dropdownRef}
-                            className="relative flex justify-end"
-                          >
+                          <div className="relative flex justify-end">
                             <button
                               onClick={(e) => {
                                 handleClick(data.id);
@@ -168,12 +167,11 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                               </svg>
                             </button>
                             {dropdownId === data.id && (
-                              <Dropdown
+                              <CategoryDropdown
                                 id={data.id}
-                                imagePaths={data.imagePaths}
-                                viewL="View Product"
-                                updateL="Update Product"
-                                deleteL="Delete Product"
+                                viewL="View Category"
+                                updateL="Update Category"
+                                deleteL="Delete Category"
                               />
                             )}
                           </div>
@@ -181,14 +179,14 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                       </div>
                     ))}
                 </div>
-              </section>
+              </div>
             </section>
             <section className="flex flex-wrap items-center justify-between gap-[1rem]">
-              <p className="text-[0.875rem] text-[#A6A8B1]">{`${selectedItems.size} of ${products.data.length} rows selected.
+              <p className="text-[0.875rem] text-[#A6A8B1]">{`${selectedItems.size} of ${categories.data.length} rows selected.
  `}</p>
               <TablePagination
-                totalEntries={products.data}
-                hasNextPage={end < products.data.length}
+                totalEntries={categories.data}
+                hasNextPage={end < categories.data.length}
                 hasPrevPage={start > 0}
               />
             </section>
@@ -201,4 +199,4 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
   );
 };
 
-export default Table;
+export default CategoryTable;

@@ -19,8 +19,14 @@ const ProductForm = () => {
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
 
-  const { setIsUploading, isUploading, setProgress, setFiles, files } =
-    useImageContext();
+  const {
+    setIsUploading,
+    isUploading,
+    setProgress,
+    setPreviews,
+    setFiles,
+    files,
+  } = useImageContext();
 
   const router = useRouter();
 
@@ -44,7 +50,8 @@ const ProductForm = () => {
       reset();
       setSelectedOption([]);
       setFiles([]);
-
+      setPreviews([]);
+      setIsUploading(false);
       router.back();
     },
     onError: (error) => {
@@ -69,6 +76,34 @@ const ProductForm = () => {
           setError("description", {
             type: "manual",
             message: errorData.description, // Pass the extracted error message
+          });
+        }
+
+        if (errorData.price) {
+          setError("price", {
+            type: "manual",
+            message: errorData.price, // Pass the extracted error message
+          });
+        }
+
+        if (errorData.categoryIds) {
+          setError("categoryIds", {
+            type: "manual",
+            message: errorData.categoryIds, // Pass the extracted error message
+          });
+        }
+
+        if (errorData.imagePaths) {
+          setError("imagePaths", {
+            type: "manual",
+            message: errorData.imagePaths, // Pass the extracted error message
+          });
+        }
+
+        if (errorData.isAvailable) {
+          setError("isAvailable", {
+            type: "manual",
+            message: errorData.isAvailable, // Pass the extracted error message
           });
         }
       } else {
@@ -99,7 +134,7 @@ const ProductForm = () => {
       setProgress(100);
     },
     onUploadError: (e) => {
-      toast.error(`Error occurred while uploading Product Image`);
+      toast.error(e.message);
       return;
     },
     onUploadBegin: () => {
@@ -198,7 +233,7 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-[1rem]">
+        <div className="mb-[1.5rem]">
           <label>Category</label>
 
           {categories.isPending ? (
@@ -249,7 +284,7 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-[1rem]">
+        <div className="mb-[1.5rem]">
           <label>Is Available</label>
 
           <Controller

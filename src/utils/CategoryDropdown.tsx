@@ -3,11 +3,10 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { type FC, Suspense } from "react";
 import LoadingComponent from "./LoadingComponent";
-import { DashboardProps } from "~/lib/types";
+import { CategoryDropdownProps } from "~/lib/types";
 
-const DropdownComponent: FC<DashboardProps> = ({
+const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
   id,
-  imagePaths,
   viewL,
   updateL,
   deleteL,
@@ -18,20 +17,16 @@ const DropdownComponent: FC<DashboardProps> = ({
 
   const deleteProductHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("product_delete", id);
-    params.set("case", "product_delete");
-    params.set("product_images", imagePaths.join(","));
-
+    params.set("category_delete", id);
+    params.set("case", "category_delete");
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };
 
   const updateProductHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("product_update", id);
-    params.set("case", "product_update");
-    params.set("product_images", imagePaths.join(","));
-
+    params.set("category_update", id);
+    params.set("case", "category_update");
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };
@@ -144,18 +139,16 @@ const DropdownComponent: FC<DashboardProps> = ({
   );
 };
 
-const Dropdown: FC<DashboardProps> = ({
+const CategoryDropdown: FC<CategoryDropdownProps> = ({
   id,
-  imagePaths,
   viewL,
   updateL,
   deleteL,
 }) => {
   return (
     <Suspense fallback={<LoadingComponent />}>
-      <DropdownComponent
+      <CategoryDropdownComponent
         id={id}
-        imagePaths={imagePaths}
         viewL={viewL}
         updateL={updateL}
         deleteL={deleteL}
@@ -164,4 +157,4 @@ const Dropdown: FC<DashboardProps> = ({
   );
 };
 
-export default Dropdown;
+export default CategoryDropdown;

@@ -55,7 +55,7 @@ export type TImage = {
 export type TablePaginationProps = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
-  totalEntries: any;
+  totalEntries: string[];
 };
 
 export type TableProps = {
@@ -67,4 +67,19 @@ export type ImageContent = {
   id: string;
   key: string;
   url: string;
+};
+
+export type CategoryDropdownProps = {
+  id: string;
+  viewL: string;
+  updateL: string;
+  deleteL: string;
+};
+
+export type DashboardProps = {
+  id: string;
+  imagePaths: ImageContent[];
+  viewL: string;
+  updateL: string;
+  deleteL: string;
 };

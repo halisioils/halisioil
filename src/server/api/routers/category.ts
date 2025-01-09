@@ -44,6 +44,21 @@ export const categoryRouter = createTRPCRouter({
       });
     }),
 
+  deleteMany: privateAdminProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Category ID is required"), // Validate 'name' is non-empty
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      return ctx.db.category.deleteMany({
+        where: {
+          id,
+        },
+      });
+    }),
+
   getAllCategories: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       orderBy: { name: "desc" },

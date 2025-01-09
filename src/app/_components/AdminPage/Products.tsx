@@ -30,7 +30,7 @@ const ProductsComponent = () => {
           <div>
             <button
               onClick={() => updateQueryParams("product_action", "create")}
-              className="flex items-center gap-[1rem] rounded-full bg-blue-500 px-[1rem] py-2 text-white"
+              className="flex items-center gap-[1rem] rounded-full bg-[#0D2F3F] px-[1rem] py-2 text-white"
               type="button"
             >
               Add Product

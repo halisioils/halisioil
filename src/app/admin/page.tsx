@@ -21,9 +21,9 @@ const AdminPage = async () => {
           </svg>
         </button>
       </div>
-      <div className="flex">
+      <div className="flex gap-[1rem]">
         <AdminNav />
-        <section className="my-2 mr-2 flex-grow rounded-lg md:p-4">
+        <section className="flex-grow rounded-lg p-4">
           <Dashboard />
         </section>
       </div>

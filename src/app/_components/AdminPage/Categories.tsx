@@ -2,10 +2,13 @@ import React, { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
 import CategoryForm from "./CategoryForm";
+import CategoryTable from "~/utils/CategoryTable";
 
 const CategoriesComponent = () => {
   const searchParams = useSearchParams();
   const active_section = searchParams.get("category_action");
+  const page = parseInt(searchParams.get("page") ?? "1", 10); // Ensure page is a number
+  const per_page = 10;
 
   const pathname = usePathname();
   const router = useRouter();
@@ -27,7 +30,7 @@ const CategoriesComponent = () => {
           <div>
             <button
               onClick={() => updateQueryParams("category_action", "create")}
-              className="flex items-center gap-[1rem] rounded-full bg-blue-500 px-[1rem] py-2 text-white"
+              className="flex items-center gap-[1rem] rounded-full bg-[#0D2F3F] px-[1rem] py-2 text-white"
               type="button"
             >
               Add Category
@@ -46,6 +49,8 @@ const CategoriesComponent = () => {
                 />
               </svg>
             </button>
+
+            <CategoryTable page={page} per_page={per_page} />
           </div>
         );
     }
