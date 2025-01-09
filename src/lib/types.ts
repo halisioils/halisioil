@@ -9,7 +9,7 @@ export const productSchema = z.object({
       z.object({
         key: z.string().min(1, "Image key is required"),
         url: z.string().min(1, "Image url is required"),
-        size: z.string().min(1, "Image size is required"),
+        size: z.number().min(0, "Image size is required"),
         name: z.string().min(1, "Image name is required"),
       }),
     )

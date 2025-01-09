@@ -77,10 +77,11 @@ export const productRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { productId } = input;
-      return ctx.db.product.findFirst({
+      const product = ctx.db.product.findFirst({
         where: {
           id: productId,
         },
       });
+      return product ?? null;
     }),
 });

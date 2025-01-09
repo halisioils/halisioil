@@ -109,8 +109,6 @@ const ProductForm = () => {
   });
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
-
     try {
       const imageUploadResult = await startUpload(files); // Upload images before submitting the form
 
