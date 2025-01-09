@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { type FC, Suspense } from "react";
 import LoadingComponent from "./LoadingComponent";
-import { DashboardProps } from "~/lib/types";
+import { type DashboardProps } from "~/lib/types";
 
 const DropdownComponent: FC<DashboardProps> = ({
   id,
@@ -20,7 +20,7 @@ const DropdownComponent: FC<DashboardProps> = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("product_delete", id);
     params.set("case", "product_delete");
-    params.set("product_images", imagePaths.join(","));
+    params.set("product_images", imagePaths.toString());
 
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
@@ -30,7 +30,7 @@ const DropdownComponent: FC<DashboardProps> = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("product_update", id);
     params.set("case", "product_update");
-    params.set("product_images", imagePaths.join(","));
+    params.set("product_images", imagePaths.toString());
 
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);

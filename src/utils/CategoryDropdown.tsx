@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { type FC, Suspense } from "react";
 import LoadingComponent from "./LoadingComponent";
-import { CategoryDropdownProps } from "~/lib/types";
+import { type CategoryDropdownProps } from "~/lib/types";
 
 const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
   id,

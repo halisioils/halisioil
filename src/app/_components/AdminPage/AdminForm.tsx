@@ -1,7 +1,7 @@
 import { type FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { IUserSchema, userSchema } from "~/lib/types";
+import { type IUserSchema, userSchema } from "~/lib/types";
 import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import { useState } from "react";

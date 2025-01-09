@@ -2,7 +2,7 @@ import Select from "react-select";
 import { Controller, type FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { clientProductSchema } from "~/lib/types";
+import { clientProductSchema, type IProductSchema } from "~/lib/types";
 import { useState } from "react";
 import Uploader from "../Uploader";
 import { useImageContext } from "~/context/ImageFormContext";
@@ -108,7 +108,7 @@ const ProductForm = () => {
         }
       } else {
         setErrorMessage(
-          error.message || "Something went wrong. Please try again.",
+          error.message ?? "Something went wrong. Please try again.",
         );
       }
     },
@@ -116,12 +116,10 @@ const ProductForm = () => {
 
   // Transform the array to match React Select's structure
   const categoryOptions =
-    categories &&
-    categories.data &&
-    categories.data.map((category) => ({
-      value: category.id, // Set value to the category ID
-      label: capitalizeFirstLetter(category.name), // Set label to the category name
-    }));
+    categories?.data?.map((category) => ({
+      value: category.id,
+      label: capitalizeFirstLetter(category.name),
+    })) ?? [];
 
   // Transform the availability array to match React Select's structure
   const availabilityOptions = [
@@ -143,7 +141,7 @@ const ProductForm = () => {
     },
   });
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = async (dataValue: FieldValues) => {
     try {
       const imageUploadResult = await startUpload(files); // Upload images before submitting the form
 
@@ -154,6 +152,8 @@ const ProductForm = () => {
           size: d.size,
           name: d.name,
         }));
+
+        const data = dataValue as IProductSchema;
 
         createProduct.mutate({
           name: data.name,
@@ -187,7 +187,7 @@ const ProductForm = () => {
             placeholder="Enter product name"
             {...register("name", { required: "Product name is required" })}
           />
-          {errors.name && (
+          {errors.name?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.name.message === "string"
                 ? errors.name.message
@@ -202,7 +202,7 @@ const ProductForm = () => {
             placeholder="Enter product description"
             {...register("description")}
           />
-          {errors.description && (
+          {errors.description?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.description.message === "string"
                 ? errors.description.message
@@ -224,7 +224,7 @@ const ProductForm = () => {
               },
             })}
           />
-          {errors.price && (
+          {errors.price?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.price.message === "string"
                 ? errors.price.message
@@ -263,7 +263,7 @@ const ProductForm = () => {
             />
           )}
 
-          {errors.categoryIds && (
+          {errors.categoryIds?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.categoryIds.message === "string"
                 ? errors.categoryIds.message
@@ -275,7 +275,7 @@ const ProductForm = () => {
         <div>
           <label className="block font-medium"> Upload images</label>
           <Uploader />
-          {errors.imagePaths && (
+          {errors.imagePaths?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.imagePaths.message === "string"
                 ? errors.imagePaths.message
@@ -300,11 +300,12 @@ const ProductForm = () => {
                 onChange={(selected) => field.onChange(selected?.value)} // Extract value
                 value={availabilityOptions.find(
                   (option) => option.value === field.value,
-                )} // Map value back to option
+                )}
+                // Map value back to option
               />
             )}
           />
-          {errors.isAvailable && (
+          {errors.isAvailable?.message && (
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.isAvailable.message === "string"
                 ? errors.isAvailable.message
@@ -318,7 +319,7 @@ const ProductForm = () => {
           type="submit"
           className={`btn-primary ${isSubmitting && "cursor-not-allowed opacity-50"}`}
         >
-          {isSubmitting || isUploading ? <LoadingComponent /> : "Submit"}
+          {(isSubmitting ?? isUploading) ? <LoadingComponent /> : "Submit"}
         </button>
       </form>
     </section>

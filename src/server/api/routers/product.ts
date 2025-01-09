@@ -14,16 +14,12 @@ export const productRouter = createTRPCRouter({
   create: privateAdminProcedure
     .input(productSchema)
     .mutation(async ({ ctx, input }) => {
-      const formattedImagePaths = input.imagePaths.map((image) =>
-        typeof image === "object" ? image.url : image,
-      );
-
       return ctx.db.product.create({
         data: {
           name: input.name,
           description: input.description,
           price: input.price,
-          imagePaths: formattedImagePaths, // Ensured it has at least one image path
+          imagePaths: input.imagePaths, // Ensured it has at least one image path
           isAvailable: input.isAvailable,
           productCategories: {
             create: input.categoryIds.map((categoryId) => ({

@@ -85,7 +85,7 @@ const CategoryForm = () => {
             {isSubmitting ? <LoadingComponent /> : "Create"}
           </button>
         </div>
-        {errors.name && (
+        {errors.name?.message && (
           <p className="mt-1 text-sm text-red-500">
             {typeof errors.name.message === "string"
               ? errors.name.message

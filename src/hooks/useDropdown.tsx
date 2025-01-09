@@ -6,14 +6,17 @@ export const useDropdown = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      // Check if the click occurred outside of the profile dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click occurred outside of the dropdown
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownId("");
       }
     };
 
-    // Add event listener to handle clicks outside of the profile dropdown
+    // Add event listener to handle clicks outside of the dropdown
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
@@ -34,14 +37,17 @@ export const useCategoryDropdown = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      // Check if the click occurred outside of the profile dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click occurred outside of the dropdown
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownId("");
       }
     };
 
-    // Add event listener to handle clicks outside of the profile dropdown
+    // Add event listener to handle clicks outside of the dropdown
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {

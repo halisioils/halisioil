@@ -20,8 +20,7 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
 
   const entries =
     products &&
-    products.data &&
-    products.data.slice(start, end).map((entry) => ({
+    products.data?.slice(start, end).map((entry) => ({
       id: entry.id,
       name: entry.name,
       imagePaths: entry.imagePaths as ImageContent[],
@@ -124,62 +123,61 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                     </p>
                     <p className="truncate p-[0.75rem] text-center text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
                   </div>
-                  {entries &&
-                    entries.map((data, index) => (
-                      <div key={data.id} className="relative">
-                        <div className="table-grid border-t-[1px] border-t-[#1C1C1C1A]">
-                          <p className="flex h-[100%] w-[100%] items-center justify-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedItems.has(data.id)}
-                              onChange={() => toggleSelectItem(data.id)}
-                            />
-                          </p>
-                          <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
-                            {index + 1}
-                          </p>
-                          <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
-                            {data.name}
-                          </p>
+                  {entries?.map((data, index) => (
+                    <div key={data.id} className="relative">
+                      <div className="table-grid border-t-[1px] border-t-[#1C1C1C1A]">
+                        <p className="flex h-[100%] w-[100%] items-center justify-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.has(data.id)}
+                            onChange={() => toggleSelectItem(data.id)}
+                          />
+                        </p>
+                        <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
+                          {index + 1}
+                        </p>
+                        <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
+                          {data.name}
+                        </p>
 
-                          <div
-                            ref={dropdownRef}
-                            className="relative flex justify-end"
+                        <div
+                          ref={dropdownRef}
+                          className="relative flex justify-end"
+                        >
+                          <button
+                            onClick={() => {
+                              handleClick(data.id);
+                            }}
+                            className="flex cursor-pointer items-center justify-center truncate p-[0.75rem] text-center text-[0.875rem] font-[400]"
                           >
-                            <button
-                              onClick={(e) => {
-                                handleClick(data.id);
-                              }}
-                              className="flex cursor-pointer items-center justify-center truncate p-[0.75rem] text-center text-[0.875rem] font-[400]"
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                                />
-                              </svg>
-                            </button>
-                            {dropdownId === data.id && (
-                              <Dropdown
-                                id={data.id}
-                                imagePaths={data.imagePaths}
-                                viewL="View Product"
-                                updateL="Update Product"
-                                deleteL="Delete Product"
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
                               />
-                            )}
-                          </div>
+                            </svg>
+                          </button>
+                          {dropdownId === data.id && (
+                            <Dropdown
+                              id={data.id}
+                              imagePaths={data.imagePaths}
+                              viewL="View Product"
+                              updateL="Update Product"
+                              deleteL="Delete Product"
+                            />
+                          )}
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
               </section>
             </section>

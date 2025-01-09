@@ -1,7 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { type KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
 
 const { getUser } = getKindeServerSession();
 
