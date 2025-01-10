@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import DashboardHeader from "./DashboardHeader";
 import LoadingComponent from "~/utils/LoadingComponent";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 const MobileAdminNavComponent = () => {
   const pathname = usePathname();
@@ -27,10 +28,6 @@ const MobileAdminNavComponent = () => {
     " bg-highlight text-black rounded-sm hover:bg-gray-200 transition-all ease-in-out duration-300";
   const inactiveIcon = "w-6 h-6";
   const activeIcon = inactiveIcon + " text-primary";
-
-  async function logout() {
-    console.log("logout");
-  }
 
   const closeMobileNav = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -201,7 +198,7 @@ const MobileAdminNavComponent = () => {
             </svg>
             Settings
           </button>
-          <button onClick={logout} className={inactiveLink}>
+          <LogoutLink className={inactiveLink}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -217,7 +214,7 @@ const MobileAdminNavComponent = () => {
               />
             </svg>
             Logout
-          </button>
+          </LogoutLink>
         </nav>
       </div>
     </aside>

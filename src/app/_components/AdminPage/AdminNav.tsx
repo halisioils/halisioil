@@ -33,7 +33,7 @@ const AdminNavComponent = () => {
   return (
     <aside
       className={
-        "fixed left-0 top-0 hidden h-full w-full bg-bgGray p-4 text-gray-500 transition-all md:static md:block md:w-auto"
+        "fixed left-0 top-0 hidden h-full w-full bg-bgGray px-[1rem] text-gray-500 transition-all md:static md:block md:w-auto"
       }
     >
       <div className="mb-4 mr-4">

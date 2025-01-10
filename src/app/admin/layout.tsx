@@ -17,7 +17,7 @@ export default function AdminLayout({
 }>) {
   return (
     <main
-      className={`${poppins.className} mx-auto flex h-[100%] min-h-screen w-[100%] max-w-[1400px] gap-[1rem] bg-bgGray px-[1rem] md:px-[2rem] lg:px-[5rem]`}
+      className={`${poppins.className} mx-auto flex h-[100%] min-h-screen w-[100%] max-w-[1400px] gap-[1rem] bg-bgGray px-[1rem] py-[2rem] md:gap-[2rem] md:px-[2rem]`}
     >
       <AdminNav />
       <MobileAdminNav />

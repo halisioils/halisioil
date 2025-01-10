@@ -51,14 +51,14 @@ label {
   @apply rounded-[6.25rem] border-[1px] border-[#D0D5DD] bg-[#0D2F3F] px-[1.25rem] py-[0.875rem] text-white shadow-sm hover:brightness-75;
 }
 
-.table-grid {
+.product-table {
   display: grid;
-  grid-template-columns: 10% 10% 70% 10%;
+  grid-template-columns: 10% 40% 20% 20% 10%;
   justify-content: space-between;
 }
 
-.table-grid-sm {
+.category-table {
   display: grid;
-  grid-template-columns: 10% 20% 50% 20%;
+  grid-template-columns: 10% 70% 20%;
   justify-content: space-between;
 }

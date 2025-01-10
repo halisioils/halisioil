@@ -8,11 +8,13 @@ import Skeleton from "./Skeleton";
 import Dropdown from "./Dropdown";
 import { useDropdown } from "~/hooks/useDropdown";
 
-const Table: FC<TableProps> = ({ page, per_page }) => {
+const ProductTable: FC<TableProps> = ({ page, per_page }) => {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const products = api.product.getAllProducts.useQuery();
 
   const { dropdownId, setDropdownId, dropdownRef } = useDropdown();
+
+  console.log(products.data);
 
   // Calculate pagination values
   const start = (Number(page) - 1) * Number(per_page);
@@ -24,6 +26,8 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
       id: entry.id,
       name: entry.name,
       imagePaths: entry.imagePaths as ImageContent[],
+      price: entry.price,
+      status: entry.status as string,
     }));
 
   const toggleSelectAll = () => {
@@ -63,11 +67,11 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
   return (
     <>
       {products && products.data && products.data.length > 0 ? (
-        <section>
+        <section className="max-w-[1000px] pt-[2rem]">
           <section>
             {selectedItems && selectedItems.size > 0 && (
               <button
-                className="flex h-[40px] w-fit cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
+                className="my-[1rem] flex h-[40px] w-fit cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
                 onClick={handleBulkDelete}
               >
                 <span>
@@ -98,13 +102,13 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                     />
                   </svg>
                 </span>
-                Bulk Delete
+                Delete Selected
               </button>
             )}
           </section>
           <section className="z-10 min-h-[70vh] overflow-y-hidden overflow-x-scroll pb-[6rem] pt-[2rem]">
             <div className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
-              <div className="table-grid h-[40px]">
+              <div className="product-table h-[40px]">
                 <p className="flex items-center justify-center">
                   <input
                     type="checkbox"
@@ -114,16 +118,19 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                 </p>
 
                 <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
-                  S/N
+                  Product Name
                 </p>
                 <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
-                  Product Name
+                  Price
+                </p>
+                <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
+                  Status
                 </p>
                 <p className="truncate p-[0.75rem] text-center text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
               </div>
-              {entries?.map((data, index) => (
+              {entries?.map((data) => (
                 <div key={data.id} className="relative">
-                  <div className="table-grid border-t-[1px] border-t-[#1C1C1C1A]">
+                  <div className="product-table border-t-[1px] border-t-[#1C1C1C1A]">
                     <p className="flex h-[100%] w-[100%] items-center justify-center">
                       <input
                         type="checkbox"
@@ -131,11 +138,29 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
                         onChange={() => toggleSelectItem(data.id)}
                       />
                     </p>
-                    <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
-                      {index + 1}
-                    </p>
+
                     <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
                       {data.name}
+                    </p>
+                    <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
+                      {Number(data.price).toFixed(2)}
+                    </p>
+
+                    <p
+                      className={`my-[0.5rem] h-fit truncate rounded-[5rem] px-[1rem] py-[0.2rem] text-left text-[0.875rem] font-[400] ${
+                        data.status === "SOLD_OUT"
+                          ? "bg-[#BC8A091A] text-[#BC8A09]"
+                          : data.status === "ON_HOLD"
+                            ? "bg-[#AC0F051A] text-[#AC0F05]"
+                            : data.status === "AVAILABLE"
+                              ? "bg-[#0D875A1A] text-[#0D875A]"
+                              : data.status === "COMING_SOON"
+                                ? "bg-[#0077B61A] text-[#0077B6]"
+                                : ""
+                      }`}
+                    >
+                      {data.status.charAt(0).toUpperCase() +
+                        data.status.slice(1).replace("_", " ")}
                     </p>
 
                     <div
@@ -195,4 +220,4 @@ const Table: FC<TableProps> = ({ page, per_page }) => {
   );
 };
 
-export default Table;
+export default ProductTable;

@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ProductForm from "./ProductForm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
-import Table from "~/utils/Table";
+import ProductTable from "~/utils/ProductTable";
 
 const ProductsComponent = () => {
   const searchParams = useSearchParams();
@@ -50,7 +50,7 @@ const ProductsComponent = () => {
               </svg>
             </button>
 
-            <Table page={page} per_page={per_page} />
+            <ProductTable page={page} per_page={per_page} />
           </div>
         );
     }
