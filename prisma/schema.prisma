@@ -11,18 +11,25 @@ datasource db {
 }
 
 model Product {
-    id          String   @id @default(cuid())
+    id          String        @id @default(cuid())
     name        String
     description String
     price       Decimal
     imagePaths  Json
-    isAvailable Boolean  @default(true)
-    properties  Json?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    status      ProductStatus @default(AVAILABLE)
+    properties  String[]      @default([])
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
 
     productCategories ProductCategory[] // Many-to-many relationship
     orders            Order[]
+}
+
+enum ProductStatus {
+    AVAILABLE
+    SOLD_OUT
+    ON_HOLD
+    COMING_SOON
 }
 
 model Category {

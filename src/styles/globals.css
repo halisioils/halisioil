@@ -12,6 +12,18 @@ body {
   padding: 0;
 }
 
+/* Chrome, Safari, Edge, Opera */
+.no-arrow::-webkit-outer-spin-button,
+.no-arrow::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 input,
 select {
   @apply w-full rounded-[6.25rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[1rem] placeholder:text-sm focus:outline-none;

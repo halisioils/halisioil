@@ -91,11 +91,7 @@ export default function Uploader() {
           <div
             className={`${
               dragActive ? "border-2 border-black" : ""
-            } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all ${
-              files.length || previews.length
-                ? "bg-white/80 opacity-0 hover:opacity-100 hover:backdrop-blur-md"
-                : "bg-white opacity-100 hover:bg-gray-50"
-            }`}
+            } absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md bg-white px-10 opacity-100 transition-all hover:bg-gray-50`}
           >
             <svg
               className={`${

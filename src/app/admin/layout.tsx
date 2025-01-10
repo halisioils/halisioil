@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { poppins } from "~/utils/font";
+import AdminNav from "../_components/AdminPage/AdminNav";
+import MobileAdminNav from "../_components/AdminPage/MobileAdminNav";
 
 export const metadata: Metadata = {
   title: "Admin - Halisi oil",
@@ -13,5 +15,13 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className={poppins.className}>{children}</main>;
+  return (
+    <main
+      className={`${poppins.className} mx-auto flex h-[100%] min-h-screen w-[100%] max-w-[1400px] gap-[1rem] bg-bgGray px-[1rem] md:px-[2rem] lg:px-[5rem]`}
+    >
+      <AdminNav />
+      <MobileAdminNav />
+      {children}
+    </main>
+  );
 }

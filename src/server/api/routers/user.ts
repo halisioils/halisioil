@@ -34,6 +34,15 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
+  createAdmin: publicProcedure.input(userSchema).mutation(async ({ input }) => {
+    try {
+      const adminUser = input.email;
+      return adminUser;
+    } catch (error) {
+      throw error;
+    }
+  }),
+
   delete: privateAdminProcedure
     .input(
       z.object({

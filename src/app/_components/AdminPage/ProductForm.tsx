@@ -12,6 +12,7 @@ import { capitalizeFirstLetter } from "~/utils/capitalizeFirstLetter";
 import toast from "react-hot-toast";
 import { useUploadThing } from "~/utils/uploadthing";
 import { useRouter } from "next/navigation";
+import MultiInput from "~/utils/MultiInput";
 
 const ProductForm = () => {
   const categories = api.category.getAllCategories.useQuery();
@@ -100,10 +101,10 @@ const ProductForm = () => {
           });
         }
 
-        if (errorData.isAvailable) {
-          setError("isAvailable", {
+        if (errorData.status) {
+          setError("status", {
             type: "manual",
-            message: errorData.isAvailable, // Pass the extracted error message
+            message: errorData.status, // Pass the extracted error message
           });
         }
       } else {
@@ -122,9 +123,11 @@ const ProductForm = () => {
     })) ?? [];
 
   // Transform the availability array to match React Select's structure
-  const availabilityOptions = [
-    { value: true, label: "True" },
-    { value: false, label: "False" },
+  const statusOptions = [
+    { value: "AVAILABLE", label: "Available" },
+    { value: "SOLD_OUT", label: "Sold Out" },
+    { value: "ON_HOLD", label: "On Hold" },
+    { value: "COMING_SOON", label: "Coming Soon" },
   ];
 
   const { startUpload } = useUploadThing("imageUploader", {
@@ -161,7 +164,8 @@ const ProductForm = () => {
           price: data.price,
           categoryIds: data.categoryIds,
           imagePaths: imageShape,
-          isAvailable: data.isAvailable,
+          properties: data.properties,
+          status: data.status,
         });
       }
     } catch (error) {
@@ -272,6 +276,29 @@ const ProductForm = () => {
           )}
         </div>
 
+        <div className="mb-[1.5rem]">
+          <label>Properties</label>
+          <Controller
+            name="properties"
+            control={control}
+            defaultValue={[]} // Default to an empty array
+            render={({ field }) => (
+              <MultiInput
+                value={field.value as string[]}
+                onChange={field.onChange} // Type-safe onChange
+              />
+            )}
+          />
+
+          {errors.properties?.message && (
+            <p className="mt-1 text-sm text-red-500">
+              {typeof errors.properties.message === "string"
+                ? errors.properties.message
+                : "Invalid input"}
+            </p>
+          )}
+        </div>
+
         <div>
           <label className="block font-medium"> Upload images</label>
           <Uploader />
@@ -288,27 +315,27 @@ const ProductForm = () => {
           <label>Is Available</label>
 
           <Controller
-            name="isAvailable" // Field name
+            name="status" // Field name
             control={control}
-            defaultValue={{ isAvailable: true }} // Default to an true
+            defaultValue={{ status: "AVAILABLE" }} // Default to an true
             render={({ field }) => (
               <Select
                 {...field}
-                options={availabilityOptions} // True/False options
+                options={statusOptions} // True/False options
                 className="z-30 text-[0.875rem]"
                 placeholder="Select availability"
                 onChange={(selected) => field.onChange(selected?.value)} // Extract value
-                value={availabilityOptions.find(
+                value={statusOptions.find(
                   (option) => option.value === field.value,
                 )}
                 // Map value back to option
               />
             )}
           />
-          {errors.isAvailable?.message && (
+          {errors.status?.message && (
             <p className="mt-1 text-sm text-red-500">
-              {typeof errors.isAvailable.message === "string"
-                ? errors.isAvailable.message
+              {typeof errors.status.message === "string"
+                ? errors.status.message
                 : "Invalid input"}
             </p>
           )}

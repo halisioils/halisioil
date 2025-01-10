@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+// Define the enum for product status
+export const ProductStatusEnum = z.enum([
+  "AVAILABLE",
+  "SOLD_OUT",
+  "ON_HOLD",
+  "COMING_SOON",
+]);
+
 export const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
@@ -14,7 +22,8 @@ export const productSchema = z.object({
       }),
     )
     .min(1, "At least one image is required"),
-  isAvailable: z.boolean().optional().default(true),
+  status: ProductStatusEnum.optional().default("AVAILABLE"),
+  properties: z.array(z.string()).optional(),
   categoryIds: z.array(z.string()).min(1, "At least one category is required"),
 });
 
@@ -22,8 +31,9 @@ export const clientProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
   price: z.number().min(0.01, "Price is required, must be a positive number"),
-  isAvailable: z.boolean().optional().default(true),
   categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  status: ProductStatusEnum.optional().default("AVAILABLE"),
+  properties: z.array(z.string()).optional(),
 });
 
 export const orderSchema = z.object({
