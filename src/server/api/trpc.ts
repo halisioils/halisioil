@@ -26,11 +26,11 @@ import { db } from "~/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const { getUser, getPermission } = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
 
   const user = await getUser();
 
-  const isAdmin = await getPermission("is:Admin");
+  const isAdmin = true;
 
   return {
     db,

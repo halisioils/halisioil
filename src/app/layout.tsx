@@ -8,6 +8,8 @@ import { poppins } from "~/utils/font";
 import { Toaster } from "react-hot-toast";
 import { ImageProvider } from "~/context/ImageFormContext";
 import Modal from "~/utils/Modal";
+import { HeaderProvider } from "~/context/HeaderContext";
+import Header from "./_components/Header";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -20,17 +22,23 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <AuthProvider>
-      <ImageProvider>
-        <html lang="en" className={`${poppins.className}`}>
-          <body>
-            <TRPCReactProvider>
-              <Toaster position="top-center" />
-              <Modal />
-              {children}
-            </TRPCReactProvider>
-          </body>
-        </html>
-      </ImageProvider>
+      <HeaderProvider>
+        <ImageProvider>
+          <html lang="en" className={`${poppins.className}`}>
+            <body>
+              <TRPCReactProvider>
+                <header className="bg-black">
+                  <Header />
+                </header>
+
+                <Modal />
+                <Toaster position="top-right" />
+                {children}
+              </TRPCReactProvider>
+            </body>
+          </html>
+        </ImageProvider>
+      </HeaderProvider>
     </AuthProvider>
   );
 }

@@ -49,7 +49,7 @@ const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
 const useImageContext = () => {
   const context = useContext(ImageContext);
   if (!context) {
-    throw new Error("useAppContext must be used within an ImageProvider");
+    throw new Error("useImageContext must be used within an ImageProvider");
   }
   return context;
 };
