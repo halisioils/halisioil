@@ -93,14 +93,12 @@ export type ImageContent = {
 
 export type CategoryDropdownProps = {
   id: string;
-  viewL: string;
   updateL: string;
   deleteL: string;
 };
 
 export type AdminTableDropdownProps = {
   id: string;
-  viewL: string;
   updateL: string;
   deleteL: string;
 };

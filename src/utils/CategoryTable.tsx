@@ -119,7 +119,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
               </div>
               {entries?.map((data) => (
                 <div key={data.id} className="relative">
-                  <div className="category-table border-t-[1px] border-t-[#1C1C1C1A]">
+                  <div className="category-table border-t-[1px] border-t-[#1C1C1C1A] text-[#252c32]">
                     <p className="flex h-[100%] w-[100%] items-center justify-center">
                       <input
                         type="checkbox"
@@ -128,7 +128,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
                       />
                     </p>
 
-                    <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400]">
+                    <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
                       {data.name}
                     </p>
 
@@ -160,7 +160,6 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
                       {dropdownId === data.id && (
                         <CategoryDropdown
                           id={data.id}
-                          viewL="View Category"
                           updateL="Update Category"
                           deleteL="Delete Category"
                         />

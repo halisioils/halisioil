@@ -7,7 +7,6 @@ import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import Skeleton from "~/utils/Skeleton";
 
 // Transform the availability array to match React Select's structure
 
@@ -21,10 +20,9 @@ const AdminForm = () => {
   const utils = api.useUtils();
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
 
-  const adminUsers = api.user.getAdminUsers.useQuery();
+  const users = api.user.getAllUsers.useQuery();
 
   const {
-    register,
     handleSubmit,
     setError,
     control,
@@ -75,47 +73,40 @@ const AdminForm = () => {
   });
 
   const onSubmit = async (data: IUserSchema) => {
-    // createAdminUser.mutate({
-    //   email: data.email,
-    //   permission: data.permission
-    // });
-
-    console.log(data);
+    createAdminUser.mutate({
+      email: data.email,
+      permission: data.permission,
+    });
   };
 
   return (
     <section>
       <BackButton />
+
       {errorMessage && (
         <p className="my-4 w-full rounded-sm bg-red-100 p-[0.5rem] text-center text-sm text-red-500">
           {errorMessage}
         </p>
       )}
-      {adminUsers.isLoading && <LoadingComponent />}
-      {adminUsers && adminUsers.data && adminUsers.data.length > 0 ? (
+      {users.isLoading && <LoadingComponent />}
+      {users && users.data && users.data.length > 0 ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Admin email</label>
           <div className="mb-2">
-            <input
-              type="email"
-              placeholder="Enter Email address"
-              {...register("email")}
-              className="flex-1 rounded-full"
-            />
             <Controller
               name="email" // Field name
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={adminUsers.data?.map((user) => ({
+                  options={users.data?.map((user) => ({
                     value: user.email,
                     label: user.email,
                   }))} // Map adminUsers.data to the correct format
-                  className="z-30 text-[0.875rem]"
+                  className="z-40 text-[0.875rem]"
                   placeholder="Select Email"
                   onChange={(selected) => field.onChange(selected?.value)} // Extract value
-                  value={adminUsers.data
+                  value={users.data
                     ?.map((user) => ({ value: user.email, label: user.email }))
                     .find((option) => option.value === field.value)} // Map value back to option
                 />

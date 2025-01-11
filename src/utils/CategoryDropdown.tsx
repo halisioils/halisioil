@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { type FC, Suspense } from "react";
 import LoadingComponent from "./LoadingComponent";
@@ -7,7 +6,6 @@ import { type CategoryDropdownProps } from "~/lib/types";
 
 const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
   id,
-  viewL,
   updateL,
   deleteL,
 }) => {
@@ -35,36 +33,6 @@ const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
     <section>
       <div className="absolute right-[1rem] top-[2.5rem] z-20 h-[122px] w-[240px] rounded-[0.5rem] border-[1px] border-[#F2F4F7] bg-white text-[0.875rem]">
         <ul className="relative">
-          <li>
-            <Link
-              href={`${pathname}/${id}`}
-              className="flex h-[40px] w-[100%] cursor-pointer items-center gap-[1rem] px-[1rem] py-[0.625rem] hover:bg-gray-100"
-            >
-              <span>
-                <svg
-                  width="18"
-                  height="16"
-                  viewBox="0 0 18 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.99935 4.87516C7.27346 4.87516 5.87435 6.27427 5.87435 8.00016C5.87435 9.72605 7.27346 11.1252 8.99935 11.1252C10.7252 11.1252 12.1243 9.72605 12.1243 8.00016C12.1243 6.27427 10.7252 4.87516 8.99935 4.87516ZM7.12435 8.00016C7.12435 6.96463 7.96382 6.12516 8.99935 6.12516C10.0349 6.12516 10.8743 6.96463 10.8743 8.00016C10.8743 9.0357 10.0349 9.87516 8.99935 9.87516C7.96382 9.87516 7.12435 9.0357 7.12435 8.00016Z"
-                    fill="#363636"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.99935 0.708496C5.23757 0.708496 2.70376 2.96199 1.23315 4.87255L1.20663 4.907C0.874048 5.33894 0.567732 5.73676 0.359922 6.20716C0.137386 6.71089 0.0410156 7.2599 0.0410156 8.00016C0.0410156 8.74042 0.137386 9.28944 0.359922 9.79317C0.567734 10.2636 0.87405 10.6614 1.20664 11.0933L1.23316 11.1278C2.70376 13.0383 5.23757 15.2918 8.99935 15.2918C12.7611 15.2918 15.2949 13.0383 16.7655 11.1278L16.792 11.0934C17.1246 10.6614 17.431 10.2636 17.6388 9.79317C17.8613 9.28944 17.9577 8.74042 17.9577 8.00016C17.9577 7.2599 17.8613 6.71089 17.6388 6.20716C17.431 5.73676 17.1246 5.33893 16.792 4.90698L16.7655 4.87255C15.2949 2.96199 12.7611 0.708496 8.99935 0.708496ZM2.2237 5.635C3.58155 3.87093 5.79131 1.9585 8.99935 1.9585C12.2074 1.9585 14.4172 3.87093 15.775 5.63499C16.1405 6.10982 16.3546 6.39354 16.4954 6.71229C16.627 7.01018 16.7077 7.37428 16.7077 8.00016C16.7077 8.62605 16.627 8.99015 16.4954 9.28804C16.3546 9.60678 16.1405 9.8905 15.775 10.3653C14.4172 12.1294 12.2074 14.0418 8.99935 14.0418C5.79132 14.0418 3.58155 12.1294 2.2237 10.3653C1.85821 9.8905 1.64413 9.60678 1.50331 9.28804C1.37171 8.99015 1.29102 8.62605 1.29102 8.00016C1.29102 7.37428 1.37171 7.01018 1.50331 6.71229C1.64413 6.39354 1.85821 6.10982 2.2237 5.635Z"
-                    fill="#363636"
-                  />
-                </svg>
-              </span>
-              {viewL}
-            </Link>
-          </li>
           <li>
             <button
               onClick={updateCategoryHandler}
@@ -141,18 +109,12 @@ const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
 
 const CategoryDropdown: FC<CategoryDropdownProps> = ({
   id,
-  viewL,
   updateL,
   deleteL,
 }) => {
   return (
     <Suspense fallback={<LoadingComponent />}>
-      <CategoryDropdownComponent
-        id={id}
-        viewL={viewL}
-        updateL={updateL}
-        deleteL={deleteL}
-      />
+      <CategoryDropdownComponent id={id} updateL={updateL} deleteL={deleteL} />
     </Suspense>
   );
 };
