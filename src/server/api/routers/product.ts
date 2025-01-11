@@ -43,16 +43,16 @@ export const productRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, key } = input;
       // Execute both operations in parallel
-      const [_, deleteProductResponse] = await Promise.all([
-        // Delete the file using the external API
-        utapi.deleteFiles(key),
-
+      const [deleteProductResponse] = await Promise.all([
         // Delete the product from the database
         ctx.db.product.delete({
           where: {
             id,
           },
         }),
+
+        // Delete the file using the external API
+        utapi.deleteFiles(key),
       ]);
 
       return deleteProductResponse;
@@ -70,16 +70,16 @@ export const productRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, key } = input;
       // Execute both operations in parallel
-      const [_, deleteProductResponse] = await Promise.all([
-        // Delete the file using the external API
-        utapi.deleteFiles(key),
-
+      const [deleteProductResponse] = await Promise.all([
         // Delete the product from the database
         ctx.db.product.deleteMany({
           where: {
             id,
           },
         }),
+
+        // Delete the file using the external API
+        utapi.deleteFiles(key),
       ]);
 
       return deleteProductResponse;

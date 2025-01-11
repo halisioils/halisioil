@@ -50,12 +50,19 @@ model ProductCategory {
 }
 
 model User {
-    id        String   @id @default(cuid())
-    email     String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id         String         @id @default(cuid())
+    email      String         @unique
+    permission UserPermission @default(NORMAL_USER)
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
 
     orders Order[]
+}
+
+enum UserPermission {
+    NORMAL_USER
+    ADMIN_USER
+    SUPER_ADMIN
 }
 
 model Order {

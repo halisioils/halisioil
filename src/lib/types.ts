@@ -8,6 +8,12 @@ export const ProductStatusEnum = z.enum([
   "COMING_SOON",
 ]);
 
+export const userPermissionEnum = z.enum([
+  "NORMAL_USER",
+  "ADMIN_USER",
+  "SUPER_ADMIN",
+]);
+
 export const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
@@ -50,6 +56,7 @@ export const categorySchema = z.object({
 
 export const userSchema = z.object({
   email: z.string().email("Must enter a valid email"),
+  permission: userPermissionEnum.optional().default("NORMAL_USER"),
 });
 
 export type IProductSchema = z.infer<typeof productSchema>;

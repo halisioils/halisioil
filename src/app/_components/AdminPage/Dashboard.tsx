@@ -5,10 +5,17 @@ import Products from "./Products";
 import LoadingComponent from "~/utils/LoadingComponent";
 import Categories from "./Categories";
 import Admins from "./Admins";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const DashboardComponent = () => {
   const searchParams = useSearchParams();
   const active_section = searchParams.get("section");
+
+  const { getUser, isLoading } = useKindeBrowserClient();
+
+  const user = getUser();
+
+  const displayName = user?.given_name ?? "Admin";
 
   // Function to render the component based on `toggled url state`
   const renderComponent = () => {
@@ -30,7 +37,18 @@ const DashboardComponent = () => {
     }
   };
 
-  return <section>{renderComponent()}</section>;
+  return (
+    <section>
+      {isLoading ? (
+        <LoadingComponent />
+      ) : (
+        <h1 className="mb-[2rem] text-[1.75rem] font-bold text-[#252c32]">
+          Hi, {displayName}
+        </h1>
+      )}
+      {renderComponent()}
+    </section>
+  );
 };
 
 const Dashboard = () => {

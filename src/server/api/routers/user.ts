@@ -15,10 +15,12 @@ export const userRouter = createTRPCRouter({
       const newUser = await ctx.db.user.create({
         data: {
           email: input.email,
+          permission: input.permission,
         },
         select: {
           id: true,
           email: true,
+          permission: true,
         },
       });
       return newUser;
@@ -34,16 +36,31 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  createAdmin: publicProcedure.input(userSchema).mutation(async ({ input }) => {
-    try {
-      const adminUser = input.email;
-      return adminUser;
-    } catch (error) {
-      throw error;
-    }
-  }),
+  createAdmin: privateProcedure
+    .input(userSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const adminUser = await ctx.db.user.update({
+          where: {
+            email: input.email,
+          },
+          data: {
+            email: input.email,
+            permission: input.permission,
+          },
+          select: {
+            id: true,
+            email: true,
+            permission: true,
+          },
+        });
+        return adminUser;
+      } catch (error) {
+        throw error;
+      }
+    }),
 
-  delete: privateAdminProcedure
+  delete: privateProcedure
     .input(
       z.object({
         id: z.string().min(1, "User ID is required"), // Validate 'name' is non-empty

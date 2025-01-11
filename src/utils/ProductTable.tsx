@@ -14,8 +14,6 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
 
   const { dropdownId, setDropdownId, dropdownRef } = useDropdown();
 
-  console.log(products.data);
-
   // Calculate pagination values
   const start = (Number(page) - 1) * Number(per_page);
   const end = start + Number(per_page);
@@ -67,11 +65,11 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
   return (
     <>
       {products && products.data && products.data.length > 0 ? (
-        <section className="max-w-[1000px] pt-[2rem]">
-          <section>
+        <section className="max-w-[1000px]">
+          <section className="my-[1rem]">
             {selectedItems && selectedItems.size > 0 && (
               <button
-                className="my-[1rem] flex h-[40px] w-fit cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
+                className="flex h-[40px] w-fit cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
                 onClick={handleBulkDelete}
               >
                 <span>
@@ -106,7 +104,7 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
               </button>
             )}
           </section>
-          <section className="z-10 min-h-[70vh] overflow-y-hidden overflow-x-scroll pb-[6rem] pt-[2rem]">
+          <section className="z-10 min-h-[50vh] overflow-y-hidden overflow-x-scroll pb-[6rem]">
             <div className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
               <div className="product-table h-[40px]">
                 <p className="flex items-center justify-center">

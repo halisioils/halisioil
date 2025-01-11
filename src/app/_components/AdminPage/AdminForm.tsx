@@ -1,4 +1,5 @@
-import { useForm } from "react-hook-form";
+import Select from "react-select";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import { type IUserSchema, userSchema } from "~/lib/types";
@@ -6,6 +7,14 @@ import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import toast from "react-hot-toast";
 import { useState } from "react";
+
+// Transform the availability array to match React Select's structure
+
+const permissionOptions = [
+  { value: "NORMAL_USER", label: "Normal user" },
+  { value: "ADMIN_USER", label: "Admin user" },
+  { value: "SUPER_ADMIN", label: "Super admin" },
+];
 
 const AdminForm = () => {
   const utils = api.useUtils();
@@ -15,16 +24,19 @@ const AdminForm = () => {
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<IUserSchema>({
     resolver: zodResolver(userSchema),
   });
 
-  const createAdminUser = api.category.create.useMutation({
+  const createAdminUser = api.user.createAdmin.useMutation({
     onSuccess: async (data) => {
-      await utils.category.invalidate();
-      toast.success(`user - ${data.name} added successfully`);
+      await utils.user.invalidate();
+      toast.success(
+        `${data.permission} successfully assign ${data.permission} permission`,
+      );
       reset();
     },
     onError: (error) => {
@@ -44,6 +56,13 @@ const AdminForm = () => {
             message: errorData.email, // Pass the extracted error message
           });
         }
+
+        if (errorData.name) {
+          setError("permission", {
+            type: "manual",
+            message: errorData.permission, // Pass the extracted error message
+          });
+        }
       } else {
         setErrorMessage(
           error.message || "Something went wrong. Please try again.",
@@ -53,9 +72,9 @@ const AdminForm = () => {
   });
 
   const onSubmit = async (data: IUserSchema) => {
-    // createCategory.mutate({
-    //   name: data.name,
-    // });
+    createAdminUser.mutate({
+      email: data.email,
+    });
 
     console.log(data);
   };
@@ -69,12 +88,10 @@ const AdminForm = () => {
         </p>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label className="text-[1rem] font-bold text-[#0D2F3F] md:text-[1.5rem]">
-          Admin Name
-        </label>
+        <label>Admin email</label>
         <div className="mb-2 mt-4 flex flex-wrap items-center gap-[1rem]">
           <input
-            type="text"
+            type="email"
             placeholder="Enter Email address"
             {...register("email")}
             className="flex-1 rounded-full"
@@ -94,6 +111,35 @@ const AdminForm = () => {
               : "Invalid input"}
           </p>
         )}
+
+        <div className="mb-[1.5rem]">
+          <label>Is Available</label>
+
+          <Controller
+            name="permission" // Field name
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={permissionOptions} // True/False options
+                className="z-30 text-[0.875rem]"
+                placeholder="Select availability"
+                onChange={(selected) => field.onChange(selected?.value)} // Extract value
+                value={permissionOptions.find(
+                  (option) => option.value === field.value,
+                )}
+                // Map value back to option
+              />
+            )}
+          />
+          {errors.permission?.message && (
+            <p className="mt-1 text-sm text-red-500">
+              {typeof errors.permission.message === "string"
+                ? errors.permission.message
+                : "Invalid input"}
+            </p>
+          )}
+        </div>
       </form>
     </section>
   );
