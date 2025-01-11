@@ -3,9 +3,9 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { type FC, Suspense } from "react";
 import LoadingComponent from "./LoadingComponent";
-import { type CategoryDropdownProps } from "~/lib/types";
+import { type AdminTableDropdownProps } from "~/lib/types";
 
-const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
+const AdminTableDropdownComponent: FC<AdminTableDropdownProps> = ({
   id,
   viewL,
   updateL,
@@ -17,16 +17,16 @@ const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
 
   const deleteCategoryHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("category_delete", id);
-    params.set("case", "category_delete");
+    params.set("admin_remove", id);
+    params.set("case", "admin_remove");
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };
 
   const updateCategoryHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("category_update", id);
-    params.set("case", "category_update");
+    params.set("admin_update", id);
+    params.set("case", "admin_update");
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };
@@ -139,7 +139,7 @@ const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
   );
 };
 
-const CategoryDropdown: FC<CategoryDropdownProps> = ({
+const AdminTableDropdown: FC<AdminTableDropdownProps> = ({
   id,
   viewL,
   updateL,
@@ -147,7 +147,7 @@ const CategoryDropdown: FC<CategoryDropdownProps> = ({
 }) => {
   return (
     <Suspense fallback={<LoadingComponent />}>
-      <CategoryDropdownComponent
+      <AdminTableDropdownComponent
         id={id}
         viewL={viewL}
         updateL={updateL}
@@ -157,4 +157,4 @@ const CategoryDropdown: FC<CategoryDropdownProps> = ({
   );
 };
 
-export default CategoryDropdown;
+export default AdminTableDropdown;

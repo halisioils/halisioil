@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { userSchema } from "~/lib/types";
+import { adminRemoveSchema, userSchema } from "~/lib/types";
 
 import {
   createTRPCRouter,
@@ -60,27 +60,30 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  delete: privateProcedure
-    .input(
-      z.object({
-        id: z.string().min(1, "User ID is required"), // Validate 'name' is non-empty
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { id } = input;
-      return ctx.db.user.delete({
-        where: {
-          id,
-        },
-      });
-    }),
-
   getAllUsers: privateAdminProcedure.query(async ({ ctx }) => {
     const users = await ctx.db.user.findMany({
       orderBy: { createdAt: "desc" },
     });
 
     return users ?? null;
+  }),
+
+  getAdminUsers: privateProcedure.query(async ({ ctx }) => {
+    return ctx.db.user.findMany({
+      where: {
+        permission: {
+          in: ["ADMIN_USER", "SUPER_ADMIN"], // Fetch users with either of these permissions
+        },
+      },
+      orderBy: {
+        permission: "desc", // Sort by permission, with SUPER_ADMIN appearing first (assuming SUPER_ADMIN > ADMIN_USER alphabetically)
+      },
+      select: {
+        id: true,
+        email: true,
+        permission: true,
+      },
+    });
   }),
 
   getSingleUser: privateProcedure
@@ -98,6 +101,45 @@ export const userRouter = createTRPCRouter({
         select: {
           id: true,
           email: true,
+        },
+      });
+    }),
+
+  removeAdmin: privateProcedure
+    .input(adminRemoveSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const adminUser = await ctx.db.user.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            id: input.id,
+            permission: input.permission,
+          },
+          select: {
+            id: true,
+            email: true,
+            permission: true,
+          },
+        });
+        return adminUser;
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  delete: privateProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "User ID is required"), // Validate 'name' is non-empty
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      return ctx.db.user.delete({
+        where: {
+          id,
         },
       });
     }),

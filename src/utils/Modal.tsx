@@ -5,6 +5,7 @@ import LoadingComponent from "./LoadingComponent";
 import { useRouter, useSearchParams } from "next/navigation";
 import DeleteProducts from "~/app/_components/DeleteProducts";
 import DeleteCategory from "~/app/_components/DeleteCategory";
+import RemoveAdmin from "~/app/_components/RemoveAdmin";
 
 const ModalComponent = () => {
   const searchParams = useSearchParams();
@@ -20,6 +21,10 @@ const ModalComponent = () => {
       case "category_delete":
         return <DeleteCategory />;
       case "bulk_category_delete":
+        return <p>xx</p>;
+      case "admin_remove":
+        return <RemoveAdmin />;
+      case "bulk_admin_remove":
         return <p>xx</p>;
 
       default:

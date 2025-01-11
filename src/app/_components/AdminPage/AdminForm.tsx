@@ -7,6 +7,7 @@ import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import Skeleton from "~/utils/Skeleton";
 
 // Transform the availability array to match React Select's structure
 
@@ -19,6 +20,8 @@ const permissionOptions = [
 const AdminForm = () => {
   const utils = api.useUtils();
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
+
+  const adminUsers = api.user.getAdminUsers.useQuery();
 
   const {
     register,
@@ -72,9 +75,10 @@ const AdminForm = () => {
   });
 
   const onSubmit = async (data: IUserSchema) => {
-    createAdminUser.mutate({
-      email: data.email,
-    });
+    // createAdminUser.mutate({
+    //   email: data.email,
+    //   permission: data.permission
+    // });
 
     console.log(data);
   };
@@ -87,15 +91,73 @@ const AdminForm = () => {
           {errorMessage}
         </p>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Admin email</label>
-        <div className="mb-2 mt-4 flex flex-wrap items-center gap-[1rem]">
-          <input
-            type="email"
-            placeholder="Enter Email address"
-            {...register("email")}
-            className="flex-1 rounded-full"
-          />
+      {adminUsers.isLoading && <LoadingComponent />}
+      {adminUsers && adminUsers.data && adminUsers.data.length > 0 ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label>Admin email</label>
+          <div className="mb-2">
+            <input
+              type="email"
+              placeholder="Enter Email address"
+              {...register("email")}
+              className="flex-1 rounded-full"
+            />
+            <Controller
+              name="email" // Field name
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={adminUsers.data?.map((user) => ({
+                    value: user.email,
+                    label: user.email,
+                  }))} // Map adminUsers.data to the correct format
+                  className="z-30 text-[0.875rem]"
+                  placeholder="Select Email"
+                  onChange={(selected) => field.onChange(selected?.value)} // Extract value
+                  value={adminUsers.data
+                    ?.map((user) => ({ value: user.email, label: user.email }))
+                    .find((option) => option.value === field.value)} // Map value back to option
+                />
+              )}
+            />
+          </div>
+          {errors.email?.message && (
+            <p className="mt-1 text-sm text-red-500">
+              {typeof errors.email.message === "string"
+                ? errors.email.message
+                : "Invalid input"}
+            </p>
+          )}
+          <div className="mb-[1.5rem]">
+            <label>Permission</label>
+
+            <Controller
+              name="permission" // Field name
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={permissionOptions} // True/False options
+                  className="z-30 text-[0.875rem]"
+                  placeholder="Select permission"
+                  onChange={(selected) => field.onChange(selected?.value)} // Extract value
+                  value={permissionOptions.find(
+                    (option) => option.value === field.value,
+                  )}
+                  // Map value back to option
+                />
+              )}
+            />
+            {errors.permission?.message && (
+              <p className="mt-1 text-sm text-red-500">
+                {typeof errors.permission.message === "string"
+                  ? errors.permission.message
+                  : "Invalid input"}
+              </p>
+            )}
+          </div>
+
           <button
             disabled={isSubmitting}
             type="submit"
@@ -103,44 +165,12 @@ const AdminForm = () => {
           >
             {isSubmitting ? <LoadingComponent /> : "Add admin"}
           </button>
+        </form>
+      ) : (
+        <div className="flex min-h-[20vh] items-center justify-center text-center">
+          <p>You currently do not have any registered user.</p>
         </div>
-        {errors.email?.message && (
-          <p className="mt-1 text-sm text-red-500">
-            {typeof errors.email.message === "string"
-              ? errors.email.message
-              : "Invalid input"}
-          </p>
-        )}
-
-        <div className="mb-[1.5rem]">
-          <label>Is Available</label>
-
-          <Controller
-            name="permission" // Field name
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={permissionOptions} // True/False options
-                className="z-30 text-[0.875rem]"
-                placeholder="Select availability"
-                onChange={(selected) => field.onChange(selected?.value)} // Extract value
-                value={permissionOptions.find(
-                  (option) => option.value === field.value,
-                )}
-                // Map value back to option
-              />
-            )}
-          />
-          {errors.permission?.message && (
-            <p className="mt-1 text-sm text-red-500">
-              {typeof errors.permission.message === "string"
-                ? errors.permission.message
-                : "Invalid input"}
-            </p>
-          )}
-        </div>
-      </form>
+      )}
     </section>
   );
 };

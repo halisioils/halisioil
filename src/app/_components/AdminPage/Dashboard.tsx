@@ -40,7 +40,9 @@ const DashboardComponent = () => {
   return (
     <section>
       {isLoading ? (
-        <LoadingComponent />
+        <div className="mb-[2rem]">
+          <LoadingComponent />
+        </div>
       ) : (
         <h1 className="mb-[2rem] text-[1.75rem] font-bold text-[#252c32]">
           Hi, {displayName}

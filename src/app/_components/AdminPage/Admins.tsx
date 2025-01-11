@@ -2,11 +2,14 @@ import React, { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
 import AdminForm from "./AdminForm";
-import AdminUsers from "./AdminUsers";
+import AdminsTable from "~/utils/AdminsTable";
 
 const AdminsComponent = () => {
   const searchParams = useSearchParams();
   const active_section = searchParams.get("admin_action");
+
+  const page = parseInt(searchParams.get("page") ?? "1", 10); // Ensure page is a number
+  const per_page = 10;
 
   const pathname = usePathname();
   const router = useRouter();
@@ -22,12 +25,7 @@ const AdminsComponent = () => {
   const renderComponent = () => {
     switch (active_section) {
       case "create":
-        return (
-          <div>
-            <AdminForm />
-            <AdminUsers />
-          </div>
-        );
+        return <AdminForm />;
       default:
         return (
           <div>
@@ -52,6 +50,8 @@ const AdminsComponent = () => {
                 />
               </svg>
             </button>
+
+            <AdminsTable page={page} per_page={per_page} />
           </div>
         );
     }

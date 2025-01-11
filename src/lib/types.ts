@@ -59,6 +59,11 @@ export const userSchema = z.object({
   permission: userPermissionEnum.optional().default("NORMAL_USER"),
 });
 
+export const adminRemoveSchema = z.object({
+  id: z.string().email("Must enter a valid admin id"),
+  permission: userPermissionEnum.default("NORMAL_USER"),
+});
+
 export type IProductSchema = z.infer<typeof productSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;
 export type ICategorySchema = z.infer<typeof categorySchema>;
@@ -72,7 +77,7 @@ export type TImage = {
 export type TablePaginationProps = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
-  totalEntries: IProductSchema[] | ICategorySchema[];
+  totalEntries: IProductSchema[] | ICategorySchema[] | IUserSchema[];
 };
 
 export type TableProps = {
@@ -87,6 +92,13 @@ export type ImageContent = {
 };
 
 export type CategoryDropdownProps = {
+  id: string;
+  viewL: string;
+  updateL: string;
+  deleteL: string;
+};
+
+export type AdminTableDropdownProps = {
   id: string;
   viewL: string;
   updateL: string;
