@@ -97,7 +97,7 @@ const AdminUpdateFormComponent = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Admin email</label>
           <div className="mb-2">
-            <p className="flex h-[44px] w-[100%] rounded-[6.25rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[0.875rem] text-[#050505] shadow-sm transition-all duration-75 ease-in-out">
+            <p className="flex h-[44px] w-[100%] rounded-[6.25rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[0.875rem] text-[#252c32] shadow-sm transition-all duration-75 ease-in-out">
               {user.email}
             </p>
           </div>
@@ -108,7 +108,7 @@ const AdminUpdateFormComponent = () => {
             <Controller
               name="permission" // Field name
               control={control}
-              defaultValue={user.permission}
+              defaultValue={user.permission || ""}
               render={({ field }) => (
                 <Select
                   {...field}

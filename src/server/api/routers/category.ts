@@ -1,4 +1,4 @@
-import { categorySchema } from "./../../../lib/types";
+import { categorySchema, categoryUpdateSchema } from "./../../../lib/types";
 import { z } from "zod";
 
 import {
@@ -24,6 +24,28 @@ export const categoryRouter = createTRPCRouter({
         });
 
         return newCategory;
+      } catch (error) {
+        throw error;
+      }
+    }),
+
+  update: privateProcedure
+    .input(categoryUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const category = await ctx.db.category.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            name: input.name,
+          },
+          select: {
+            id: true,
+            name: true,
+          },
+        });
+        return category;
       } catch (error) {
         throw error;
       }
@@ -66,4 +88,23 @@ export const categoryRouter = createTRPCRouter({
 
     return categories ?? null;
   }),
+
+  getSingleCategory: privateProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Category id is required"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      return ctx.db.category.findFirst({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+    }),
 });

@@ -54,6 +54,15 @@ export const categorySchema = z.object({
   productIds: z.array(z.string()).optional(), // Optionally pass an array of product IDs to associate
 });
 
+export const categoryUpdateSchema = z.object({
+  id: z.string().min(1, "Category id is required"),
+  name: z.string().min(1, "Category name is required"), // Ensure the category name is provided
+});
+
+export const categoryUpdateFormSchema = z.object({
+  name: z.string().min(1, "Category name is required"), // Ensure the category name is provided
+});
+
 export const userSchema = z.object({
   email: z.string().email("Must enter a valid email"),
   permission: userPermissionEnum.optional().default("NORMAL_USER"),
@@ -71,6 +80,7 @@ export const adminUpdateSchema = z.object({
 export type IProductSchema = z.infer<typeof productSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;
 export type ICategorySchema = z.infer<typeof categorySchema>;
+export type ICategoryUpdateSchema = z.infer<typeof categoryUpdateFormSchema>;
 export type IUserSchema = z.infer<typeof userSchema>;
 export type IAdminUpdateSchema = z.infer<typeof adminUpdateSchema>;
 
