@@ -23,7 +23,7 @@ const AdminForm = () => {
 
   const router = useRouter();
 
-  const users = api.user.getAllUsers.useQuery();
+  const user = api.user.getAllUsers.useSuspenseQuery()[0];
 
   const {
     handleSubmit,
@@ -93,8 +93,7 @@ const AdminForm = () => {
           {errorMessage}
         </p>
       )}
-      {users.isLoading && <LoadingComponent />}
-      {users && users.data && users.data.length > 0 ? (
+      {user.length > 0 ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Admin email</label>
           <div className="mb-2">
@@ -104,15 +103,15 @@ const AdminForm = () => {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={users.data?.map((user) => ({
+                  options={user.map((user) => ({
                     value: user.email,
                     label: user.email,
                   }))} // Map adminUsers.data to the correct format
                   className="z-40 text-[0.875rem]"
                   placeholder="Select Email"
                   onChange={(selected) => field.onChange(selected?.value)} // Extract value
-                  value={users.data
-                    ?.map((user) => ({ value: user.email, label: user.email }))
+                  value={user
+                    .map((user) => ({ value: user.email, label: user.email }))
                     .find((option) => option.value === field.value)} // Map value back to option
                 />
               )}

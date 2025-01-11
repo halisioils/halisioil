@@ -4,12 +4,11 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   privateAdminProcedure,
-  privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
 export const categoryRouter = createTRPCRouter({
-  create: privateProcedure
+  create: privateAdminProcedure
     .input(categorySchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -29,7 +28,7 @@ export const categoryRouter = createTRPCRouter({
       }
     }),
 
-  update: privateProcedure
+  update: privateAdminProcedure
     .input(categoryUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -89,7 +88,7 @@ export const categoryRouter = createTRPCRouter({
     return categories ?? null;
   }),
 
-  getSingleCategory: privateProcedure
+  getSingleCategory: publicProcedure
     .input(
       z.object({
         id: z.string().min(1, "Category id is required"),

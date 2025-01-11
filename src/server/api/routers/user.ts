@@ -36,7 +36,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  createAdmin: privateProcedure
+  createAdmin: privateAdminProcedure
     .input(userSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -68,7 +68,7 @@ export const userRouter = createTRPCRouter({
     return users ?? null;
   }),
 
-  getAdminUsers: privateProcedure.query(async ({ ctx }) => {
+  getAdminUsers: privateAdminProcedure.query(async ({ ctx }) => {
     return ctx.db.user.findMany({
       where: {
         permission: {
@@ -108,7 +108,27 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  removeAdmin: privateProcedure
+  getLoggedInUser: privateProcedure
+    .input(
+      z.object({
+        email: z.string().email("Must enter a valid email"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { email } = input;
+      return ctx.db.user.findFirst({
+        where: {
+          email,
+        },
+        select: {
+          id: true,
+          email: true,
+          permission: true,
+        },
+      });
+    }),
+
+  removeAdmin: privateAdminProcedure
     .input(adminRemoveSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -132,7 +152,7 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  delete: privateProcedure
+  delete: privateAdminProcedure
     .input(
       z.object({
         id: z.string().min(1, "User ID is required"), // Validate 'name' is non-empty

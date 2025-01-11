@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { productSchema } from "~/lib/types";
+import { productSchema, updateProductSchema } from "~/lib/types";
 import { UTApi } from "uploadthing/server";
 
 import {
@@ -29,6 +29,48 @@ export const productRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  update: privateAdminProcedure
+    .input(updateProductSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log(input);
+
+      try {
+        const product = await ctx.db.product.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            name: input.name,
+            description: input.description,
+            price: input.price,
+            status: input.status,
+            properties: input.properties,
+            productCategories: {
+              upsert: input.categoryIds.map((categoryId) => ({
+                where: {
+                  productId_categoryId: {
+                    productId: input.id,
+                    categoryId: categoryId,
+                  },
+                },
+                update: {},
+                create: {
+                  category: { connect: { id: categoryId } },
+                },
+              })),
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+          },
+        });
+        return product;
+      } catch (error) {
+        throw error;
+      }
     }),
 
   delete: privateAdminProcedure
@@ -88,6 +130,13 @@ export const productRouter = createTRPCRouter({
   getAllProducts: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.product.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        productCategories: {
+          include: {
+            category: true,
+          },
+        },
+      },
     });
 
     return products ?? null;
@@ -96,16 +145,24 @@ export const productRouter = createTRPCRouter({
   getSingleProduct: publicProcedure
     .input(
       z.object({
-        productId: z.string().min(1, "Product ID is required"),
+        id: z.string().min(1, "Product ID is required"),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { productId } = input;
-      const product = ctx.db.product.findFirst({
+      const { id } = input;
+      const product = await ctx.db.product.findFirst({
         where: {
-          id: productId,
+          id,
+        },
+        include: {
+          productCategories: {
+            include: {
+              category: true,
+            },
+          },
         },
       });
+
       return product ?? null;
     }),
 });

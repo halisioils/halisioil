@@ -3,6 +3,7 @@ import ProductForm from "./ProductForm";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
 import ProductTable from "~/utils/ProductTable";
+import ProductUpdateForm from "./ProductUpdateForm";
 
 const ProductsComponent = () => {
   const searchParams = useSearchParams();
@@ -25,6 +26,8 @@ const ProductsComponent = () => {
     switch (active_section) {
       case "create":
         return <ProductForm />;
+      case "update":
+        return <ProductUpdateForm />;
       default:
         return (
           <div>

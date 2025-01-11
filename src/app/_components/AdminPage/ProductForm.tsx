@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import MultiInput from "~/utils/MultiInput";
 
 const ProductForm = () => {
-  const categories = api.category.getAllCategories.useQuery();
+  const categories = api.category.getAllCategories.useSuspenseQuery()[0];
 
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
@@ -117,7 +117,7 @@ const ProductForm = () => {
 
   // Transform the array to match React Select's structure
   const categoryOptions =
-    categories?.data?.map((category) => ({
+    categories.map((category) => ({
       value: category.id,
       label: capitalizeFirstLetter(category.name),
     })) ?? [];
@@ -176,7 +176,7 @@ const ProductForm = () => {
   };
 
   return (
-    <section>
+    <section className="mb-[2rem]">
       <BackButton />
       {errorMessage && (
         <p className="my-4 w-full rounded-sm bg-red-100 p-[0.5rem] text-center text-sm text-red-500">
@@ -240,32 +240,28 @@ const ProductForm = () => {
         <div className="mb-[1.5rem]">
           <label>Category</label>
 
-          {categories.isPending ? (
-            <LoadingComponent />
-          ) : (
-            <Controller
-              name="categoryIds"
-              control={control}
-              defaultValue={[]} // Default to an empty array
-              render={({ field }) => (
-                <Select
-                  {...selectedOption}
-                  options={categoryOptions} // Ensure this has valid `value` and `label`
-                  isMulti
-                  className="z-30 text-[0.875rem]"
-                  placeholder="Select categories"
-                  onChange={(selected) => {
-                    const ids = selected.map(
-                      (option: { value: string }) => option.value,
-                    ); // Extract IDs
-                    const values = selected.map((option) => option.label); // Extract IDs
-                    setSelectedOption(values);
-                    field.onChange(ids); // Update the form state
-                  }}
-                />
-              )}
-            />
-          )}
+          <Controller
+            name="categoryIds"
+            control={control}
+            defaultValue={[]} // Default to an empty array
+            render={({ field }) => (
+              <Select
+                {...selectedOption}
+                options={categoryOptions} // Ensure this has valid `value` and `label`
+                isMulti
+                className="z-30 text-[0.875rem]"
+                placeholder="Select categories"
+                onChange={(selected) => {
+                  const ids = selected.map(
+                    (option: { value: string }) => option.value,
+                  ); // Extract IDs
+                  const values = selected.map((option) => option.label); // Extract IDs
+                  setSelectedOption(values);
+                  field.onChange(ids); // Update the form state
+                }}
+              />
+            )}
+          />
 
           {errors.categoryIds?.message && (
             <p className="mt-1 text-sm text-red-500">
@@ -299,18 +295,6 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div>
-          <label className="block font-medium"> Upload images</label>
-          <Uploader />
-          {errors.imagePaths?.message && (
-            <p className="mt-1 text-sm text-red-500">
-              {typeof errors.imagePaths.message === "string"
-                ? errors.imagePaths.message
-                : "Invalid input"}
-            </p>
-          )}
-        </div>
-
         <div className="mb-[1.5rem]">
           <label>Is Available</label>
 
@@ -336,6 +320,18 @@ const ProductForm = () => {
             <p className="mt-1 text-sm text-red-500">
               {typeof errors.status.message === "string"
                 ? errors.status.message
+                : "Invalid input"}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block font-medium"> Upload images</label>
+          <Uploader />
+          {errors.imagePaths?.message && (
+            <p className="mt-1 text-sm text-red-500">
+              {typeof errors.imagePaths.message === "string"
+                ? errors.imagePaths.message
                 : "Invalid input"}
             </p>
           )}

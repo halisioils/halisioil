@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import {
@@ -31,7 +31,6 @@ const CategoryUpdateFormComponent = () => {
     register,
     formState: { errors, isSubmitting },
     reset,
-    control,
   } = useForm<ICategoryUpdateSchema>({
     resolver: zodResolver(categoryUpdateFormSchema),
   });

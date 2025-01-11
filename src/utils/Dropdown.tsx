@@ -20,7 +20,7 @@ const DropdownComponent: FC<DashboardProps> = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("product_delete", id);
     params.set("case", "product_delete");
-    params.set("product_images", imagePaths.map((i) => i.key).toString());
+    // params.set("product_images", imagePaths.map((i) => i.key).toString());
 
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
@@ -29,8 +29,8 @@ const DropdownComponent: FC<DashboardProps> = ({
   const updateProductHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("product_action", "update");
-    params.set("product_action", id);
-    params.set("product_images", imagePaths.map((i) => i.key).toString());
+    params.set("product_action_id", id);
+    // params.set("product_images", imagePaths.map((i) => i.key).toString());
 
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);

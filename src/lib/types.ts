@@ -33,6 +33,36 @@ export const productSchema = z.object({
   categoryIds: z.array(z.string()).min(1, "At least one category is required"),
 });
 
+export const adminProductSchema = z.object({
+  id: z.string().min(1, "Product id is required"),
+  name: z.string().min(1, "Product name is required"),
+  description: z.string().min(1, "Product description is required"),
+  price: z.number().min(0.01, "Price is required, must be a positive number"),
+  imagePaths: z
+    .array(
+      z.object({
+        key: z.string().min(1, "Image key is required"),
+        url: z.string().min(1, "Image url is required"),
+        size: z.number().min(0, "Image size is required"),
+        name: z.string().min(1, "Image name is required"),
+      }),
+    )
+    .min(1, "At least one image is required"),
+  status: ProductStatusEnum.optional().default("AVAILABLE"),
+  properties: z.array(z.string()).optional(),
+  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+});
+
+export const updateProductSchema = z.object({
+  id: z.string().min(1, "Product id is required"),
+  name: z.string().min(1, "Product name is required"),
+  description: z.string().min(1, "Product description is required"),
+  price: z.number().min(0.01, "Price is required, must be a positive number"),
+  status: ProductStatusEnum.optional().default("AVAILABLE"),
+  properties: z.array(z.string()).optional(),
+  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+});
+
 export const clientProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
@@ -78,6 +108,8 @@ export const adminUpdateSchema = z.object({
 });
 
 export type IProductSchema = z.infer<typeof productSchema>;
+export type IProductUpdateSchema = z.infer<typeof updateProductSchema>;
+export type IClientProductSchema = z.infer<typeof clientProductSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;
 export type ICategorySchema = z.infer<typeof categorySchema>;
 export type ICategoryUpdateSchema = z.infer<typeof categoryUpdateFormSchema>;
