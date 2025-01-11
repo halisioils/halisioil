@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
 import CategoryForm from "./CategoryForm";
 import CategoryTable from "~/utils/CategoryTable";
+import CategoryUpdateForm from "./CategoryUpdateForm";
 
 const CategoriesComponent = () => {
   const searchParams = useSearchParams();
@@ -25,6 +26,8 @@ const CategoriesComponent = () => {
     switch (active_section) {
       case "create":
         return <CategoryForm />;
+      case "update":
+        return <CategoryUpdateForm />;
       default:
         return (
           <div>

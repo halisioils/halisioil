@@ -13,7 +13,7 @@ const AdminTableDropdownComponent: FC<AdminTableDropdownProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const deleteCategoryHandler = () => {
+  const deleteAdminHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("admin_remove", id);
     params.set("case", "admin_remove");
@@ -21,10 +21,10 @@ const AdminTableDropdownComponent: FC<AdminTableDropdownProps> = ({
     router.push(newUrl);
   };
 
-  const updateCategoryHandler = () => {
+  const updateAdminHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("admin_update", id);
-    params.set("case", "admin_update");
+    params.set("admin_action", "update");
+    params.set("admin_action_id", id);
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };
@@ -35,7 +35,7 @@ const AdminTableDropdownComponent: FC<AdminTableDropdownProps> = ({
         <ul className="relative">
           <li>
             <button
-              onClick={updateCategoryHandler}
+              onClick={updateAdminHandler}
               className="flex h-[40px] w-[100%] cursor-pointer items-center gap-[1rem] px-[1rem] py-[0.625rem] hover:bg-gray-100"
             >
               <span>
@@ -68,7 +68,7 @@ const AdminTableDropdownComponent: FC<AdminTableDropdownProps> = ({
           <li>
             <button
               className="flex h-[40px] w-[100%] cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
-              onClick={deleteCategoryHandler}
+              onClick={deleteAdminHandler}
             >
               <span>
                 <svg

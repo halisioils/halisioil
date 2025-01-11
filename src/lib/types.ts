@@ -60,7 +60,11 @@ export const userSchema = z.object({
 });
 
 export const adminRemoveSchema = z.object({
-  id: z.string().email("Must enter a valid admin id"),
+  id: z.string().min(1, "User id is required"),
+  permission: userPermissionEnum.default("NORMAL_USER"),
+});
+
+export const adminUpdateSchema = z.object({
   permission: userPermissionEnum.default("NORMAL_USER"),
 });
 
@@ -68,6 +72,7 @@ export type IProductSchema = z.infer<typeof productSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;
 export type ICategorySchema = z.infer<typeof categorySchema>;
 export type IUserSchema = z.infer<typeof userSchema>;
+export type IAdminUpdateSchema = z.infer<typeof adminUpdateSchema>;
 
 export type TImage = {
   id: number;

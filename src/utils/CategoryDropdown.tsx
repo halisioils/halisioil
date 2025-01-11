@@ -23,8 +23,8 @@ const CategoryDropdownComponent: FC<CategoryDropdownProps> = ({
 
   const updateCategoryHandler = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("category_update", id);
-    params.set("case", "category_update");
+    params.set("case", "update");
+    params.set("category_action", id);
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
   };

@@ -42,14 +42,16 @@ const AdminsTable: FC<TableProps> = ({ page, per_page }) => {
 
   return (
     <>
-      {adminUsers && adminUsers.data && adminUsers.data.length > 0 ? (
-        <section className="max-w-[1000px]">
-          <h2 className="font-semi-bold pb-[1rem] pt-[2rem] text-[1.5rem] text-[#252c32]">
-            Existing Admins
-          </h2>
-
+      {!adminUsers.isPending &&
+      adminUsers &&
+      adminUsers.data &&
+      adminUsers.data.length > 0 ? (
+        <section className="max-w-[1000px] pt-[1rem]">
           <div className="z-10 min-h-[50vh] overflow-y-hidden overflow-x-scroll pb-[6rem]">
-            <div className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
+            <div
+              ref={dropdownRef}
+              className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]"
+            >
               <div className="admin-table h-[40px]">
                 <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
                   Admin email
@@ -83,10 +85,7 @@ const AdminsTable: FC<TableProps> = ({ page, per_page }) => {
                       {dayjs(data.updatedAt).fromNow()}
                     </p>
 
-                    <div
-                      ref={dropdownRef}
-                      className="relative flex justify-end"
-                    >
+                    <div className="relative flex justify-end">
                       <button
                         onClick={() => {
                           handleClick(data.id);
@@ -111,8 +110,8 @@ const AdminsTable: FC<TableProps> = ({ page, per_page }) => {
                       {dropdownId === data.id && (
                         <AdminTableDropdown
                           id={data.id}
-                          updateL="Update Admins"
-                          deleteL="Delete Admins"
+                          updateL="Update permision"
+                          deleteL="Revoke permision"
                         />
                       )}
                     </div>

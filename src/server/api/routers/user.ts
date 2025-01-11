@@ -91,18 +91,19 @@ export const userRouter = createTRPCRouter({
   getSingleUser: privateProcedure
     .input(
       z.object({
-        userEmail: z.string().email("Invalid email format"),
+        id: z.string().min(1, "User id is required"),
       }),
     )
     .query(async ({ ctx, input }) => {
-      const { userEmail } = input;
+      const { id } = input;
       return ctx.db.user.findFirst({
         where: {
-          email: userEmail,
+          id,
         },
         select: {
           id: true,
           email: true,
+          permission: true,
         },
       });
     }),

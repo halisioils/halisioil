@@ -2,12 +2,12 @@ import Select from "react-select";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { type IUserSchema, userSchema } from "~/lib/types";
+import { adminUpdateSchema, type IAdminUpdateSchema } from "~/lib/types";
 import BackButton from "~/utils/BackButton";
 import LoadingComponent from "~/utils/LoadingComponent";
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Transform the availability array to match React Select's structure
 
@@ -17,13 +17,16 @@ const permissionOptions = [
   { value: "SUPER_ADMIN", label: "Super admin" },
 ];
 
-const AdminForm = () => {
+const AdminUpdateFormComponent = () => {
   const utils = api.useUtils();
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
 
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("admin_action_id") ?? "";
 
-  const users = api.user.getAllUsers.useQuery();
+  const user = api.user.getSingleUser.useSuspenseQuery({ id })[0];
+
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -31,8 +34,8 @@ const AdminForm = () => {
     control,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<IUserSchema>({
-    resolver: zodResolver(userSchema),
+  } = useForm<IAdminUpdateSchema>({
+    resolver: zodResolver(adminUpdateSchema),
   });
 
   const createAdminUser = api.user.createAdmin.useMutation({
@@ -41,6 +44,7 @@ const AdminForm = () => {
       toast.success(
         `${data.permission} successfully assign ${data.permission} permission`,
       );
+
       router.back();
     },
     onError: (error) => {
@@ -54,14 +58,7 @@ const AdminForm = () => {
           ]),
         );
 
-        if (errorData.name) {
-          setError("email", {
-            type: "manual",
-            message: errorData.email, // Pass the extracted error message
-          });
-        }
-
-        if (errorData.name) {
+        if (errorData.permission) {
           setError("permission", {
             type: "manual",
             message: errorData.permission, // Pass the extracted error message
@@ -75,11 +72,13 @@ const AdminForm = () => {
     },
   });
 
-  const onSubmit = async (data: IUserSchema) => {
-    createAdminUser.mutate({
-      email: data.email,
-      permission: data.permission,
-    });
+  const onSubmit = async (data: IAdminUpdateSchema) => {
+    if (user) {
+      createAdminUser.mutate({
+        email: user.email,
+        permission: data.permission,
+      });
+    }
 
     reset();
   };
@@ -93,58 +92,37 @@ const AdminForm = () => {
           {errorMessage}
         </p>
       )}
-      {users.isLoading && <LoadingComponent />}
-      {users && users.data && users.data.length > 0 ? (
+
+      {user ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <label>Admin email</label>
           <div className="mb-2">
-            <Controller
-              name="email" // Field name
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={users.data?.map((user) => ({
-                    value: user.email,
-                    label: user.email,
-                  }))} // Map adminUsers.data to the correct format
-                  className="z-40 text-[0.875rem]"
-                  placeholder="Select Email"
-                  onChange={(selected) => field.onChange(selected?.value)} // Extract value
-                  value={users.data
-                    ?.map((user) => ({ value: user.email, label: user.email }))
-                    .find((option) => option.value === field.value)} // Map value back to option
-                />
-              )}
-            />
-          </div>
-          {errors.email?.message && (
-            <p className="mt-1 text-sm text-red-500">
-              {typeof errors.email.message === "string"
-                ? errors.email.message
-                : "Invalid input"}
+            <p className="flex h-[44px] w-[100%] rounded-[6.25rem] border-[1px] border-[#D0D5DD] px-[1.25rem] py-[0.875rem] text-[0.875rem] text-[#050505] shadow-sm transition-all duration-75 ease-in-out">
+              {user.email}
             </p>
-          )}
+          </div>
+
           <div className="mb-[1.5rem]">
             <label>Permission</label>
 
             <Controller
               name="permission" // Field name
               control={control}
+              defaultValue={user.permission}
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={permissionOptions} // True/False options
+                  options={permissionOptions}
                   className="z-30 text-[0.875rem]"
                   placeholder="Select permission"
-                  onChange={(selected) => field.onChange(selected?.value)} // Extract value
+                  onChange={(selected) => field.onChange(selected?.value)} // Update field value
                   value={permissionOptions.find(
-                    (option) => option.value === field.value,
+                    (option) => option.value === field.value, // Match current value with option
                   )}
-                  // Map value back to option
                 />
               )}
             />
+
             {errors.permission?.message && (
               <p className="mt-1 text-sm text-red-500">
                 {typeof errors.permission.message === "string"
@@ -159,7 +137,7 @@ const AdminForm = () => {
             type="submit"
             className={`btn-admin ${isSubmitting && "cursor-not-allowed opacity-50"}`}
           >
-            {isSubmitting ? <LoadingComponent /> : "Add admin"}
+            {isSubmitting ? <LoadingComponent /> : "Update Permission"}
           </button>
         </form>
       ) : (
@@ -171,4 +149,12 @@ const AdminForm = () => {
   );
 };
 
-export default AdminForm;
+const AdminUpdateForm = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <AdminUpdateFormComponent />
+    </Suspense>
+  );
+};
+
+export default AdminUpdateForm;

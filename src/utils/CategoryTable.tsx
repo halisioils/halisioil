@@ -102,7 +102,10 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
             )}
           </section>
           <div className="z-10 min-h-[50vh] overflow-y-hidden overflow-x-scroll pb-[6rem]">
-            <div className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]">
+            <div
+              ref={dropdownRef}
+              className="relative z-10 mb-[1rem] h-auto w-[1000px] rounded-[0.75rem] border-[1px] border-[#1C1C1C1A]"
+            >
               <div className="category-table h-[40px]">
                 <p className="flex items-center justify-center">
                   <input
@@ -132,10 +135,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
                       {data.name}
                     </p>
 
-                    <div
-                      ref={dropdownRef}
-                      className="relative flex justify-end"
-                    >
+                    <div className="relative flex justify-end">
                       <button
                         onClick={() => {
                           handleClick(data.id);
