@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
+import { api } from "~/trpc/server";
 
 /**
  * 1. CONTEXT
@@ -30,13 +31,27 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 
   const user = await getUser();
 
-  const isAdmin = true;
+  let adminUser = false;
+  let superAdminUser = false;
+
+  if (user.email) {
+    const response = await api.user.getLoggedInUser({ email: user.email });
+
+    if (response?.permission) {
+      const userPermissions: string = response.permission;
+
+      adminUser =
+        userPermissions === "ADMIN_USER" || userPermissions === "SUPER_ADMIN";
+      superAdminUser = userPermissions === "SUPER_ADMIN";
+    }
+  }
 
   return {
     db,
     ...opts,
     currentUser: user,
-    adminUser: isAdmin,
+    adminUser,
+    superAdminUser,
   };
 };
 
@@ -169,3 +184,46 @@ const enforceUserIsAdminAuthed = t.middleware(async ({ ctx, next }) => {
 });
 
 export const privateAdminProcedure = t.procedure.use(enforceUserIsAdminAuthed);
+
+/**
+ * Private super admin user (authenticated) procedure
+ *
+ * This is the base piece you use to build new queries and mutations on your tRPC API. It does
+ * guarantee that a user querying is authorized, you can access user session data if they
+ * are logged in.
+ */
+
+const enforceUserIsSuperAdminAuthed = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.currentUser) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User must be logged in",
+    });
+  }
+
+  if (!ctx.adminUser) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Admin access required",
+    });
+  }
+
+  if (!ctx.superAdminUser) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Super Admin access required",
+    });
+  }
+
+  return next({
+    ctx: {
+      currentUser: ctx.currentUser,
+      adminUser: ctx.adminUser,
+      superAdminUser: ctx.superAdminUser,
+    },
+  });
+});
+
+export const privateSuperAdminProcedure = t.procedure.use(
+  enforceUserIsSuperAdminAuthed,
+);

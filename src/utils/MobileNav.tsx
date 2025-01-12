@@ -1,9 +1,13 @@
 "use client";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import {
+  LoginLink,
+  LogoutLink,
+  RegisterLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 import { useHeaderContext } from "~/context/HeaderContext";
 import LoadingComponent from "./LoadingComponent";
 import { userLinks } from "./UserListIconts";
@@ -16,14 +20,10 @@ const MobileNav = () => {
 
   const pathname = usePathname();
 
-  let photoURL: string | undefined;
   let displayName: string | undefined;
 
   if (user) {
     displayName = `${user.given_name}`;
-    if (user.picture) {
-      photoURL = user.picture;
-    }
   }
 
   const closeDropdown = () => {
@@ -84,7 +84,7 @@ const MobileNav = () => {
                 onClick={closeDropdown}
                 className="flex items-center gap-[1rem] px-[1.5rem] pb-[1rem]"
               >
-                <div className="relative flex h-[32px] w-[32px] items-center justify-center overflow-hidden rounded-md bg-[#B88E2F] dark:bg-gray-600">
+                <div className="relative flex h-[32px] w-[32px] items-center justify-center overflow-hidden rounded-md bg-black dark:bg-gray-600">
                   <p className="font-bold text-white">
                     {displayName?.charAt(0).toLocaleUpperCase()}
                   </p>
@@ -130,6 +130,74 @@ const MobileNav = () => {
               </li>
             ))}
           </ul>
+          <div className="mt-[2rem]">
+            {user ? (
+              <LogoutLink
+                onClick={closeDropdown}
+                className={`flex items-center gap-[1.5rem]`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                  />
+                </svg>
+                Logout
+              </LogoutLink>
+            ) : (
+              <div className="grid grid-cols-1 gap-[2rem]">
+                <LoginLink
+                  className={`flex items-center gap-[1.5rem]`}
+                  onClick={closeDropdown}
+                >
+                  {" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                    />
+                  </svg>
+                  Sign in
+                </LoginLink>
+                <RegisterLink
+                  className={`flex items-center gap-[1.5rem]`}
+                  onClick={closeDropdown}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"
+                    />
+                  </svg>
+                  Sign up
+                </RegisterLink>
+              </div>
+            )}
+          </div>
         </section>
       </section>
     </section>

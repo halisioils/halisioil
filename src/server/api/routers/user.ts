@@ -116,7 +116,7 @@ export const userRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { email } = input;
-      return ctx.db.user.findFirst({
+      return ctx.db.user.findUnique({
         where: {
           email,
         },
