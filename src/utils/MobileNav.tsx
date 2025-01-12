@@ -85,7 +85,9 @@ const MobileNav = () => {
                 className="flex items-center gap-[1rem] px-[1.5rem] pb-[1rem]"
               >
                 <div className="relative flex h-[32px] w-[32px] items-center justify-center overflow-hidden rounded-md bg-[#B88E2F] dark:bg-gray-600">
-                  <p>{displayName?.charAt(0).toLocaleUpperCase()}</p>
+                  <p className="font-bold text-white">
+                    {displayName?.charAt(0).toLocaleUpperCase()}
+                  </p>
                 </div>
                 <p className="flex items-center justify-between gap-[0.3rem] text-[16px] font-[600] text-white">
                   {displayName}
