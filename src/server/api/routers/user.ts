@@ -7,6 +7,7 @@ import {
   privateAdminProcedure,
   publicProcedure,
   privateProcedure,
+  privateSuperAdminProcedure,
 } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
@@ -36,7 +37,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  createAdmin: privateAdminProcedure
+  createAdmin: privateSuperAdminProcedure
     .input(userSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -128,7 +129,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  removeAdmin: privateAdminProcedure
+  removeAdmin: privateSuperAdminProcedure
     .input(adminRemoveSchema)
     .mutation(async ({ ctx, input }) => {
       try {

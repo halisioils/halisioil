@@ -4,7 +4,7 @@ import Overview from "./LandingPage/Overview";
 
 const LandingPage = () => {
   return (
-    <section>
+    <section className="bg-[#F5F5F5]">
       <Hero />
       <Overview />
     </section>
