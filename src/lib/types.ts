@@ -108,6 +108,7 @@ export const adminUpdateSchema = z.object({
 });
 
 export type IProductSchema = z.infer<typeof productSchema>;
+export type IProductPageSchema = z.infer<typeof adminProductSchema>;
 export type IProductUpdateSchema = z.infer<typeof updateProductSchema>;
 export type IClientProductSchema = z.infer<typeof clientProductSchema>;
 export type IOrderSchema = z.infer<typeof orderSchema>;

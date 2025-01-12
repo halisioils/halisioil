@@ -1,12 +1,14 @@
 import React from "react";
 import Hero from "./LandingPage/Hero";
 import Overview from "./LandingPage/Overview";
+import Products from "./LandingPage/Products";
 
 const LandingPage = () => {
   return (
-    <section className="bg-[#F5F5F5]">
+    <section className="bg-white">
       <Hero />
       <Overview />
+      <Products />
     </section>
   );
 };

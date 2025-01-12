@@ -308,7 +308,7 @@ const ProductUpdateFormComponent = () => {
           <button
             disabled={isSubmitting}
             type="submit"
-            className={`btn-primary ${isSubmitting && "cursor-not-allowed opacity-50"}`}
+            className={`btn-primary ${isSubmitting && "cursor-not-allowed"}`}
           >
             {isSubmitting ? <LoadingComponent /> : "Submit"}
           </button>

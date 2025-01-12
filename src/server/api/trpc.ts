@@ -35,7 +35,16 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   let superAdminUser = false;
 
   if (user.email) {
-    const response = await api.user.getLoggedInUser({ email: user.email });
+    const response = await db.user.findUnique({
+      where: {
+        email: user.email,
+      },
+      select: {
+        id: true,
+        email: true,
+        permission: true,
+      },
+    });
 
     if (response?.permission) {
       const userPermissions: string = response.permission;
@@ -161,13 +170,6 @@ export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
  * are logged in.
  */
 const enforceUserIsAdminAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.currentUser) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "User must be logged in",
-    });
-  }
-
   if (!ctx.adminUser) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
@@ -194,20 +196,6 @@ export const privateAdminProcedure = t.procedure.use(enforceUserIsAdminAuthed);
  */
 
 const enforceUserIsSuperAdminAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.currentUser) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "User must be logged in",
-    });
-  }
-
-  if (!ctx.adminUser) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Admin access required",
-    });
-  }
-
   if (!ctx.superAdminUser) {
     throw new TRPCError({
       code: "UNAUTHORIZED",

@@ -142,6 +142,22 @@ export const productRouter = createTRPCRouter({
     return products ?? null;
   }),
 
+  getLandingPageProducts: publicProcedure.query(async ({ ctx }) => {
+    const products = await ctx.db.product.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        productCategories: {
+          include: {
+            category: true,
+          },
+        },
+      },
+      take: 4,
+    });
+
+    return products ?? null;
+  }),
+
   getSingleProduct: publicProcedure
     .input(
       z.object({
