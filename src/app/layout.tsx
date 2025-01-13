@@ -10,6 +10,7 @@ import { ImageProvider } from "~/context/ImageFormContext";
 import Modal from "~/utils/Modal";
 import { HeaderProvider } from "~/context/HeaderContext";
 import Header from "./_components/Header";
+import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -30,10 +31,12 @@ export default function RootLayout({
                 <header className="bg-black">
                   <Header />
                 </header>
-
                 <Modal />
                 <Toaster position="top-right" />
                 {children}
+                <footer className="bg-gradient-to-b from-gray-700 to-black">
+                  <Footer />
+                </footer>
               </TRPCReactProvider>
             </body>
           </html>

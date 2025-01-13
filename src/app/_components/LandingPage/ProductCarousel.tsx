@@ -85,20 +85,23 @@ const ProductCarousel = () => {
                 transform: `translateX(${translateX}px)`,
               }}
             >
-              {item.imagePaths &&
-                Array.isArray(item.imagePaths) &&
-                item.imagePaths[0] && (
-                  <Image
-                    src={
-                      (item.imagePaths[0] as ImageContent)?.url ||
-                      image_skeleton
-                    }
-                    alt={`Image for ${item.name}`}
-                    className="h-[285px] object-cover"
-                    width={285}
-                    height={250}
-                  />
-                )}
+              <div className="relative rounded-lg">
+                {item.imagePaths &&
+                  Array.isArray(item.imagePaths) &&
+                  item.imagePaths[0] && (
+                    <Image
+                      src={
+                        (item.imagePaths[0] as ImageContent)?.url ||
+                        image_skeleton
+                      }
+                      alt={`Image for ${item.name}`}
+                      className="h-[285px] rounded-lg object-cover"
+                      width={285}
+                      height={250}
+                    />
+                  )}
+                <div className="carousel-gradient absolute inset-0 rounded-lg"></div>
+              </div>
 
               <div className="flex flex-col justify-between gap-2 p-4">
                 {/* Product Name */}

@@ -12,7 +12,6 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
-import { api } from "~/trpc/server";
 
 /**
  * 1. CONTEXT

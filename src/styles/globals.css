@@ -68,3 +68,31 @@ label {
   grid-template-columns: 35% 15% 20% 20% 10%;
   justify-content: space-between;
 }
+
+.hero-gradient {
+  background: linear-gradient(
+    94.38deg,
+    rgba(0, 0, 0, 0.765) -4.7%,
+    rgba(0, 0, 0, 0.585) 96.89%
+  );
+}
+
+.overlay-gradient {
+  background: #00000033;
+}
+
+.card-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(54, 54, 54, 0) 0%,
+    rgba(150, 149, 149, 0.75) 100%
+  );
+}
+
+.carousel-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(54, 54, 54, 0) 0%,
+    rgba(150, 149, 149, 0.3) 100%
+  );
+}

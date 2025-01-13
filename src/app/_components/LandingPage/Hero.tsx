@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React from "react";
 import { poppins, raleway } from "~/utils/font";
-import x from "~/assets/DSC09970.jpg";
 import { useHeroImages } from "~/hooks/useHeroImages";
 import { heroImageSources } from "~/utils/heroImageSources";
 
@@ -96,7 +95,7 @@ const Hero = () => {
             className={`rounded-full p-[0.2rem] transition duration-300 ease-in-out ${
               index === paginationIndex
                 ? "h-[4.625rem] bg-orange-500 transition duration-300 ease-in-out"
-                : "bg-orange-950"
+                : "bg-white"
             }`}
           ></div>
         ))}

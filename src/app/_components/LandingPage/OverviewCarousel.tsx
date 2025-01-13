@@ -9,18 +9,25 @@ const OverviewCarousel = () => {
         {overviewData.map((item, index) => (
           <div
             key={item.id}
-            className={`rounded-lg ${index === 2 ? "col-span-3 lg:col-span-1" : index === 1 ? "col-span-3 md:col-span-1" : index === 0 ? "col-span-3 md:col-span-1" : ""}`}
+            className={`group relative rounded-lg ${index === 2 ? "col-span-3 lg:col-span-1" : index === 1 ? "col-span-3 md:col-span-1" : index === 0 ? "col-span-3 md:col-span-1" : ""}`}
           >
-            <Image
-              src={item.image}
-              alt={`Image for ${item.text}`}
-              className="mb-4 h-[350px] w-full cursor-pointer rounded-md transition-shadow duration-300 ease-in-out hover:shadow-lg sm:h-[450px]"
-              placeholder="blur"
-              style={{
-                objectFit: "cover",
-              }}
-            />
-            <p className="text-center font-bold text-[#333333]">{item.text}</p>
+            <div className="relative h-[350px] w-[100%] cursor-pointer overflow-hidden rounded-[0.75rem] border-[1px] border-[#D5D5D5] sm:h-[450px]">
+              <Image
+                src={item.image}
+                alt={`Image for ${item.text}`}
+                quality={100}
+                fill
+                sizes="(min-width: 768px) 100vw, 700px"
+                priority
+                placeholder="blur"
+                className="transition duration-500 ease-in-out group-hover:scale-125"
+              />
+              <div className="card-gradient absolute inset-0 rounded-[0.75rem]"></div>
+            </div>
+
+            <p className="mt-[1rem] text-center font-bold text-[#333333]">
+              {item.text}
+            </p>
           </div>
         ))}
       </div>
