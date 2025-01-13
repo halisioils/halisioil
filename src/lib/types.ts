@@ -158,3 +158,9 @@ export type DashboardProps = {
   updateL: string;
   deleteL: string;
 };
+
+export type BannerProps = {
+  prev: string;
+  next: string;
+  head: string;
+};

@@ -17,12 +17,7 @@ const ProductCarousel = () => {
   const router = useRouter();
 
   // Default card width
-  let cardWidth = 300;
-
-  // Media query to check if the screen width is less than or equal to 768 pixels
-  if (window.innerWidth <= 768) {
-    cardWidth = 300; // Set the card width to 270 on mobile
-  }
+  const cardWidth = 300;
 
   const translateX = -currentIndex * cardWidth;
 
@@ -45,7 +40,7 @@ const ProductCarousel = () => {
 
   if (products.data?.length === 0) {
     return (
-      <div className="-[158px] flex justify-center py-[2rem] md:h-[248px]">
+      <div className="flex h-[158px] justify-center py-[2rem] md:h-[248px]">
         <p className="text-[1rem] text-[#898989]">No data found</p>;
       </div>
     );
@@ -95,7 +90,7 @@ const ProductCarousel = () => {
                         image_skeleton
                       }
                       alt={`Image for ${item.name}`}
-                      className="h-[285px] rounded-lg object-cover"
+                      className="h-[285px] rounded-t-lg object-cover"
                       width={285}
                       height={250}
                     />
