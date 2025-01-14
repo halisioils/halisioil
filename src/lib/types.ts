@@ -125,7 +125,11 @@ export type TImage = {
 export type TablePaginationProps = {
   hasNextPage: boolean;
   hasPrevPage: boolean;
-  totalEntries: IProductSchema[] | ICategorySchema[] | IUserSchema[];
+  totalEntries:
+    | IProductSchema[]
+    | IProductPageSchema[]
+    | ICategorySchema[]
+    | IUserSchema[];
 };
 
 export type TableProps = {
@@ -163,4 +167,18 @@ export type BannerProps = {
   prev: string;
   next: string;
   head: string;
+};
+
+export type IProductCardSchema = {
+  status: string;
+  name: string;
+  price: number;
+  imagePaths: {
+    name: string;
+    key: string;
+    url: string;
+    size: number;
+  }[];
+  id: string;
+  properties?: string[];
 };

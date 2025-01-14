@@ -1,8 +1,9 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
+import LoadingComponent from "./LoadingComponent";
 
-const ProductSort = () => {
+const ProductSortComponent = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,11 +30,19 @@ const ProductSort = () => {
             Select an option
           </option>
 
-          <option value="ascending">Ascending</option>
-          <option value="descending">Descending</option>
+          <option value="Newest First">Newest First</option>
+          <option value="Oldest First">Oldest First</option>
         </select>
       </section>
     </section>
+  );
+};
+
+const ProductSort = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <ProductSortComponent />
+    </Suspense>
   );
 };
 

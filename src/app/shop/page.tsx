@@ -1,7 +1,7 @@
 import React from "react";
 import Banner from "~/utils/Banner";
-import ProductCard from "~/utils/ProductCard";
 import ProductSort from "~/utils/ProductSort";
+import Shop from "../_components/ShopPage/Shop";
 
 const ShopPage = async () => {
   return (
@@ -10,9 +10,7 @@ const ShopPage = async () => {
       <section>
         <ProductSort />
       </section>
-      <section className="mx-auto max-w-[1440px] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
-        <ProductCard />
-      </section>
+      <Shop />
     </section>
   );
 };
