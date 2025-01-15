@@ -27,7 +27,7 @@ const ShopPageNavComponent = () => {
   return (
     <aside
       className={
-        "hidden h-[200px] rounded-[1.125rem] border-[1px] border-gray-300 px-[1rem] shadow-md md:block"
+        "hidden h-[200px] rounded-[15px] border-[1px] border-gray-300 px-[1rem] py-[1rem] shadow-md md:block"
       }
     >
       <div className="my-4 border-b-[1px] border-b-gray-300 pb-[0.5rem]">
@@ -37,7 +37,7 @@ const ShopPageNavComponent = () => {
           Sort By
         </h2>
       </div>
-      <ul className="flex w-[200px] flex-col gap-[1rem] text-gray-700">
+      <ul className="flex w-[200px] flex-col gap-[0.5rem] text-gray-700">
         <li>
           <button
             onClick={() => updateQueryParams("Newest First")}
