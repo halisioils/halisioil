@@ -5,15 +5,23 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import type { IProductPageSchema, ImageContent } from "~/lib/types";
-import { api } from "~/trpc/react";
 import CarouselButton from "~/utils/CarouselButton";
 import { raleway } from "~/utils/font";
-import LoadingComponent from "~/utils/LoadingComponent";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
 
-const ProductCarousel = () => {
+const ProductCarousel = ({
+  products,
+}: {
+  products: {
+    id: string;
+    name: string;
+    imagePaths: ImageContent[];
+    price: number;
+    status: string;
+    properties: string[];
+  }[];
+}) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const products = api.product.getLandingPageProducts.useQuery();
   const router = useRouter();
 
   // Default card width
@@ -29,22 +37,6 @@ const ProductCarousel = () => {
   const handleCardClick = async (id: string) => {
     router.push(`/shop/${id}`);
   };
-
-  if (products.isLoading) {
-    return (
-      <div className="flex min-h-[300px] justify-center py-[2rem]">
-        <LoadingComponent />
-      </div>
-    );
-  }
-
-  if (products.data?.length === 0) {
-    return (
-      <div className="flex h-[158px] justify-center py-[2rem] md:h-[248px]">
-        <p className="text-[1rem] text-[#898989]">No data found</p>;
-      </div>
-    );
-  }
 
   return (
     <article className="mx-auto min-h-[446px] pb-[3rem] pt-[2rem]">
@@ -65,13 +57,13 @@ const ProductCarousel = () => {
           </div>
 
           <CarouselButton
-            data={products.data as unknown as IProductPageSchema[]}
+            data={products as unknown as IProductPageSchema[]}
             currentCardIndex={currentIndex}
             onIndexChange={handleIndexChange}
           />
         </div>
         <div className="no-scrollbar flex h-full w-full gap-4 overflow-x-auto overflow-y-hidden lg:overflow-hidden">
-          {products?.data?.map((item) => (
+          {products?.map((item) => (
             <div
               key={item.id}
               onClick={() => handleCardClick(item.id)}
@@ -85,10 +77,7 @@ const ProductCarousel = () => {
                   Array.isArray(item.imagePaths) &&
                   item.imagePaths[0] && (
                     <Image
-                      src={
-                        (item.imagePaths[0] as ImageContent)?.url ||
-                        image_skeleton
-                      }
+                      src={item.imagePaths[0]?.url || image_skeleton}
                       alt={`Image for ${item.name}`}
                       className="h-[285px] rounded-t-lg object-cover"
                       width={285}
