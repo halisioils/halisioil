@@ -33,7 +33,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   let adminUser = false;
   let superAdminUser = false;
 
-  if (user.email) {
+  if (user?.email) {
     const response = await db.user.findUnique({
       where: {
         email: user.email,
