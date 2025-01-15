@@ -34,7 +34,7 @@ export default function RootLayout({
                 <Modal />
                 <Toaster position="top-right" />
                 {children}
-                <footer className="bg-gradient-to-b from-gray-700 to-black">
+                <footer className="bg-gradient-to-b from-pink-600 to-yellow-600">
                   <Footer />
                 </footer>
               </TRPCReactProvider>

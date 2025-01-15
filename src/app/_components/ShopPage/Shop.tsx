@@ -67,9 +67,9 @@ const ShopComponent = () => {
   }
 
   return (
-    <section className="relative mx-auto min-h-[600px] max-w-[1440px] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
+    <section className="relative mx-auto min-h-[600px] w-[100%]">
       {entries && <ProductCard products={entries} />}
-      <section className="absolute bottom-0 left-0 w-[100%] max-w-[1440px] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
+      <section className="absolute bottom-0 left-0 w-[100%] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
         {productsLength && (
           <TablePagination
             totalEntries={products.data as unknown as IProductPageSchema[]}

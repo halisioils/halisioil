@@ -26,12 +26,12 @@ const ProductCard = ({
 
   return (
     <section className="mb-[2rem]">
-      <section className="brx:grid-cols-5 grid w-[100%] grid-cols-2 gap-[0.5rem] gap-y-[1.5rem] md:grid-cols-3 md:gap-[1rem] md:gap-y-[1rem] lg:grid-cols-4">
+      <section className="w-[100%]">
         {products.map((item) => (
           <div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="relative h-[300px] w-[100%] cursor-pointer rounded-[1.5rem] border-[1px] border-[#D5D5D5] p-[0.5rem] md:h-[300px] lg:p-[1rem]"
+            className="relative flex h-[300px] w-[100%] cursor-pointer justify-between gap-[1rem] rounded-[1.5rem] border-[1px] border-[#D5D5D5] p-[0.5rem] md:h-[300px] lg:p-[1rem]"
           >
             <div className="relative mx-auto h-[158px] w-[100%] rounded-[1rem] md:h-[158px] md:rounded-[0.75rem]">
               {item.imagePaths &&
