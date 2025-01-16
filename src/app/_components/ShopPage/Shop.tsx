@@ -2,7 +2,6 @@
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import type { IProductPageSchema, ImageContent } from "~/lib/types";
-import { api } from "~/trpc/react";
 import LoadingComponent from "~/utils/LoadingComponent";
 import ProductCard from "~/utils/ProductCard";
 import TablePagination from "~/utils/TablePagination";
@@ -60,24 +59,24 @@ const ShopComponent = ({
 
   if (products.length === 0) {
     return (
-      <div className="flex min-h-[70vh] justify-center py-[2rem] md:h-[248px]">
+      <div className="flex min-h-[100vh] justify-center py-[2rem] md:h-[248px]">
         <p className="text-[1rem] text-[#898989]">No data found</p>;
       </div>
     );
   }
 
   return (
-    <section className="relative mx-auto h-[100%] w-[100%]">
+    <section>
       {entries && <ProductCard products={entries} />}
-      {/* <section className="absolute bottom-0 left-0 w-[100%] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
+      <section className="relative bottom-0 left-0 w-[100%] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
         {productsLength && (
           <TablePagination
-            totalEntries={products.data as unknown as IProductPageSchema[]}
+            totalEntries={products as unknown as IProductPageSchema[]}
             hasNextPage={end < productsLength}
             hasPrevPage={start > 0}
           />
         )}
-      </section> */}
+      </section>
     </section>
   );
 };

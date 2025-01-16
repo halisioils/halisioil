@@ -6,7 +6,7 @@ import { type BannerProps } from "~/lib/types";
 
 const Banner: FC<BannerProps> = ({ prev, next, head }) => {
   return (
-    <section className="h-[100%] w-[100%] max-w-[1440px]">
+    <section className="h-[100%] w-[100%]">
       <div className="relative h-[250px] w-full rounded-[3.125rem]">
         <Image
           quality={100}
