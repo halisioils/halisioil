@@ -16,33 +16,9 @@ const ImageComponent = ({
   );
 
   return (
-    <div className="flex items-center">
-      {/* Thumbnail List */}
-      <div className="relative mr-4 flex h-[76px] w-[76px] flex-col overflow-y-auto">
-        {imagePaths.map((image, index) => (
-          <div key={image.key} className="mb-2">
-            <Image
-              src={image.url}
-              alt={`Thumbnail ${name} ${index + 1}`}
-              className={`cursor-pointer rounded-lg border-2 ${
-                selectedImage?.key === image.key
-                  ? "border-blue-500"
-                  : "border-transparent"
-              } transition duration-300`}
-              onClick={() => setSelectedImage(image)}
-              width={76}
-              height={76}
-              style={{
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
+    <section className="h-[100%] w-[100%] flex-col items-center justify-center gap-[1rem]">
       {/* Main Image Display */}
-      <div className="relative mx-auto h-[158px] w-full rounded-[1rem] md:h-[158px] md:rounded-[0.75rem]">
+      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:w-[80%] md:rounded-[0.75rem]">
         {selectedImage ? (
           <Image
             src={selectedImage.url}
@@ -51,7 +27,7 @@ const ImageComponent = ({
             priority
             fill
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               objectPosition: "center",
             }}
             className="rounded-[1rem]"
@@ -64,15 +40,37 @@ const ImageComponent = ({
             priority
             fill
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               objectPosition: "center",
             }}
             className="rounded-[1rem]"
           />
         )}
-        <div className="carousel-gradient absolute inset-0 rounded-[1rem]"></div>
       </div>
-    </div>
+
+      {/* Thumbnail List */}
+      <div className="flex flex-wrap items-center justify-center gap-[1rem]">
+        {imagePaths.map((image, index) => (
+          <div key={image.key} className="relative mb-2 h-[76px] w-[76px]">
+            <Image
+              src={image.url}
+              alt={`Thumbnail ${name} ${index + 1}`}
+              className={`cursor-pointer rounded-lg border-[1px] ${
+                selectedImage?.key === image.key
+                  ? "border-orange-500"
+                  : "border-[#ECECEC]"
+              } transition duration-300`}
+              onClick={() => setSelectedImage(image)}
+              fill
+              style={{
+                objectFit: "contain",
+                objectPosition: "center",
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 

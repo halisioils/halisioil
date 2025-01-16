@@ -3,6 +3,8 @@ import Shop from "../_components/ShopPage/Shop";
 import MobileSortButton from "~/utils/MobileSortButton";
 import { api } from "~/trpc/server";
 import { type ImageContent } from "~/lib/types";
+import ShopPageNav from "../_components/ShopPage/ShopPageNav";
+import MobileShopPageNav from "../_components/ShopPage/MobileShopPageNav";
 
 async function fetchAllProducts() {
   // Fetch products from the API
@@ -30,7 +32,14 @@ const ShopPage = async () => {
   return (
     <section className="h-full min-h-[100vh] w-full">
       <MobileSortButton />
-      <Shop products={data} />
+
+      <section className="flex justify-between gap-[1rem] py-[2rem]">
+        <div>
+          <ShopPageNav />
+          <MobileShopPageNav />
+        </div>
+        <Shop products={data} />
+      </section>
     </section>
   );
 };

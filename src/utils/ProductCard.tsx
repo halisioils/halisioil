@@ -26,13 +26,21 @@ const ProductCard = ({
     router.push(`/shop/${id}`);
   };
 
+  const handleCartClick = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    id: string,
+  ) => {
+    e.stopPropagation();
+    console.log(id);
+  };
+
   return (
     <section>
       {products.map((item) => (
         <div
           key={item.id}
           onClick={() => handleCardClick(item.id)}
-          className="mb-[2rem] flex cursor-pointer items-center justify-center gap-[1rem] md:gap-[2rem]"
+          className="mb-[3rem] flex cursor-pointer justify-center gap-[1rem] md:gap-[2rem]"
         >
           {/* Image Container */}
           <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:max-w-[353px]">
@@ -58,7 +66,7 @@ const ProductCard = ({
           </div>
 
           {/* Text Container */}
-          <div className="flex flex-col justify-between gap-[1rem]">
+          <div className="relative flex flex-col gap-[1rem]">
             <p className="truncate text-lg font-semibold leading-[1.5] text-[#253D4E]">
               {item.name}
             </p>
@@ -73,12 +81,17 @@ const ProductCard = ({
             <p className="truncate text-base font-semibold text-orange-500">
               &#163; {Number(item.price).toFixed(2)}
             </p>
-            <button className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 text-white transition-all duration-300 ease-in-out hover:brightness-75">
-              <span>
-                <CartIcon />
-              </span>
-              Add to Cart
-            </button>
+            <div
+              onClick={(e) => handleCartClick(e, item.id)}
+              className="absolute -bottom-[1rem] left-0"
+            >
+              <button className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75">
+                <span>
+                  <CartIcon />
+                </span>
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       ))}
