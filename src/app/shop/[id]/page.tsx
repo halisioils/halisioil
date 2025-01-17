@@ -44,9 +44,9 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (!product.data) {
     return (
-      <div className="flex min-h-[100vh] justify-center py-[2rem] md:h-[248px]">
+      <section className="relative mx-auto flex h-full min-h-[100vh] w-full justify-center pt-[3rem]">
         <p className="text-[1rem] text-[#898989]">No Product data found</p>;
-      </div>
+      </section>
     );
   }
 
@@ -97,21 +97,21 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
           <section className="flex flex-col justify-start gap-[1rem]">
             <div>
               <h2
-                className={`${raleway.className} pb-[1rem] text-[1.5rem] font-semibold text-[#333333]`}
+                className={`${raleway.className} pb-[1rem] text-[1.5rem] font-bold leading-[48px] text-[#253D4E] md:text-[2.5rem]`}
               >
                 {product.data.name}
               </h2>
 
-              <p className="text-[1.125rem] font-bold text-orange-500">
+              <p className="text-[2.125rem] font-bold leading-[58px] text-orange-500 md:text-[3.125rem]">
                 &#163; {Number(product.data.price).toFixed(2)}
               </p>
             </div>
-            <h3 className="text-[1rem] leading-[25px] text-gray-800">
+            <h3 className="text-[1rem] leading-[24px] text-[#7E7E7E]">
               {product.data.description}
             </h3>
 
-            <div className="flex flex-col gap-[0.5rem]">
-              <h4 className="text-[1.125rem] text-[#9F9F9F]">Properties</h4>
+            <div className="flex flex-wrap items-center gap-[0.5rem]">
+              <h4 className="text-[1.125rem] text-[#7E7E7E]">Properties:</h4>
               <p className="text-[1rem] leading-[25px] text-gray-800">
                 {renderArrayCapitalizedContent(product.data.properties)}
               </p>

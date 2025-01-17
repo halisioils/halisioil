@@ -7,7 +7,7 @@ import { type BannerProps } from "~/lib/types";
 const Banner: FC<BannerProps> = ({ prev, next, head }) => {
   return (
     <section className="h-[100%] w-[100%]">
-      <div className="relative h-[250px] w-full rounded-[3.125rem]">
+      <div className="relative h-[250px] w-full rounded-[2rem]">
         <Image
           quality={100}
           fill
@@ -15,13 +15,13 @@ const Banner: FC<BannerProps> = ({ prev, next, head }) => {
           src={banner_image}
           priority
           alt="background image"
-          className="absolute inset-0 rounded-[3.125rem] object-cover"
+          className="absolute inset-0 rounded-[2rem] object-cover"
           style={{
             objectPosition: "center top 10%",
           }}
         />
 
-        <div className="hero-gradient absolute inset-0 rounded-[3.125rem]"></div>
+        <div className="hero-gradient absolute inset-0 rounded-[2rem]"></div>
 
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-white">
           <h2

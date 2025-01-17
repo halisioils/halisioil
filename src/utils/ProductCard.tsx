@@ -6,6 +6,7 @@ import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import { renderArrayCapitalizedContent } from "./renderArrayCapitalizedContent";
 import type { ImageContent } from "~/lib/types";
 import { CartIcon } from "./UserListIconts";
+import { raleway } from "./font";
 
 const ProductCard = ({
   products,
@@ -43,7 +44,7 @@ const ProductCard = ({
           className="mb-[3rem] flex cursor-pointer flex-col justify-center gap-[1rem] md:flex-row md:gap-[2rem]"
         >
           {/* Image Container */}
-          <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:max-w-[353px]">
+          <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:h-[220px] md:max-w-[353px]">
             {item.imagePaths &&
               Array.isArray(item.imagePaths) &&
               item.imagePaths[0] && (
@@ -67,10 +68,12 @@ const ProductCard = ({
 
           {/* Text Container */}
           <div className="relative flex flex-col gap-[1rem]">
-            <p className="truncate text-lg font-semibold leading-[1.5] text-[#253D4E]">
+            <h2
+              className={`${raleway.className} truncate text-[1.5rem] font-bold leading-[38.4px] text-[#253D4E] md:text-[2rem]`}
+            >
               {item.name}
-            </p>
-            <p className="line-clamp-2 text-sm font-medium text-[#7E7E7E]">
+            </h2>
+            <p className="line-clamp-2 text-[1rem] font-medium leading-[24px] text-[#7E7E7E]">
               {item.description}
             </p>
             {item?.properties && item.properties?.length > 0 && (
@@ -78,7 +81,7 @@ const ProductCard = ({
                 {renderArrayCapitalizedContent(item.properties)}
               </p>
             )}
-            <p className="truncate text-base font-semibold text-orange-500">
+            <p className="truncate text-[1.5rem] font-bold leading-[24px] text-orange-500">
               &#163; {Number(item.price).toFixed(2)}
             </p>
             <div
