@@ -9,7 +9,7 @@ import { helpLinks } from "~/utils/helpLinks";
 const Footer = () => {
   return (
     <section
-      className={`grid h-full w-full grid-cols-2 justify-between gap-[1rem] md:grid-cols-3 lg:grid-cols-4 ${poppins.className} mx-auto max-w-[1240px] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]`}
+      className={`mx-auto flex h-full w-full flex-wrap justify-between gap-[1rem] ${poppins.className} mx-auto max-w-[1240px] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]`}
     >
       <Link href={`/`} className="relative h-[50px] w-[100px] cursor-pointer">
         <Image
@@ -30,7 +30,7 @@ const Footer = () => {
           {navLinks.map(({ label, href }) => (
             <li key={label}>
               <Link
-                className={`text-[1rem] text-white transition-all duration-300 ease-in-out hover:text-[#a9acbb]`}
+                className={`text-[1rem] text-[#253D4E] transition-all duration-300 ease-in-out hover:text-[#a9acbb]`}
                 href={href}
               >
                 {label}
@@ -45,7 +45,7 @@ const Footer = () => {
           {helpLinks.map((link, index) => (
             <li key={index}>
               <Link
-                className={`text-[1rem] text-white transition-all duration-300 ease-in-out hover:text-[#a9acbb]`}
+                className={`text-[1rem] text-[#253D4E] transition-all duration-300 ease-in-out hover:text-[#a9acbb]`}
                 href={link.href}
               >
                 {link.label}

@@ -11,6 +11,7 @@ import Modal from "~/utils/Modal";
 import { HeaderProvider } from "~/context/HeaderContext";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import { CartProvider } from "~/context/CartContext";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,23 +25,25 @@ export default function RootLayout({
   return (
     <AuthProvider>
       <HeaderProvider>
-        <ImageProvider>
-          <html lang="en" className={`${poppins.className}`}>
-            <body>
-              <TRPCReactProvider>
-                <header className="bg-black">
-                  <Header />
-                </header>
-                <Modal />
-                <Toaster position="top-right" />
-                {children}
-                <footer className="bg-gradient-to-b from-pink-600 to-yellow-600">
-                  <Footer />
-                </footer>
-              </TRPCReactProvider>
-            </body>
-          </html>
-        </ImageProvider>
+        <CartProvider>
+          <ImageProvider>
+            <html lang="en" className={`${poppins.className}`}>
+              <body>
+                <TRPCReactProvider>
+                  <header className="bg-black">
+                    <Header />
+                  </header>
+                  <Modal />
+                  <Toaster position="top-right" />
+                  {children}
+                  <footer className="bg-bgGray">
+                    <Footer />
+                  </footer>
+                </TRPCReactProvider>
+              </body>
+            </html>
+          </ImageProvider>
+        </CartProvider>
       </HeaderProvider>
     </AuthProvider>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import logo_image from "~/assets/halisioils_logo.png";
+import { useCartContext } from "~/context/CartContext";
 import { useHeaderContext } from "~/context/HeaderContext";
 import { poppins } from "~/utils/font";
 import MobileNav from "~/utils/MobileNav";
@@ -12,6 +13,7 @@ import { userLinks } from "~/utils/UserListIconts";
 
 const Header = () => {
   const { mobileNav, setMobileNav } = useHeaderContext();
+  const { cartQuantity } = useCartContext();
   const pathname = usePathname();
 
   const openDropdown = () => {
@@ -58,8 +60,15 @@ const Header = () => {
       <section className="hidden text-white lg:block">
         <ul className="flex items-center justify-center gap-[2rem]">
           {userLinks.map((link, index) => (
-            <li key={index}>
-              <Link href={link.href}>{link.svg}</Link>
+            <li key={index} className="relative">
+              <Link href={link.href}>
+                {link.svg}
+                {link.href === "/cart" && (
+                  <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+                    {cartQuantity > 0 ? cartQuantity : 0}
+                  </span>
+                )}
+              </Link>
             </li>
           ))}
         </ul>

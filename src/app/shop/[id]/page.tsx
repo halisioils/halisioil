@@ -1,34 +1,26 @@
 "use client";
-import { useRouter } from "next/navigation";
-import React, { use, useState } from "react";
+import React, { use } from "react";
 import ImageComponent from "~/app/_components/ShopDetailPage/ImageComponent";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
+import { useCartContext } from "~/context/CartContext";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
 import { raleway } from "~/utils/font";
 import LoadingComponent from "~/utils/LoadingComponent";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
-import { CartIcon, WishlistIcon } from "~/utils/UserListIconts";
+import { CartIcon, DeleteIcon, WishlistIcon } from "~/utils/UserListIconts";
 
 const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
-  const [numberValue, setNumberValue] = useState<number>(1); // State resides in the parent
+  const { increaseCartQuantity, removeFromCart, getItemQuantity } =
+    useCartContext();
 
   const { id } = use(params);
-  const router = useRouter();
 
   const product = api.product.getSingleProduct.useQuery({
     id,
   });
 
-  console.log(numberValue);
-
-  const handleValueChange = (value: number): void => {
-    setNumberValue(value); // Update the parent's state when the child notifies of changes
-  };
-
-  const handleCartClick = async (id: string) => {
-    console.log(id);
-  };
+  const itemQuantity = getItemQuantity(id);
 
   const handleWishlistClick = async (id: string) => {
     console.log(id);
@@ -83,7 +75,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
           </span>
         </p>
         <p
-          className={`flex items-center justify-center gap-[0.5rem] border-l-[1px] border-l-[#333333] px-[1rem] text-center text-[1rem] font-semibold text-[#333333] ${raleway.className} `}
+          className={`flex items-center justify-center gap-[0.5rem] border-l-[1px] border-l-[#333333] px-[1rem] text-center text-[1rem] font-semibold text-[#253D4E] ${raleway.className} `}
         >
           {product.data?.name}
         </p>
@@ -118,20 +110,28 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
             <div className="flex items-center gap-[1rem]">
-              <NumberInput
-                value={numberValue}
-                onValueChange={handleValueChange}
-              />
-              <button
-                onClick={() => handleCartClick(id)}
-                className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
-              >
-                <span>
-                  <CartIcon />
-                </span>
-                Add to Cart
-              </button>
-
+              {itemQuantity > 0 && <NumberInput id={id} />}
+              {itemQuantity > 0 ? (
+                <button
+                  onClick={() => removeFromCart(id)}
+                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-red-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                >
+                  <span>
+                    <DeleteIcon />
+                  </span>
+                  Remove
+                </button>
+              ) : (
+                <button
+                  onClick={() => increaseCartQuantity(id)}
+                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                >
+                  <span>
+                    <CartIcon />
+                  </span>
+                  Add to Cart
+                </button>
+              )}
               <button
                 onClick={() => handleWishlistClick(id)}
                 className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-orange-500 hover:text-orange-500"
