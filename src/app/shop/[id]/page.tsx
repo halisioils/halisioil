@@ -1,15 +1,18 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import ImageComponent from "~/app/_components/ShopDetailPage/ImageComponent";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
 import { raleway } from "~/utils/font";
+import LoadingComponent from "~/utils/LoadingComponent";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
 import { CartIcon, WishlistIcon } from "~/utils/UserListIconts";
 
 const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const [numberValue, setNumberValue] = useState<number>(1); // State resides in the parent
+
   const { id } = use(params);
   const router = useRouter();
 
@@ -17,7 +20,11 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
     id,
   });
 
-  console.log(product.data);
+  console.log(numberValue);
+
+  const handleValueChange = (value: number): void => {
+    setNumberValue(value); // Update the parent's state when the child notifies of changes
+  };
 
   const handleCartClick = async (id: string) => {
     console.log(id);
@@ -27,9 +34,25 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
     console.log(id);
   };
 
+  if (product.isLoading) {
+    return (
+      <section className="relative mx-auto flex h-full min-h-[100vh] w-full justify-center pt-[3rem]">
+        <LoadingComponent />
+      </section>
+    );
+  }
+
+  if (!product.data) {
+    return (
+      <div className="flex min-h-[100vh] justify-center py-[2rem] md:h-[248px]">
+        <p className="text-[1rem] text-[#898989]">No Product data found</p>;
+      </div>
+    );
+  }
+
   return (
     <section className="relative mx-auto h-full min-h-[100vh] w-full">
-      <section className="flex h-[60px] items-center gap-[1.5rem] px-[1rem] text-[#333333] md:px-[2rem] lg:px-[3rem]">
+      <section className="flex h-[60px] items-center gap-[1.5rem] text-[#333333]">
         <p className="flex items-center justify-center gap-[0.5rem] text-center text-[1rem] font-medium text-[#9F9F9F]">
           Home
           <span>
@@ -66,24 +89,27 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
         </p>
       </section>
       {product && product.data && (
-        <section className="my-[1rem] flex flex-col gap-[1rem] md:flex-row md:gap-[0rem]">
+        <section className="my-[1rem] flex flex-col gap-[1rem] md:flex-row md:gap-[3rem]">
           <ImageComponent
             name={product.data.name}
             imagePaths={product.data.imagePaths as ImageContent[]}
           />
           <section className="flex flex-col justify-start gap-[1rem]">
             <div>
-              <h2 className="text-[1.5rem] font-semibold text-[#333333]">
+              <h2
+                className={`${raleway.className} pb-[1rem] text-[1.5rem] font-semibold text-[#333333]`}
+              >
                 {product.data.name}
               </h2>
+
+              <p className="text-[1.125rem] font-bold text-orange-500">
+                &#163; {Number(product.data.price).toFixed(2)}
+              </p>
             </div>
             <h3 className="text-[1rem] leading-[25px] text-gray-800">
               {product.data.description}
             </h3>
 
-            <p className="text-[1.125rem] text-[#9F9F9F]">
-              &#163; {Number(product.data.price).toFixed(2)}
-            </p>
             <div className="flex flex-col gap-[0.5rem]">
               <h4 className="text-[1.125rem] text-[#9F9F9F]">Properties</h4>
               <p className="text-[1rem] leading-[25px] text-gray-800">
@@ -92,7 +118,10 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
             <div className="flex items-center gap-[1rem]">
-              <NumberInput />
+              <NumberInput
+                value={numberValue}
+                onValueChange={handleValueChange}
+              />
               <button
                 onClick={() => handleCartClick(id)}
                 className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"

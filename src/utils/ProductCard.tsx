@@ -40,7 +40,7 @@ const ProductCard = ({
         <div
           key={item.id}
           onClick={() => handleCardClick(item.id)}
-          className="mb-[3rem] flex cursor-pointer justify-center gap-[1rem] md:gap-[2rem]"
+          className="mb-[3rem] flex cursor-pointer flex-col justify-center gap-[1rem] md:flex-row md:gap-[2rem]"
         >
           {/* Image Container */}
           <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:max-w-[353px]">

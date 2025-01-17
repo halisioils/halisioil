@@ -1,14 +1,15 @@
 "use client";
-import React, { useState, type ChangeEvent } from "react";
+import React, { type ChangeEvent } from "react";
 
-const NumberInput: React.FC = () => {
-  const [value, setValue] = useState<number>(1); // Initialize state with a minimum value of 1
+interface NumberInputProps {
+  value: number; // The value is controlled by the parent
+  onValueChange: (value: number) => void; // Callback to notify the parent of changes
+}
 
-  console.log(value);
-
+const NumberInput: React.FC<NumberInputProps> = ({ value, onValueChange }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const newValue = Math.max(1, Number(e.target.value)); // Ensure the value is never less than 1
-    setValue(newValue);
+    const newValue = Math.max(1, Number(e.target.value)); // Ensure value is at least 1
+    onValueChange(newValue); // Notify the parent of the new value
   };
 
   return (
@@ -19,7 +20,7 @@ const NumberInput: React.FC = () => {
       min={1}
       value={value}
       onChange={handleChange}
-      className="w-[100px] rounded-[8px] border-[2px] border-orange-500 px-[1rem] focus:outline-none"
+      className="h-[47px] w-[100px] rounded-[8px] border-[2px] border-orange-500 px-[1rem] focus:outline-none"
     />
   );
 };

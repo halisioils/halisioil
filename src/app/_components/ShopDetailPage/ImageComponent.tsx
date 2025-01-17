@@ -18,7 +18,7 @@ const ImageComponent = ({
   return (
     <section className="h-[100%] w-[100%] flex-col items-center justify-center gap-[1rem]">
       {/* Main Image Display */}
-      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:w-[80%] md:rounded-[0.75rem]">
+      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:rounded-[0.75rem]">
         {selectedImage ? (
           <Image
             src={selectedImage.url}
@@ -61,6 +61,7 @@ const ImageComponent = ({
                   : "border-[#ECECEC]"
               } transition duration-300`}
               onClick={() => setSelectedImage(image)}
+              sizes="(min-width: 768px) 50vw, 100vw"
               fill
               style={{
                 objectFit: "contain",
