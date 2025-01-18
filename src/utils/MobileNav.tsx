@@ -13,11 +13,13 @@ import { userLinks } from "./UserListIconts";
 import { navLinks } from "./NavLinks";
 import { useCartContext } from "~/context/CartContext";
 import { useMobileNav } from "~/hooks/useMobileNav";
+import { useWishListContext } from "~/context/WishListContext";
 
 const MobileNav = () => {
   const { user, isLoading } = useKindeBrowserClient();
   const { dropdownRef, mobileNav, setMobileNav } = useMobileNav();
   const { cartQuantity } = useCartContext();
+  const { WishListQuantity } = useWishListContext();
 
   const pathname = usePathname();
 
@@ -117,7 +119,13 @@ const MobileNav = () => {
                         {cartQuantity > 0 ? cartQuantity : 0}
                       </span>
                     )}
+                    {link.href === "/wishlist" && (
+                      <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-[#B88E2F] text-xs text-white">
+                        {WishListQuantity > 0 ? WishListQuantity : 0}
+                      </span>
+                    )}
                   </span>
+
                   {link.label}
                 </Link>
               </li>

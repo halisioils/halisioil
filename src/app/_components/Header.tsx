@@ -6,6 +6,7 @@ import React from "react";
 import logo_image from "~/assets/halisioils_logo.png";
 import { useCartContext } from "~/context/CartContext";
 import { useHeaderContext } from "~/context/HeaderContext";
+import { useWishListContext } from "~/context/WishListContext";
 import { useProfileToggle } from "~/hooks/useDropdown";
 import { poppins } from "~/utils/font";
 import MobileNav from "~/utils/MobileNav";
@@ -16,6 +17,8 @@ import { AccountIcon, userLinks } from "~/utils/UserListIconts";
 const Header = () => {
   const { mobileNav, setMobileNav } = useHeaderContext();
   const { cartQuantity } = useCartContext();
+
+  const { WishListQuantity } = useWishListContext();
 
   const { dropdown, dropdownRef, openProfile } = useProfileToggle();
 
@@ -77,6 +80,11 @@ const Header = () => {
                 {link.href === "/cart" && (
                   <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-[#B88E2F] text-xs text-white">
                     {cartQuantity > 0 ? cartQuantity : 0}
+                  </span>
+                )}
+                {link.href === "/wishlist" && (
+                  <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-[#B88E2F] text-xs text-white">
+                    {WishListQuantity > 0 ? WishListQuantity : 0}
                   </span>
                 )}
               </Link>

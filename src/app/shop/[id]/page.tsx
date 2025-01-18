@@ -3,6 +3,7 @@ import React, { use } from "react";
 import ImageComponent from "~/app/_components/ShopDetailPage/ImageComponent";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
 import { useCartContext } from "~/context/CartContext";
+import { useWishListContext } from "~/context/WishListContext";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
 import { raleway } from "~/utils/font";
@@ -15,6 +16,9 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
     useCartContext();
 
+  const { isInWishList, addToWishList, removeFromWishList } =
+    useWishListContext();
+
   const { id } = use(params);
 
   const product = api.product.getSingleProduct.useQuery({
@@ -23,9 +27,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const itemQuantity = getItemQuantity(id);
 
-  const handleWishlistClick = async (id: string) => {
-    console.log(id);
-  };
+  const isAddedToWishList = isInWishList(id);
 
   if (product.isLoading) {
     return (
@@ -136,12 +138,22 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                   Add to Cart
                 </button>
               )}
-              <button
-                onClick={() => handleWishlistClick(id)}
-                className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
-              >
-                <WishlistIcon />
-              </button>
+
+              {isAddedToWishList ? (
+                <button
+                  onClick={() => removeFromWishList(id)}
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                >
+                  <WishlistIcon />
+                </button>
+              ) : (
+                <button
+                  onClick={() => addToWishList(id)}
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                >
+                  <WishlistIcon />
+                </button>
+              )}
             </div>
           </section>
         </section>

@@ -69,6 +69,12 @@ label {
   justify-content: space-between;
 }
 
+.wishlist-table {
+  display: grid;
+  grid-template-columns: 20% 50% 20% 10%;
+  justify-content: space-between;
+}
+
 .admin-table {
   display: grid;
   grid-template-columns: 35% 15% 20% 20% 10%;
