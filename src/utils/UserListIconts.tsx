@@ -69,7 +69,6 @@ export const WishlistIcon = () => (
 );
 
 export const userLinks = [
-  { label: "Account", href: "/account", svg: <AccountIcon /> },
   { label: "Wishlist", href: "/wishlist", svg: <WishlistIcon /> },
   { label: "Cart", href: "/cart", svg: <CartIcon /> },
 ];

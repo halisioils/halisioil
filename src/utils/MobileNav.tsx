@@ -151,7 +151,6 @@ const MobileNav = () => {
                   className={`flex items-center gap-[1.5rem]`}
                   onClick={closeDropdown}
                 >
-                  {" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

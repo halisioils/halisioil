@@ -21,13 +21,6 @@ const ContactForm = () => {
     resolver: zodResolver(contactSchema),
   });
 
-  const charMessageChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ): void => {
-    const content = event.target.value.slice(0, maxCharacterCount);
-    setCharCount(content.length);
-  };
-
   const onSubmit = async (dataValue: FieldValues) => {
     try {
       //   const serviceId = process.env.NEXT_PUBLIC_SERVICE_ID;

@@ -6,14 +6,19 @@ import React from "react";
 import logo_image from "~/assets/halisioils_logo.png";
 import { useCartContext } from "~/context/CartContext";
 import { useHeaderContext } from "~/context/HeaderContext";
+import { useProfileToggle } from "~/hooks/useDropdown";
 import { poppins } from "~/utils/font";
 import MobileNav from "~/utils/MobileNav";
 import { navLinks } from "~/utils/NavLinks";
-import { userLinks } from "~/utils/UserListIconts";
+import ProfileNav from "~/utils/ProfileNav";
+import { AccountIcon, userLinks } from "~/utils/UserListIconts";
 
 const Header = () => {
   const { mobileNav, setMobileNav } = useHeaderContext();
   const { cartQuantity } = useCartContext();
+
+  const { dropdown, dropdownRef, openProfile } = useProfileToggle();
+
   const pathname = usePathname();
 
   const openDropdown = () => {
@@ -22,9 +27,9 @@ const Header = () => {
 
   return (
     <section
-      className={`relative flex h-[60px] w-full items-center justify-between gap-8 py-[0.5rem] ${poppins.className} mx-auto max-w-[1440px] px-[1rem] md:px-[2rem] lg:px-[3rem]`}
+      className={`relative flex h-[60px] w-full items-center justify-between gap-8 py-[0.5rem] md:h-[80px] ${poppins.className} mx-auto max-w-[1440px] px-[1rem] md:px-[2rem] lg:px-[3rem]`}
     >
-      <Link href={`/`} className="relative h-[41px] w-[30px] cursor-pointer">
+      <Link href={`/`} className="relative h-[50px] w-[30px] cursor-pointer">
         <Image
           quality={100}
           fill
@@ -57,7 +62,13 @@ const Header = () => {
           ))}
         </ul>
       </nav>
-      <section className="hidden text-white lg:block">
+      <section className="hidden items-center justify-center gap-[2rem] text-white lg:flex">
+        <div ref={dropdownRef} className="relative h-[100%] w-[100%]">
+          <button onClick={openProfile}>
+            <AccountIcon />
+          </button>
+          {dropdown && <ProfileNav />}
+        </div>
         <ul className="flex items-center justify-center gap-[2rem]">
           {userLinks.map((link, index) => (
             <li key={index} className="relative">

@@ -4,6 +4,7 @@ import { raleway } from "~/utils/font";
 import image_route from "~/assets/DSC00014.jpg";
 import Overview from "../_components/AboutPage/Overview";
 import Accordian from "~/utils/Accordian";
+import Link from "next/link";
 
 const AboutPage = async () => {
   return (
@@ -16,6 +17,7 @@ const AboutPage = async () => {
               alt={`Placeholder image for Halisi About`}
               sizes="(min-width: 768px) 100vw, 700px"
               priority
+              placeholder="blur"
               fill
               style={{
                 objectFit: "cover",
@@ -45,7 +47,16 @@ const AboutPage = async () => {
           </p>
         </section>
       </section>
+
       <Overview />
+      <div className={`my-[3rem] flex w-[100%] items-center justify-center`}>
+        <Link
+          className={`flex h-[55px] w-[200px] items-center justify-center rounded bg-[#B88E2F] font-bold text-white hover:brightness-75`}
+          href={`/shop`}
+        >
+          Discover Now
+        </Link>
+      </div>
       <div className="mx-auto mt-[3rem] max-w-[800px]">
         <h2
           className={`text-center text-[1.5rem] font-semibold text-[#B88E2F] md:text-[2rem] ${raleway.className} `}

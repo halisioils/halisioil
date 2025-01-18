@@ -31,7 +31,7 @@ export default function RootLayout({
             <html lang="en" className={`${poppins.className}`}>
               <body>
                 <TRPCReactProvider>
-                  <header className="bg-black">
+                  <header className="sticky top-0 z-50 bg-[#333333]">
                     <Header />
                   </header>
                   <Modal />

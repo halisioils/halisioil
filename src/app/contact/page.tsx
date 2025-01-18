@@ -7,11 +7,11 @@ const ContactPage = async () => {
     <section className="h-full min-h-[100vh] w-full py-[1rem]">
       <div className="mx-auto mb-[4rem] mt-[3rem] max-w-[644px]">
         <h2
-          className={`${raleway.className} pb-[1rem] text-center text-[1.5rem] font-bold leading-[48px] text-[#253D4E] md:text-[2rem]`}
+          className={`${raleway.className} pb-[1rem] text-left text-[1.5rem] font-bold leading-[48px] text-[#253D4E] md:text-center md:text-[2rem]`}
         >
           Get In Touch With Us
         </h2>
-        <p className="text-center text-[1rem] leading-[24px] text-[#7E7E7E]">
+        <p className="text-left text-[1rem] leading-[24px] text-[#7E7E7E] md:text-center">
           For More Information About Our Product & Services. Please Feel Free To
           Drop Us An Email. Our Staff Always Be There To Help You Out. Do Not
           Hesitate!
