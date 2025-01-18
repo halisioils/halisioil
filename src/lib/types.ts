@@ -107,6 +107,18 @@ export const adminUpdateSchema = z.object({
   permission: userPermissionEnum.default("NORMAL_USER"),
 });
 
+export const contactSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  message: z
+    .string()
+    .min(20, { message: "Message must be at least 20 characters" })
+    .max(500, { message: "Message must not exceed 500 characters" }),
+});
+
 export type IProductSchema = z.infer<typeof productSchema>;
 export type IProductPageSchema = z.infer<typeof adminProductSchema>;
 export type IProductUpdateSchema = z.infer<typeof updateProductSchema>;
@@ -116,6 +128,8 @@ export type ICategorySchema = z.infer<typeof categorySchema>;
 export type ICategoryUpdateSchema = z.infer<typeof categoryUpdateFormSchema>;
 export type IUserSchema = z.infer<typeof userSchema>;
 export type IAdminUpdateSchema = z.infer<typeof adminUpdateSchema>;
+
+export type IContactSchema = z.infer<typeof contactSchema>;
 
 export type TImage = {
   id: number;
