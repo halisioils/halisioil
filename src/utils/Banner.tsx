@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { type FC } from "react";
-import banner_image from "~/assets/vanilla.jpg";
+import banner_image from "~/assets/HAL-WB01.png";
 import { raleway } from "./font";
 import { type BannerProps } from "~/lib/types";
 
