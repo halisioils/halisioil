@@ -71,7 +71,7 @@ label {
 
 .wishlist-table {
   display: grid;
-  grid-template-columns: 20% 50% 20% 10%;
+  grid-template-columns: 15% 35% 15% 35%;
   justify-content: space-between;
 }
 

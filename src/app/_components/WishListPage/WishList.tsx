@@ -5,13 +5,16 @@ import { type IProductCardSchema } from "~/lib/types";
 import { api } from "~/trpc/react";
 import LoadingComponent from "~/utils/LoadingComponent";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
-import { DeleteIcon } from "~/utils/UserListIconts";
+import { CartIcon, DeleteIcon } from "~/utils/UserListIconts";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { useWishListContext } from "~/context/WishListContext";
+import { useCartContext } from "~/context/CartContext";
 
 const WishList = () => {
   const { removeFromWishList, WishListItems, WishListQuantity } =
     useWishListContext();
+
+  const { increaseCartQuantity } = useCartContext();
 
   const ids = WishListItems.map((item) => item.id);
 
@@ -90,12 +93,24 @@ const WishList = () => {
                               {formatCurrency(product.price)}
                             </p>
 
-                            <p className="truncate p-[0.75rem] text-center text-[0.875rem] font-[400] text-[#252c32]">
+                            <p className="flex items-start justify-between gap-[1rem] truncate p-[0.75rem] text-right text-[0.875rem] font-[400] text-[#252c32]">
                               <button
                                 onClick={() => removeFromWishList(product.id)}
                                 className="text-sm text-red-500 hover:brightness-75"
                               >
                                 <DeleteIcon />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  increaseCartQuantity(product.id);
+                                  removeFromWishList(product.id);
+                                }}
+                                className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                              >
+                                <span>
+                                  <CartIcon />
+                                </span>
+                                Add to Cart
                               </button>
                             </p>
                           </div>
