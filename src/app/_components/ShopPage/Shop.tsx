@@ -68,7 +68,7 @@ const ShopComponent = ({
   return (
     <section>
       {entries && <ProductCard products={entries} />}
-      <section className="relative bottom-0 left-0 w-[100%] px-[1rem] py-[2rem] md:px-[2rem] lg:px-[3rem]">
+      <section className="relative bottom-0 left-0 w-[100%] py-[2rem]">
         {productsLength && (
           <TablePagination
             totalEntries={products as unknown as IProductPageSchema[]}

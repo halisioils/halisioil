@@ -114,7 +114,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               {itemQuantity > 0 ? (
                 <button
                   onClick={() => removeFromCart(id)}
-                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-red-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-red-400 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                 >
                   <span>
                     <DeleteIcon />

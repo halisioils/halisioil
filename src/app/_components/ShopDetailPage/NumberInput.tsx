@@ -41,7 +41,7 @@ const NumberInput: FC<NumberInputProps> = ({ id }) => {
         -
       </button>
 
-      <span className="flex h-[47px] w-fit items-center justify-center rounded-[8px] border-[2px] border-orange-500 px-[1rem] text-center text-[#7E7E7E]">{`${quantityInCart} in cart`}</span>
+      <span className="flex h-[47px] w-[120px] items-center justify-center rounded-[8px] border-[2px] border-orange-500 px-[1rem] text-center text-[#7E7E7E]">{`${quantityInCart} in cart`}</span>
       <button
         type="button"
         onClick={handleIncrement}

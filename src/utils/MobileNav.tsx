@@ -5,18 +5,19 @@ import {
   RegisterLink,
   useKindeBrowserClient,
 } from "@kinde-oss/kinde-auth-nextjs";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useHeaderContext } from "~/context/HeaderContext";
 import LoadingComponent from "./LoadingComponent";
 import { userLinks } from "./UserListIconts";
 import { navLinks } from "./NavLinks";
+import { useCartContext } from "~/context/CartContext";
+import { useMobileNav } from "~/hooks/useMobileNav";
 
 const MobileNav = () => {
   const { user, isLoading } = useKindeBrowserClient();
-  const { mobileNav, setMobileNav } = useHeaderContext();
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { dropdownRef, mobileNav, setMobileNav } = useMobileNav();
+  const { cartQuantity } = useCartContext();
 
   const pathname = usePathname();
 
@@ -29,23 +30,6 @@ const MobileNav = () => {
   const closeDropdown = () => {
     setMobileNav(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setMobileNav(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setMobileNav]);
 
   return (
     <section
@@ -125,7 +109,15 @@ const MobileNav = () => {
                   href={link.href}
                   className="flex items-center gap-[1.5rem]"
                 >
-                  {link.svg} <span>{link.label}</span>
+                  <span className="relative">
+                    {link.svg}
+                    {link.href === "/cart" && (
+                      <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+                        {cartQuantity > 0 ? cartQuantity : 0}
+                      </span>
+                    )}
+                  </span>
+                  {link.label}
                 </Link>
               </li>
             ))}

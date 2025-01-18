@@ -8,6 +8,7 @@ import type { ImageContent } from "~/lib/types";
 import { CartIcon, DeleteIcon } from "./UserListIconts";
 import { raleway } from "./font";
 import { useCartContext } from "~/context/CartContext";
+import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
 
 const ProductCard = ({
   products,
@@ -31,14 +32,6 @@ const ProductCard = ({
     router.push(`/shop/${id}`);
   };
 
-  const handleCartClick = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string,
-  ) => {
-    e.stopPropagation(); // Prevent triggering the card click when clicking on the cart
-    console.log("Cart action for item id:", id);
-  };
-
   return (
     <section>
       {products.map((item) => {
@@ -48,7 +41,7 @@ const ProductCard = ({
           <div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="mb-[3rem] flex cursor-pointer flex-col justify-center gap-[1rem] md:flex-row md:gap-[2rem]"
+            className="mb-[6rem] flex cursor-pointer flex-col justify-center gap-[1rem] md:mb-[3rem] md:flex-row md:gap-[2rem]"
           >
             {/* Image Container */}
             <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:h-[220px] md:max-w-[353px]">
@@ -96,22 +89,22 @@ const ProductCard = ({
                 &#163; {Number(item.price).toFixed(2)}
               </p>
               <div
-                onClick={(e) => handleCartClick(e, item.id)}
-                className="absolute -bottom-[1rem] left-0"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute -bottom-[4rem] left-0 md:-bottom-[1rem]"
               >
                 {itemQuantity > 0 ? (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent the card click event
-                      removeFromCart(item.id);
-                    }}
-                    className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-red-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
-                  >
-                    <span>
+                  <div className="flex items-center justify-between gap-[1rem]">
+                    <NumberInput id={item.id} />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the card click event
+                        removeFromCart(item.id);
+                      }}
+                      className="flex h-[47px] w-full items-center justify-center gap-[0.5rem] text-red-500 transition-all duration-300 ease-in-out hover:brightness-75"
+                    >
                       <DeleteIcon />
-                    </span>
-                    Remove
-                  </button>
+                    </button>
+                  </div>
                 ) : (
                   <button
                     onClick={(e) => {
