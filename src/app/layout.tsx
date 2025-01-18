@@ -12,6 +12,7 @@ import { HeaderProvider } from "~/context/HeaderContext";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import { CartProvider } from "~/context/CartContext";
+import MiniCart from "./_components/MiniCart";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -34,6 +35,7 @@ export default function RootLayout({
                     <Header />
                   </header>
                   <Modal />
+                  <MiniCart />
                   <Toaster position="top-right" />
                   {children}
                   <footer className="bg-bgGray">

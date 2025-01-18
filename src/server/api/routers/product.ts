@@ -181,4 +181,20 @@ export const productRouter = createTRPCRouter({
 
       return product ?? null;
     }),
+
+  getProductsByIds: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()).nonempty("Product IDs are required"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const products = await ctx.db.product.findMany({
+        where: { id: { in: input.ids } },
+        include: {
+          productCategories: { include: { category: true } },
+        },
+      });
+      return products ?? null;
+    }),
 });

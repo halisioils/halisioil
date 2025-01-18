@@ -19,7 +19,7 @@ const MobileSortButtonComponent = () => {
     <div className="my-[1rem] flex items-center md:hidden">
       <button
         onClick={() => updateQueryParams("nav_sort", "true")}
-        className="hover:brightness-75; w-[167.5px] rounded-[6.25rem] border-[1px] border-[#D0D5DD] bg-[#1c1c1c0d] px-[1rem] py-[0.5rem] text-[1c1c1c] shadow-sm"
+        className="w-[167.5px] rounded-[6.25rem] border-[1px] border-[#D0D5DD] bg-[#1c1c1c0d] px-[1rem] py-[0.5rem] text-[1c1c1c] shadow-sm hover:brightness-75"
       >
         Sort by
       </button>

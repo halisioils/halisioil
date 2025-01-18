@@ -9,6 +9,7 @@ import { CartIcon, DeleteIcon } from "./UserListIconts";
 import { raleway } from "./font";
 import { useCartContext } from "~/context/CartContext";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
+import { formatCurrency } from "./formatCurrency";
 
 const ProductCard = ({
   products,
@@ -23,7 +24,7 @@ const ProductCard = ({
     description: string;
   }[];
 }) => {
-  const { increaseCartQuantity, removeFromCart, getItemQuantity } =
+  const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
     useCartContext();
 
   const router = useRouter();
@@ -35,7 +36,7 @@ const ProductCard = ({
   return (
     <section>
       {products.map((item) => {
-        const itemQuantity = getItemQuantity(item.id); // Access item id here
+        const itemQuantity = getItemQuantity(item.id);
 
         return (
           <div
@@ -64,7 +65,7 @@ const ProductCard = ({
                 <Image
                   src={image_skeleton}
                   alt="Skeleton loading image"
-                  layout="fill"
+                  fill
                   className="rounded-[15px] object-cover"
                 />
               )}
@@ -86,7 +87,7 @@ const ProductCard = ({
                 </p>
               )}
               <p className="truncate text-[1.5rem] font-bold leading-[24px] text-orange-500">
-                &#163; {Number(item.price).toFixed(2)}
+                {formatCurrency(item.price)}
               </p>
               <div
                 onClick={(e) => e.stopPropagation()}
@@ -110,6 +111,7 @@ const ProductCard = ({
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent the card click event
                       increaseCartQuantity(item.id);
+                      openCart();
                     }}
                     className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                   >

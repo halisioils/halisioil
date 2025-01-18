@@ -6,12 +6,13 @@ import { useCartContext } from "~/context/CartContext";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
 import { raleway } from "~/utils/font";
+import { formatCurrency } from "~/utils/formatCurrency";
 import LoadingComponent from "~/utils/LoadingComponent";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
 import { CartIcon, DeleteIcon, WishlistIcon } from "~/utils/UserListIconts";
 
 const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
-  const { increaseCartQuantity, removeFromCart, getItemQuantity } =
+  const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
     useCartContext();
 
   const { id } = use(params);
@@ -95,7 +96,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               </h2>
 
               <p className="text-[2.125rem] font-bold leading-[58px] text-orange-500 md:text-[3.125rem]">
-                &#163; {Number(product.data.price).toFixed(2)}
+                {formatCurrency(Number(product.data.price))}
               </p>
             </div>
             <h3 className="text-[1rem] leading-[24px] text-[#7E7E7E]">
@@ -123,7 +124,10 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 </button>
               ) : (
                 <button
-                  onClick={() => increaseCartQuantity(id)}
+                  onClick={() => {
+                    increaseCartQuantity(id);
+                    openCart();
+                  }}
                   className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                 >
                   <span>
