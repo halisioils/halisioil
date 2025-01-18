@@ -182,12 +182,14 @@ const MiniCart = () => {
                             <Link
                               className="w-fit rounded-[15px] border-[1px] border-[#ECECEC] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
                               href={`/cart`}
+                              onClick={closeCart}
                             >
                               Cart
                             </Link>
                             <Link
                               className="w-fit rounded-[15px] border-[1px] border-[#ECECEC] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
                               href={`/checkout`}
+                              onClick={closeCart}
                             >
                               Checkout
                             </Link>

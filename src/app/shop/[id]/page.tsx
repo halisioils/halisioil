@@ -95,7 +95,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 {product.data.name}
               </h2>
 
-              <p className="text-[2.125rem] font-bold leading-[58px] text-orange-500 md:text-[3.125rem]">
+              <p className="text-[2.125rem] font-bold leading-[58px] text-[#B88E2F] md:text-[3.125rem]">
                 {formatCurrency(Number(product.data.price))}
               </p>
             </div>
@@ -128,7 +128,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                     increaseCartQuantity(id);
                     openCart();
                   }}
-                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                  className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                 >
                   <span>
                     <CartIcon />
@@ -138,7 +138,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               )}
               <button
                 onClick={() => handleWishlistClick(id)}
-                className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-orange-500 hover:text-orange-500"
+                className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
               >
                 <WishlistIcon />
               </button>

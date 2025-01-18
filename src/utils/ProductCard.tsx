@@ -86,7 +86,7 @@ const ProductCard = ({
                   {renderArrayCapitalizedContent(item.properties)}
                 </p>
               )}
-              <p className="truncate text-[1.5rem] font-bold leading-[24px] text-orange-500">
+              <p className="truncate text-[1.5rem] font-bold leading-[24px] text-[#B88E2F]">
                 {formatCurrency(item.price)}
               </p>
               <div
@@ -113,7 +113,7 @@ const ProductCard = ({
                       increaseCartQuantity(item.id);
                       openCart();
                     }}
-                    className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-orange-500 px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
+                    className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                   >
                     <span>
                       <CartIcon />

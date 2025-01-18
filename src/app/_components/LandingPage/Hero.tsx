@@ -30,7 +30,7 @@ const Hero = () => {
       {/* Text Content */}
       <div className="absolute left-0 top-1/2 z-30 flex -translate-y-1/2 transform flex-col gap-[1.5rem] px-[1rem] text-white md:px-[3rem] xl:gap-[2.5rem] xl:pl-[7.5rem]">
         <p className="border-secondary_color flex w-[210px] items-center justify-between rounded-[6.25rem] border px-[1.5rem] py-[0.5rem] text-[0.85rem]">
-          <span className="rounded-full bg-orange-500 p-[0.2rem] font-[700]"></span>
+          <span className="rounded-full bg-[#B88E2F] p-[0.2rem] font-[700]"></span>
           Welcome to Halisioils
         </p>
         <div className="flex flex-col flex-wrap gap-[1.5rem] md:max-w-[649px]">
@@ -38,7 +38,7 @@ const Hero = () => {
             className={`max-w-[400px] text-[2.25rem] font-[700] leading-[42.26px] md:leading-[56.35px] lg:text-[3rem] ${raleway.className} `}
           >
             <span className="flex sm:inline-flex">Discover Our </span>
-            <span className="pr-[0.5rem] text-orange-500">New</span>
+            <span className="pr-[0.5rem] text-[#B88E2F]">New</span>
             Collection
           </h1>
           <p className="max-w-full text-[1rem] font-[400] leading-[27px] sm:max-w-[70%] md:max-w-full lg:text-[1.125rem]">
@@ -94,7 +94,7 @@ const Hero = () => {
             key={index}
             className={`rounded-full p-[0.2rem] transition duration-300 ease-in-out ${
               index === paginationIndex
-                ? "h-[4.625rem] bg-orange-500 transition duration-300 ease-in-out"
+                ? "h-[4.625rem] bg-[#B88E2F] transition duration-300 ease-in-out"
                 : "bg-white"
             }`}
           ></div>

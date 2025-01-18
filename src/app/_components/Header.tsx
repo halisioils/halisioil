@@ -64,7 +64,7 @@ const Header = () => {
               <Link href={link.href}>
                 {link.svg}
                 {link.href === "/cart" && (
-                  <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+                  <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-[#B88E2F] text-xs text-white">
                     {cartQuantity > 0 ? cartQuantity : 0}
                   </span>
                 )}

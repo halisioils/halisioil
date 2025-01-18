@@ -108,7 +108,7 @@ const ProductCarousel = ({
                 )}
 
                 {/* Price */}
-                <p className="truncate text-base font-bold text-orange-500">
+                <p className="truncate text-base font-bold text-[#B88E2F]">
                   {formatCurrency(item.price)}
                 </p>
               </div>

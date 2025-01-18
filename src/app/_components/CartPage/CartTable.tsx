@@ -36,7 +36,7 @@ const CartTable = () => {
                 <div className="flex flex-col justify-between gap-[1rem] md:flex-row">
                   <section className="z-10 min-h-[50vh] max-w-[900px] overflow-y-hidden overflow-x-scroll pb-[6rem]">
                     <div className="relative h-auto w-[100%] min-w-[900px]">
-                      <div className="cart-table h-[40px] rounded-[15px] border-[1px] border-[#ECECEC] text-[#253D4E]">
+                      <div className="cart-table h-[40px] bg-[#F9F1E7] text-[#253D4E]">
                         <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
                         <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
                           Product
@@ -119,7 +119,7 @@ const CartTable = () => {
                       </div>
                     </div>
                   </section>
-                  <section className="h-[200px] w-[100%] rounded-[15px] border-[1px] border-[#ECECEC] p-[1rem] md:w-[300px]">
+                  <section className="h-[200px] w-[100%] bg-[#F9F1E7] p-[1rem] md:w-[300px]">
                     <p className="text-center text-[1.5rem] text-[#253D4E]">
                       Cart Total
                     </p>
@@ -139,7 +139,7 @@ const CartTable = () => {
                       </span>
                     </div>
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
-                      <button className="rounded-[8px] border-[1px] border-[#253D4E] px-[2rem] py-[0.5rem] text-[#253D4E] transition-colors duration-300 ease-in-out hover:border-orange-500 hover:text-orange-500">
+                      <button className="rounded-[8px] border-[1px] border-[#253D4E] px-[2rem] py-[0.5rem] text-[#253D4E] transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]">
                         Check out
                       </button>
                     </div>

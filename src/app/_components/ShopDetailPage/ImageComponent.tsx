@@ -57,7 +57,7 @@ const ImageComponent = ({
               alt={`Thumbnail ${name} ${index + 1}`}
               className={`cursor-pointer rounded-lg border-[1px] ${
                 selectedImage?.key === image.key
-                  ? "border-orange-500"
+                  ? "border-[#B88E2F]"
                   : "border-[#ECECEC]"
               } transition duration-300`}
               onClick={() => setSelectedImage(image)}

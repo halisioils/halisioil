@@ -42,7 +42,7 @@ const Banner: FC<BannerProps> = ({ prev, next, head }) => {
                 <path d="M0 12L5 7L0 2L1 0L8 7L1 14L0 12Z" fill="white" />
               </svg>
             </span>
-            <span className="font-regular text-orange-500">{next}</span>
+            <span className="font-regular text-[#B88E2F]">{next}</span>
           </p>
         </div>
       </div>
