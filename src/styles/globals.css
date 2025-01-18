@@ -63,6 +63,12 @@ label {
   justify-content: space-between;
 }
 
+.cart-table {
+  display: grid;
+  grid-template-columns: 15% 20% 15% 25% 15% 10%;
+  justify-content: space-between;
+}
+
 .admin-table {
   display: grid;
   grid-template-columns: 35% 15% 20% 20% 10%;
@@ -72,8 +78,8 @@ label {
 .hero-gradient {
   background: linear-gradient(
     94.38deg,
-    rgba(0, 0, 0, 0.765) -4.7%,
-    rgba(0, 0, 0, 0.585) 96.89%
+    rgba(0, 0, 0, 0.9) -4.7%,
+    /* Darker at the start */ rgba(0, 0, 0, 0.8) 96.89% /* Darker at the end */
   );
 }
 

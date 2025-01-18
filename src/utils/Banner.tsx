@@ -17,7 +17,7 @@ const Banner: FC<BannerProps> = ({ prev, next, head }) => {
           alt="background image"
           className="absolute inset-0 rounded-[2rem] object-cover"
           style={{
-            objectPosition: "center top 10%",
+            objectPosition: "center top 5%",
           }}
         />
 

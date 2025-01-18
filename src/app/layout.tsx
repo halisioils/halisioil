@@ -38,7 +38,7 @@ export default function RootLayout({
                   <MiniCart />
                   <Toaster position="top-right" />
                   {children}
-                  <footer className="bg-bgGray">
+                  <footer className="border-t-[1px] border-t-[#cacaca] bg-bgGray">
                     <Footer />
                   </footer>
                 </TRPCReactProvider>

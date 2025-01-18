@@ -7,6 +7,7 @@ import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import type { IProductPageSchema, ImageContent } from "~/lib/types";
 import CarouselButton from "~/utils/CarouselButton";
 import { raleway } from "~/utils/font";
+import { formatCurrency } from "~/utils/formatCurrency";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
 
 const ProductCarousel = ({
@@ -67,42 +68,48 @@ const ProductCarousel = ({
             <div
               key={item.id}
               onClick={() => handleCardClick(item.id)}
-              className="cursor-pointer rounded-lg border border-gray-100 bg-[#F4F5F7] shadow-sm transition-transform ease-in-out"
+              className="cursor-pointer rounded-[1rem] border-[1px] border-[#ECECEC] shadow-sm transition-transform ease-in-out"
               style={{
                 transform: `translateX(${translateX}px)`,
               }}
             >
-              <div className="relative rounded-lg">
+              <div className="relative h-[250px] w-[220px] rounded-t-[1rem] border-[1px] border-[#ECECEC] md:w-[285px] md:rounded-t-[0.75rem]">
                 {item.imagePaths &&
                   Array.isArray(item.imagePaths) &&
                   item.imagePaths[0] && (
                     <Image
                       src={item.imagePaths[0]?.url || image_skeleton}
                       alt={`Image for ${item.name}`}
-                      className="h-[285px] rounded-t-lg object-cover"
-                      width={285}
-                      height={250}
+                      sizes="(min-width: 768px) 100vw, 700px"
+                      priority
+                      fill
+                      style={{
+                        objectFit: "contain",
+                        objectPosition: "center",
+                      }}
+                      className="rounded-[1rem]"
                     />
                   )}
-                <div className="carousel-gradient absolute inset-0 rounded-lg"></div>
               </div>
 
               <div className="flex flex-col justify-between gap-2 p-4">
                 {/* Product Name */}
-                <p className="truncate text-lg font-semibold text-gray-800">
+                <p
+                  className={`${raleway.className} text-[1rem] font-bold leading-[48px] text-[#253D4E] md:text-[1.2rem]`}
+                >
                   {item.name}
                 </p>
 
                 {/* Properties */}
                 {item.properties?.length > 0 && (
-                  <p className="truncate text-sm font-medium text-gray-500">
+                  <p className="truncate text-sm font-medium text-[#7E7E7E]">
                     {renderArrayCapitalizedContent(item.properties)}
                   </p>
                 )}
 
                 {/* Price */}
-                <p className="truncate text-base font-semibold text-gray-800">
-                  &#163; {Number(item.price).toFixed(2)}
+                <p className="truncate text-base font-bold text-orange-500">
+                  {formatCurrency(item.price)}
                 </p>
               </div>
             </div>
