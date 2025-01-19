@@ -110,8 +110,11 @@ const ProductCard = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent the card click event
-                      increaseCartQuantity(item.id);
-                      openCart();
+
+                      if (item.id) {
+                        openCart(); // Ensure this function is defined in your cart context.
+                        increaseCartQuantity(item.id);
+                      }
                     }}
                     className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                   >
