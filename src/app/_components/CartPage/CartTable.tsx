@@ -33,13 +33,11 @@ const CartTable = ({ userId }: { userId: string }) => {
     }
 
     // Assert that the object conforms to the CartItem type
-    return (
-      ({
-        ...cartItem,
-        name: product.name,
-        price: Number(product.price),
-      } as ChectOutItem) ?? []
-    );
+    return {
+      ...cartItem,
+      name: product.name,
+      price: Number(product.price),
+    } as ChectOutItem;
   });
 
   return (
