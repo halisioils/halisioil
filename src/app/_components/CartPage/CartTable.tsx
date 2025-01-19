@@ -29,15 +29,17 @@ const CartTable = ({ userId }: { userId: string }) => {
     const product = products.find((p) => p.id === cartItem.id);
     if (!product) {
       // Return cartItem without modification if no product is found
-      return cartItem;
+      return cartItem ?? [];
     }
 
     // Assert that the object conforms to the CartItem type
-    return {
-      ...cartItem,
-      name: product.name,
-      price: Number(product.price),
-    } as ChectOutItem;
+    return (
+      ({
+        ...cartItem,
+        name: product.name,
+        price: Number(product.price),
+      } as ChectOutItem) ?? []
+    );
   });
 
   return (
