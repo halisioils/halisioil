@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import Confetti from "react-confetti";
@@ -10,7 +10,7 @@ import LoadingComponent from "~/utils/LoadingComponent";
 const ConfettiEffect = () => {
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Set mounted to true after the component has mounted
     setMounted(true);
   }, []);
