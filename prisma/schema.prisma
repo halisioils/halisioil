@@ -22,7 +22,9 @@ model Product {
     updatedAt   DateTime      @updatedAt
 
     productCategories ProductCategory[] // Many-to-many relationship
-    orders            Order[]
+
+    orders       Order[]        @relation("OrderProducts")
+    productOrder ProductOrder[]
 }
 
 enum ProductStatus {
@@ -72,8 +74,19 @@ model Order {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    userId    String
+    userId   String
+    user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    products Product[] @relation("OrderProducts")
+
+    productOrder ProductOrder[]
+}
+
+model ProductOrder {
+    orderId   String
     productId String
-    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+    order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+    @@id([orderId, productId]) // Composite primary key for the many-to-many relationship
 }

@@ -66,7 +66,10 @@ const Header = () => {
         </ul>
       </nav>
       <section className="hidden items-center justify-center gap-[2rem] text-white lg:flex">
-        <div ref={dropdownRef} className="relative h-[100%] w-[100%]">
+        <div
+          ref={dropdownRef}
+          className="relative mt-[0.5rem] h-[100%] w-[100%]"
+        >
           <button onClick={openProfile}>
             <AccountIcon />
           </button>

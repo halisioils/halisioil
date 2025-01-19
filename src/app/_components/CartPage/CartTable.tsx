@@ -9,8 +9,17 @@ import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import NumberInput from "../ShopDetailPage/NumberInput";
 import { DeleteIcon } from "~/utils/UserListIconts";
 import { formatCurrency } from "~/utils/formatCurrency";
+import { handleCheckout } from "~/actions/actions";
 
-const CartTable = () => {
+type ChectOutItem = {
+  id: string;
+  quantity: number;
+  name: string;
+  price: number;
+  image?: string;
+};
+
+const CartTable = ({ userId }: { userId: string }) => {
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
 
   const ids = cartItems.map((item) => item.id);
@@ -22,11 +31,26 @@ const CartTable = () => {
     },
   );
 
-  const products = data.data as unknown as IProductCardSchema[];
+  const products = (data.data as unknown as IProductCardSchema[]) ?? [];
+
+  const fullCartItems = cartItems.map((cartItem) => {
+    const product = products.find((p) => p.id === cartItem.id);
+    if (!product) {
+      // Return cartItem without modification if no product is found
+      return cartItem;
+    }
+
+    // Assert that the object conforms to the CartItem type
+    return {
+      ...cartItem,
+      name: product.name,
+      price: Number(product.price),
+    } as ChectOutItem;
+  });
 
   return (
     <section>
-      <div className="mt-4 w-full py-4 text-[#253D4E]">
+      <div className="mx-auto mt-4 w-full py-4 text-[#253D4E]">
         {cartQuantity > 0 ? (
           data.isLoading ? (
             <LoadingComponent />
@@ -139,7 +163,15 @@ const CartTable = () => {
                       </span>
                     </div>
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
-                      <button className="rounded-[8px] border-[1px] border-[#253D4E] px-[2rem] py-[0.5rem] text-[#253D4E] transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]">
+                      <button
+                        onClick={async () =>
+                          await handleCheckout(
+                            fullCartItems as ChectOutItem[],
+                            userId,
+                          )
+                        } // Pass fullCartItems with necessary properties
+                        className="rounded-[8px] border-[1px] border-[#253D4E] px-[2rem] py-[0.5rem] text-[#253D4E] transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                      >
                         Check out
                       </button>
                     </div>

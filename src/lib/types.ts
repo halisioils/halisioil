@@ -76,7 +76,7 @@ export const orderSchema = z.object({
   pricePaid: z.number().min(0, "Price paid must be greater than or equal to 0"),
   status: z.string().optional().default("pending"),
   userId: z.string(),
-  productId: z.string(),
+  productIds: z.array(z.string()),
 });
 
 export const categorySchema = z.object({

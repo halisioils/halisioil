@@ -13,13 +13,11 @@ import LoadingComponent from "./LoadingComponent";
 const ProfileNav = () => {
   const { user, isLoading } = useKindeBrowserClient();
 
-  const { dropdown, closeProfile } = useProfileToggle();
+  const { closeProfile } = useProfileToggle();
 
   return (
     <nav
-      className={`absolute -right-[1rem] top-[3rem] z-30 h-auto w-[240px] rounded-[0.5rem] border-[1px] border-[#F2F4F7] bg-white text-[#333333] ${
-        dropdown ? "block" : "hidden"
-      } `}
+      className={`absolute -right-[1rem] top-[3rem] z-50 hidden h-auto w-[240px] rounded-[0.5rem] border-[1px] border-[#F2F4F7] bg-white text-[#333333] md:block`}
     >
       <ul className="flex flex-col">
         <li>

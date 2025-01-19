@@ -17,8 +17,8 @@ export const orderRouter = createTRPCRouter({
             user: {
               connect: { id: input.userId }, // Connect to the existing user
             },
-            product: {
-              connect: { id: input.productId }, // Connect to the existing product
+            products: {
+              connect: input.productIds.map((id) => ({ id })), // Connect to multiple products by their IDs
             },
           },
         });
