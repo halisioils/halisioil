@@ -7,12 +7,13 @@ import { DeleteIcon } from "~/utils/UserListIconts";
 import { api } from "~/trpc/react";
 import LoadingComponent from "~/utils/LoadingComponent";
 import Image from "next/image";
-import type { IProductCardSchema } from "~/lib/types";
+import type { ChectOutItem, IProductCardSchema } from "~/lib/types";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import Link from "next/link";
 import { formatCurrency } from "~/utils/formatCurrency";
+import { handleCheckout } from "~/actions/actions";
 
-const MiniCart = () => {
+const MiniCart = ({ userId }: { userId: string }) => {
   const { closeCart, isOpen, cartItems, cartQuantity, removeFromCart } =
     useCartContext();
 
@@ -26,6 +27,21 @@ const MiniCart = () => {
   );
 
   const products = data.data as unknown as IProductCardSchema[];
+
+  const fullCartItems = cartItems.map((cartItem) => {
+    const product = products.find((p) => p.id === cartItem.id);
+    if (!product) {
+      // Return cartItem without modification if no product is found
+      return cartItem;
+    }
+
+    // Assert that the object conforms to the CartItem type
+    return {
+      ...cartItem,
+      name: product.name,
+      price: Number(product.price),
+    } as ChectOutItem;
+  });
 
   return (
     <>
@@ -186,13 +202,18 @@ const MiniCart = () => {
                             >
                               Cart
                             </Link>
-                            <Link
+                            <button
                               className="w-fit rounded-[15px] border-[1px] border-[#ECECEC] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
-                              href={`/checkout`}
-                              onClick={closeCart}
+                              onClick={async () => {
+                                closeCart();
+                                await handleCheckout(
+                                  fullCartItems as ChectOutItem[],
+                                  userId,
+                                );
+                              }}
                             >
                               Checkout
-                            </Link>
+                            </button>
                           </div>
                         </div>
                       ) : (

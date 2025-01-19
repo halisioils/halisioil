@@ -73,12 +73,19 @@ model Order {
     status    String   @default("pending")
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    paid      Boolean  @default(false)
 
     userId   String
     user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     products Product[] @relation("OrderProducts")
 
     productOrder ProductOrder[]
+
+    street  String?
+    city    String?
+    state   String?
+    zipCode String?
+    country String?
 }
 
 model ProductOrder {

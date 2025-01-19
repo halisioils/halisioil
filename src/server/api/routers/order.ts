@@ -20,6 +20,12 @@ export const orderRouter = createTRPCRouter({
             products: {
               connect: input.productIds.map((id) => ({ id })), // Connect to multiple products by their IDs
             },
+            // Include address fields
+            street: input.street,
+            city: input.city,
+            state: input.state,
+            zipCode: input.zipCode,
+            country: input.country,
           },
         });
 

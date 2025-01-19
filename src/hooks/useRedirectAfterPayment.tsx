@@ -1,19 +1,33 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation"; // Importing useRouter from Next.js
+import { useCartContext } from "~/context/CartContext";
+import { useSearchParams } from "next/navigation"; // To access query params in the URL
 
-const useRedirectAfterPayment = (path: string, delay = 2000) => {
+export const useRedirectAfterPayment = (path: string, delay = 2000) => {
+  const { removeFromCart } = useCartContext();
   const router = useRouter();
+  const searchParams = useSearchParams(); // Access query parameters
 
   useEffect(() => {
-    // Set a timeout to redirect after the specified delay
-    const timer = setTimeout(() => {
-      router.push(path);
-    }, delay);
+    // Check if product_ids exists in the URL
+    const productIds = searchParams.get("product_ids");
 
-    // Cleanup the timeout when the component unmounts
-    return () => clearTimeout(timer);
-  }, [router, path, delay]);
+    if (productIds) {
+      const productIdsArray = productIds.split(","); // Convert the product IDs string to an array
+
+      // Remove each product from the cart
+      productIdsArray.forEach((id) => {
+        removeFromCart(id); // Assuming removeFromCart takes the product ID as an argument
+      });
+
+      // Set a timeout to redirect after removing the items from the cart
+      const timer = setTimeout(() => {
+        router.push(path); // Redirect to the specified path (e.g., dashboard)
+      }, delay);
+
+      // Cleanup the timeout when the component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, router, path, delay, removeFromCart]);
 };
-
-export default useRedirectAfterPayment;

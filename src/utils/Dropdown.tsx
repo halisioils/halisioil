@@ -7,7 +7,6 @@ import { type DashboardProps } from "~/lib/types";
 
 const DropdownComponent: FC<DashboardProps> = ({
   id,
-  imagePaths,
   viewL,
   updateL,
   deleteL,

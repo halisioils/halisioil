@@ -14,6 +14,8 @@ import Footer from "./_components/Footer";
 import { CartProvider } from "~/context/CartContext";
 import MiniCart from "./_components/MiniCart";
 import { WishListProvider } from "~/context/WishListContext";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { api } from "~/trpc/server";
 
 export const metadata: Metadata = {
   title: "Halisi oil - Home",
@@ -21,9 +23,22 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  let id = "";
+
+  if (user?.email) {
+    const response = await api.user.getLoggedInUser({ email: user.email });
+
+    if (response) {
+      id = response.id;
+    }
+  }
+
   return (
     <AuthProvider>
       <HeaderProvider>
@@ -37,7 +52,7 @@ export default function RootLayout({
                       <Header />
                     </header>
                     <Modal />
-                    <MiniCart />
+                    <MiniCart userId={id} />
                     <Toaster position="top-right" />
                     {children}
                     <footer className="border-t-[1px] border-t-[#cacaca] bg-bgGray">

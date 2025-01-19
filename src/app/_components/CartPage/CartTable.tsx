@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import { useCartContext } from "~/context/CartContext";
-import { type IProductCardSchema } from "~/lib/types";
+import type { ChectOutItem, IProductCardSchema } from "~/lib/types";
 import { api } from "~/trpc/react";
 import LoadingComponent from "~/utils/LoadingComponent";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
@@ -10,14 +10,6 @@ import NumberInput from "../ShopDetailPage/NumberInput";
 import { DeleteIcon } from "~/utils/UserListIconts";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { handleCheckout } from "~/actions/actions";
-
-type ChectOutItem = {
-  id: string;
-  quantity: number;
-  name: string;
-  price: number;
-  image?: string;
-};
 
 const CartTable = ({ userId }: { userId: string }) => {
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
@@ -164,15 +156,15 @@ const CartTable = ({ userId }: { userId: string }) => {
                     </div>
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
                       <button
-                        onClick={async () =>
+                        className="w-fit rounded-[15px] border-[1px] border-[#ECECEC] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
+                        onClick={async () => {
                           await handleCheckout(
                             fullCartItems as ChectOutItem[],
                             userId,
-                          )
-                        } // Pass fullCartItems with necessary properties
-                        className="rounded-[8px] border-[1px] border-[#253D4E] px-[2rem] py-[0.5rem] text-[#253D4E] transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                          );
+                        }}
                       >
-                        Check out
+                        Checkout
                       </button>
                     </div>
                   </section>

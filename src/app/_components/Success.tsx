@@ -1,17 +1,18 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import Confetti from "react-confetti";
-import useRedirectAfterPayment from "~/hooks/useRedirectAfterPayment";
+import { useRedirectAfterPayment } from "~/hooks/useRedirectAfterPayment";
+import LoadingComponent from "~/utils/LoadingComponent";
 
 // Confetti Component for handling confetti effect based on window size
 const ConfettiEffect = () => {
   return <Confetti className="h-[100%] w-[100%]" />;
 };
 
-const Success = () => {
-  // Call the custom hook to redirect to "/dashboard" after 2 seconds
-  useRedirectAfterPayment("/dashboard", 2000);
+const SuccessComponent = () => {
+  // // Call the custom hook to redirect to "/dashboard" after 2 seconds
+  // useRedirectAfterPayment("/dashboard", 2000);
 
   return (
     <section
@@ -52,6 +53,14 @@ const Success = () => {
         </div>
       </section>
     </section>
+  );
+};
+
+const Success = () => {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <SuccessComponent />
+    </Suspense>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import CartTable from "../_components/CartPage/CartTable";
-import { api } from "~/trpc/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { api } from "~/trpc/server";
 
 const CartPage = async () => {
   const { getUser } = getKindeServerSession();
@@ -16,7 +16,6 @@ const CartPage = async () => {
       id = response.id;
     }
   }
-
   return (
     <section className="h-full min-h-[100vh] w-full">
       <CartTable userId={id} />

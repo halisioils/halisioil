@@ -77,6 +77,23 @@ export const orderSchema = z.object({
   status: z.string().optional().default("pending"),
   userId: z.string(),
   productIds: z.array(z.string()),
+  paid: z.boolean().optional().default(false),
+
+  // Address fields
+  street: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  country: z.string().optional(),
+});
+
+export const addressSchema = z.object({
+  // Address fields
+  street: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zipCode: z.string(),
+  country: z.string(),
 });
 
 export const categorySchema = z.object({
@@ -195,4 +212,20 @@ export type IProductCardSchema = {
   }[];
   id: string;
   properties?: string[];
+};
+
+export type ChectOutItem = {
+  id: string;
+  quantity: number;
+  name: string;
+  price: number;
+  image?: string;
+};
+
+export type Address = {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
 };
