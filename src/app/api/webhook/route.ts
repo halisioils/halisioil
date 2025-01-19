@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { api } from "~/trpc/server";
 
 // Initialize Stripe with your secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+const stripe = new Stripe(process.env.STRIPE_WEBHOOK_SECRET ?? "");
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature") ?? "";
