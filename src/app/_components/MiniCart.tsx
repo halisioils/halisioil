@@ -45,7 +45,7 @@ const MiniCart = ({ userId }: { userId: string }) => {
 
   return (
     <>
-      {isOpen && (
+      {isOpen && userId && fullCartItems && (
         <dialog
           onClick={closeCart}
           className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-end overflow-auto bg-black bg-opacity-20"
