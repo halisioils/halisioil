@@ -13,6 +13,7 @@ type CartContextProps = {
   cartQuantity: number;
   cartItems: CartItem[];
   isOpen: boolean;
+  emptyCart: () => void;
 };
 
 interface CartProviderProps {
@@ -81,6 +82,10 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     });
   }
 
+  function emptyCart() {
+    setCartItems([]); // Clear all items from the cart
+  }
+
   const appContextValue: CartContextProps = {
     getItemQuantity,
     increaseCartQuantity,
@@ -91,6 +96,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     cartItems,
     cartQuantity,
     isOpen,
+    emptyCart,
   };
 
   return (

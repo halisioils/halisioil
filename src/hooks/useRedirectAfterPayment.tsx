@@ -1,33 +1,28 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation"; // Importing useRouter from Next.js
-import { useCartContext } from "~/context/CartContext";
-import { useSearchParams } from "next/navigation"; // To access query params in the URL
+import { useRouter } from "next/navigation"; // Importing from Next.js
+import { useCartContext } from "~/context/CartContext"; // Import your cart context
 
+/**
+ * Hook to handle redirection after payment and cart cleanup.
+ *
+ * @param {string} path - The path to redirect to.
+ * @param {number} delay - The delay before redirecting (in milliseconds). Default is 2000ms.
+ */
 export const useRedirectAfterPayment = (path: string, delay = 2000) => {
-  const { removeFromCart } = useCartContext();
+  const { emptyCart } = useCartContext(); // Use the emptyCart function
   const router = useRouter();
-  const searchParams = useSearchParams(); // Access query parameters
 
   useEffect(() => {
-    // Check if product_ids exists in the URL
-    const productIds = searchParams.get("product_ids");
+    // Clear the cart
+    emptyCart();
 
-    if (productIds) {
-      const productIdsArray = productIds.split(","); // Convert the product IDs string to an array
+    // Set a timeout to redirect after the specified delay
+    const timer = setTimeout(() => {
+      router.push(path); // Redirect to the specified path
+    }, delay);
 
-      // Remove each product from the cart
-      productIdsArray.forEach((id) => {
-        removeFromCart(id); // Assuming removeFromCart takes the product ID as an argument
-      });
-
-      // Set a timeout to redirect after removing the items from the cart
-      const timer = setTimeout(() => {
-        router.push(path); // Redirect to the specified path (e.g., dashboard)
-      }, delay);
-
-      // Cleanup the timeout when the component unmounts
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams, router, path, delay, removeFromCart]);
+    // Cleanup the timeout on unmount
+    return () => clearTimeout(timer);
+  }, [router, path, delay, emptyCart]); // Ensure all dependencies are included
 };

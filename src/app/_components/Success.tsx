@@ -11,8 +11,8 @@ const ConfettiEffect = () => {
 };
 
 const SuccessComponent = () => {
-  // // Call the custom hook to redirect to "/dashboard" after 2 seconds
-  // useRedirectAfterPayment("/dashboard", 2000);
+  // Call the custom hook to redirect to "/dashboard" after 2 seconds
+  useRedirectAfterPayment("/dashboard", 2000);
 
   return (
     <section
