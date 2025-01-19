@@ -112,7 +112,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               </p>
             </div>
 
-            <div className="flex items-center gap-[1rem]">
+            <div className="flex flex-wrap items-center gap-[1rem]">
               {itemQuantity > 0 && <NumberInput id={id} />}
               {itemQuantity > 0 ? (
                 <button

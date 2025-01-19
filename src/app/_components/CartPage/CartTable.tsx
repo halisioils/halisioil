@@ -163,7 +163,7 @@ const CartTable = () => {
                     </div>
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
                       <button
-                        className="w-fit rounded-[15px] border-[1px] border-[#ECECEC] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
+                        className="h-[46px] w-fit rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
                         onClick={async () => {
                           await handleCheckout(
                             fullCartItems as ChectOutItem[],

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import Confetti from "react-confetti";
@@ -7,6 +8,17 @@ import LoadingComponent from "~/utils/LoadingComponent";
 
 // Confetti Component for handling confetti effect based on window size
 const ConfettiEffect = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // Don't render Confetti on the server side
+  }
+
   return <Confetti className="h-[100%] w-[100%]" />;
 };
 
