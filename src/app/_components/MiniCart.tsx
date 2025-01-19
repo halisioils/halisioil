@@ -52,7 +52,7 @@ const MiniCart = () => {
 
   return (
     <>
-      {isOpen && (
+      {isOpen && cartQuantity > 0 && (
         <dialog
           onClick={closeCart}
           className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-end overflow-auto bg-black bg-opacity-20"
