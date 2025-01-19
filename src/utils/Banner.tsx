@@ -31,17 +31,17 @@ const Banner: FC<BannerProps> = ({ prev, next, head }) => {
           </h2>
           <p className="mt-2 flex items-center justify-center gap-[0.5rem] text-center text-[1rem] font-medium text-white">
             {prev}
-            <span>
-              <svg
-                width="8"
-                height="14"
-                viewBox="0 0 8 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M0 12L5 7L0 2L1 0L8 7L1 14L0 12Z" fill="white" />
-              </svg>
-            </span>
+
+            <svg
+              width="8"
+              height="14"
+              viewBox="0 0 8 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M0 12L5 7L0 2L1 0L8 7L1 14L0 12Z" fill="white" />
+            </svg>
+
             <span className="font-regular text-[#B88E2F]">{next}</span>
           </p>
         </div>
