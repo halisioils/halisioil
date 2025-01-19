@@ -38,23 +38,21 @@ const MiniCart = () => {
   const products = data.data as unknown as IProductCardSchema[];
 
   const fullCartItems = cartItems.map((cartItem) => {
-    const product = products.find((p) => p.id === cartItem.id);
-    if (!product) {
-      // Return cartItem without modification if no product is found
-      return cartItem;
-    }
-
-    // Assert that the object conforms to the CartItem type
+    const product = products.find((p) => p.id === cartItem.id) ?? {
+      id: "",
+      name: "",
+      price: 0,
+    };
     return {
       ...cartItem,
       name: product.name,
       price: Number(product.price),
-    } as ChectOutItem;
+    };
   });
 
   return (
     <>
-      {isOpen && userId && fullCartItems && (
+      {isOpen && (
         <dialog
           onClick={closeCart}
           className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-end overflow-auto bg-black bg-opacity-20"

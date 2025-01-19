@@ -35,18 +35,16 @@ const CartTable = () => {
   const products = (data.data as unknown as IProductCardSchema[]) ?? [];
 
   const fullCartItems = cartItems.map((cartItem) => {
-    const product = products.find((p) => p.id === cartItem.id);
-    if (!product) {
-      // Return cartItem without modification if no product is found
-      return cartItem;
-    }
-
-    // Assert that the object conforms to the CartItem type
+    const product = products.find((p) => p.id === cartItem.id) ?? {
+      id: "",
+      name: "",
+      price: 0,
+    };
     return {
       ...cartItem,
       name: product.name,
       price: Number(product.price),
-    } as ChectOutItem;
+    };
   });
 
   return (
