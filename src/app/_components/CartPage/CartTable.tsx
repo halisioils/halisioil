@@ -10,9 +10,18 @@ import NumberInput from "../ShopDetailPage/NumberInput";
 import { DeleteIcon } from "~/utils/UserListIconts";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { handleCheckout } from "~/actions/actions";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-const CartTable = ({ userId }: { userId: string }) => {
+const CartTable = () => {
+  const { user, isLoading } = useKindeBrowserClient();
+
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
+
+  let userId = "";
+
+  if (user) {
+    userId = user.id;
+  }
 
   const ids = cartItems.map((item) => item.id);
 
@@ -29,7 +38,7 @@ const CartTable = ({ userId }: { userId: string }) => {
     const product = products.find((p) => p.id === cartItem.id);
     if (!product) {
       // Return cartItem without modification if no product is found
-      return cartItem ?? [];
+      return cartItem;
     }
 
     // Assert that the object conforms to the CartItem type
@@ -44,7 +53,7 @@ const CartTable = ({ userId }: { userId: string }) => {
     <section>
       <div className="mx-auto mt-4 w-full py-4 text-[#253D4E]">
         {cartQuantity > 0 ? (
-          data.isLoading ? (
+          data.isLoading || isLoading ? (
             <LoadingComponent />
           ) : (
             <div>

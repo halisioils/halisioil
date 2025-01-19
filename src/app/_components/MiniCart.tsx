@@ -12,10 +12,19 @@ import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import Link from "next/link";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { handleCheckout } from "~/actions/actions";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-const MiniCart = ({ userId }: { userId: string }) => {
+const MiniCart = () => {
   const { closeCart, isOpen, cartItems, cartQuantity, removeFromCart } =
     useCartContext();
+
+  const { user, isLoading } = useKindeBrowserClient();
+
+  let userId = "";
+
+  if (user) {
+    userId = user.id;
+  }
 
   const ids = cartItems.map((item) => item.id);
 
@@ -32,7 +41,7 @@ const MiniCart = ({ userId }: { userId: string }) => {
     const product = products.find((p) => p.id === cartItem.id);
     if (!product) {
       // Return cartItem without modification if no product is found
-      return cartItem ?? [];
+      return cartItem;
     }
 
     // Assert that the object conforms to the CartItem type
@@ -101,7 +110,7 @@ const MiniCart = ({ userId }: { userId: string }) => {
 
               <div className="mt-4 w-[100%]">
                 {cartQuantity > 0 ? (
-                  data.isLoading ? (
+                  data.isLoading || isLoading ? (
                     <LoadingComponent />
                   ) : (
                     <div>
