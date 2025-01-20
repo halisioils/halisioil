@@ -3,20 +3,30 @@ import Stripe from "stripe";
 import { api } from "~/trpc/server";
 
 // Initialize Stripe with your secret key
-const stripe = new Stripe(process.env.STRIPE_WEBHOOK_SECRET ?? "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
+
+export const config = {
+  api: {
+    bodyParser: false, // Disable Next.js' default body parsing to handle raw body
+  },
+};
 
 export async function POST(req: NextRequest) {
-  const sig = req.headers.get("stripe-signature") ?? "";
-  const body = await req.text();
-
   try {
+    const sig = req.headers.get("stripe-signature") ?? "";
+
+    // Convert NextRequest body (ReadableStream) to Buffer
+    const rawBody = await req.arrayBuffer(); // Read the stream as ArrayBuffer
+    const buffer = Buffer.from(rawBody); // Convert ArrayBuffer to Buffer
+
     // Verify the webhook signature
     const event = stripe.webhooks.constructEvent(
-      body,
+      buffer,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET ?? "",
     );
 
+    // Handle the event
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;
@@ -24,24 +34,31 @@ export async function POST(req: NextRequest) {
         // Check if the payment was successful
         if (session.payment_status === "paid") {
           const userId = session.client_reference_id; // Assumes you passed userId in the session
-          const productIds = session.metadata?.product_ids?.split(","); // Assumes product IDs are stored in metadata
-          const totalAmount = session.amount_total; // Total amount in smallest currency unit (pence)
+          const productIds = session.metadata?.productIds?.split(","); // Assumes product IDs are stored in metadata
+          const totalAmount = session.amount_total; // Total amount in the smallest currency unit (e.g., cents)
 
-          console.log(session.metadata);
-
-          if (userId && productIds && totalAmount) {
-            // Create the order in the database
+          if (
+            userId &&
+            productIds &&
+            totalAmount &&
+            session.shipping_details?.address
+          ) {
             await api.order.create({
               userId,
               pricePaid: totalAmount,
               productIds,
               paid: true,
-              // Assuming address details are in metadata, modify as per your implementation
-              street: session.metadata?.street,
-              city: session.metadata?.city,
-              state: session.metadata?.state,
-              zipCode: session.metadata?.zip_code,
-              country: session.metadata?.country,
+              street: [
+                session.shipping_details.address.line1,
+                session.shipping_details.address.line2, // This will be included only if it exists
+              ]
+                .filter(Boolean) // Removes falsy values like undefined or null
+                .join(" ")
+                .trim(),
+              city: session.shipping_details.address.city ?? "",
+              state: session.shipping_details.address.state ?? "",
+              zipCode: session.shipping_details.address.postal_code ?? "",
+              country: session.shipping_details.address.country ?? "",
             });
 
             console.log("Order created successfully after payment.");
@@ -51,19 +68,10 @@ export async function POST(req: NextRequest) {
         } else {
           console.log("Payment failed, no order created.");
         }
-
         break;
       }
 
       // Add more event types as needed
-      case "payment_intent.succeeded":
-        console.log("Payment intent succeeded.");
-        break;
-
-      case "payment_intent.payment_failed":
-        console.log("Payment intent failed.");
-        break;
-
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }

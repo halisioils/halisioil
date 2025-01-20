@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
       payment_method_types: ["card", "paypal"],
       line_items: lineItems,
       mode: "payment",
+      client_reference_id: userId,
       billing_address_collection: "required",
       shipping_address_collection: {
         allowed_countries: [
@@ -294,21 +295,10 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/cancel`, // Add product IDs to the cancel URL
+      metadata: {
+        productIds: cartItems.map((item) => item.id).join(","), // Store product IDs as a comma-separated string
+      },
     });
-
-    // Save the order to the Prisma database
-    const totalAmount = cartItems.reduce(
-      (total, item) => total + Math.round(item.price * 100) * item.quantity,
-      0,
-    );
-
-    if (session.payment_intent === "succeeded") {
-      await api.order.create({
-        userId,
-        pricePaid: totalAmount, // Price in smallest currency unit (pence)
-        productIds: cartItems.map((item) => item.id),
-      });
-    }
 
     // Return the session URL
     return NextResponse.json({ url: session.url }, { status: 200 });

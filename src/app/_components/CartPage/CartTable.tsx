@@ -57,7 +57,7 @@ const CartTable = () => {
             <div>
               {products && products.length > 0 ? (
                 <div className="flex flex-col justify-between gap-[1rem] md:flex-row">
-                  <section className="z-10 min-h-[50vh] max-w-[900px] overflow-y-hidden overflow-x-scroll pb-[6rem]">
+                  <section className="z-10 min-h-[30vh] max-w-[900px] overflow-y-hidden overflow-x-scroll pb-[6rem] md:min-h-[50vh]">
                     <div className="relative h-auto w-[100%] min-w-[900px]">
                       <div className="cart-table h-[40px] bg-[#F9F1E7] text-[#253D4E]">
                         <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
