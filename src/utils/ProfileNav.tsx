@@ -9,9 +9,12 @@ import Link from "next/link";
 import React from "react";
 import { useProfileToggle } from "~/hooks/useDropdown";
 import LoadingComponent from "./LoadingComponent";
+import { useRouter, usePathname } from "next/navigation";
 
 const ProfileNav = () => {
   const { user, isLoading } = useKindeBrowserClient();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const { closeProfile } = useProfileToggle();
 
@@ -55,10 +58,7 @@ const ProfileNav = () => {
           <LoadingComponent />
         </div>
       ) : user ? (
-        <LogoutLink
-          onClick={closeProfile}
-          className="flex h-[40px] cursor-pointer items-center gap-[1rem] rounded-[0.5rem] px-[1rem] py-[0.625rem] text-[0.875rem] transition-all duration-300 ease-in-out hover:bg-gray-100"
-        >
+        <LogoutLink className="flex h-[40px] cursor-pointer items-center gap-[1rem] rounded-[0.5rem] px-[1rem] py-[0.625rem] text-[0.875rem] transition-all duration-300 ease-in-out hover:bg-gray-100">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -78,6 +78,7 @@ const ProfileNav = () => {
       ) : (
         <div className="grid grid-cols-1">
           <LoginLink
+            postLoginRedirectURL={`/api/auth/login?currentpath=${encodeURIComponent(pathname)}`}
             className="flex h-[40px] cursor-pointer items-center gap-[1rem] rounded-[0.5rem] px-[1rem] py-[0.625rem] text-[0.875rem] transition-all duration-300 ease-in-out hover:bg-gray-100"
             onClick={closeProfile}
           >
