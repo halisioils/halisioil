@@ -32,19 +32,45 @@ const Header = () => {
     <section
       className={`relative flex h-[60px] w-full items-center justify-between gap-8 py-[0.5rem] md:h-[80px] ${poppins.className} mx-auto max-w-[1440px] px-[1rem] md:px-[2rem] lg:px-[3rem]`}
     >
-      <Link href={`/`} className="relative h-[50px] w-[30px] cursor-pointer">
-        <Image
-          quality={100}
-          fill
-          sizes="(min-width: 768px) 100vw, 700px"
-          src={logo_image}
-          priority
-          alt="background image"
-          style={{
-            objectFit: "contain",
-          }}
-        />
-      </Link>
+      <section className="flex h-[100%] w-fit items-center gap-[1rem]">
+        <div className="block lg:hidden">
+          <span
+            onClick={openDropdown}
+            className={`cursor-pointer ${mobileNav ? "hidden" : "block"} `}
+          >
+            <svg
+              width="20"
+              height="14"
+              viewBox="0 0 20 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 12.5H19M7 7H19M11.5 1H19"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+
+          <MobileNav />
+        </div>
+        <Link href={`/`} className="relative h-[50px] w-[30px] cursor-pointer">
+          <Image
+            quality={100}
+            fill
+            sizes="(min-width: 768px) 100vw, 700px"
+            src={logo_image}
+            priority
+            alt="background image"
+            style={{
+              objectFit: "contain",
+            }}
+          />
+        </Link>
+      </section>
       <nav className="hidden lg:block">
         <ul className="flex items-center justify-between text-[1rem]">
           {navLinks.map(({ label, href }) => (
@@ -65,10 +91,10 @@ const Header = () => {
           ))}
         </ul>
       </nav>
-      <section className="hidden items-center justify-center gap-[2rem] text-white lg:flex">
+      <section className="flex items-center justify-center gap-[2rem] text-white">
         <div
           ref={dropdownRef}
-          className="relative mt-[0.5rem] h-[100%] w-[100%]"
+          className="relative mt-[0.5rem] hidden h-[100%] w-[100%] lg:block"
         >
           <button onClick={openProfile}>
             <AccountIcon />
@@ -95,31 +121,6 @@ const Header = () => {
           ))}
         </ul>
       </section>
-
-      <div className="block lg:hidden">
-        <span
-          onClick={openDropdown}
-          className={`cursor-pointer ${mobileNav ? "hidden" : "block"} `}
-        >
-          <svg
-            width="20"
-            height="14"
-            viewBox="0 0 20 14"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 12.5H19M7 7H19M11.5 1H19"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-
-        <MobileNav />
-      </div>
     </section>
   );
 };

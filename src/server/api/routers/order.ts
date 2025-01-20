@@ -18,6 +18,7 @@ export const orderRouter = createTRPCRouter({
           data: {
             pricePaid: input.pricePaid,
             status: input.status,
+            paid: true,
             user: {
               connect: { id: input.userId }, // Connect to the existing user
             },
