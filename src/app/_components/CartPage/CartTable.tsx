@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useCartContext } from "~/context/CartContext";
 import type { ChectOutItem, IProductCardSchema } from "~/lib/types";
 import { api } from "~/trpc/react";
@@ -10,18 +10,12 @@ import NumberInput from "../ShopDetailPage/NumberInput";
 import { DeleteIcon } from "~/utils/UserListIconts";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { handleCheckout } from "~/actions/actions";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import toast from "react-hot-toast";
 
-const CartTable = () => {
-  const { user, isLoading } = useKindeBrowserClient();
+const CartTable = ({ userId }: { userId: string }) => {
+  const [load, setLoad] = useState(false);
 
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
-
-  let userId = "";
-
-  if (user) {
-    userId = user.id;
-  }
 
   const ids = cartItems.map((item) => item.id);
 
@@ -47,11 +41,26 @@ const CartTable = () => {
     };
   });
 
+  async function handleCheckouthandler(fullCartItems: ChectOutItem[]) {
+    setLoad(true);
+
+    if (!userId) {
+      throw new Error("User auth missing");
+    }
+    try {
+      await handleCheckout(fullCartItems, userId);
+    } catch (error) {
+      toast.error(`An error occured`);
+    } finally {
+      setLoad(false);
+    }
+  }
+
   return (
     <section>
       <div className="mx-auto mt-4 w-full py-4 text-[#253D4E]">
         {cartQuantity > 0 ? (
-          data.isLoading || isLoading ? (
+          data.isLoading ? (
             <LoadingComponent />
           ) : (
             <div>
@@ -163,15 +172,15 @@ const CartTable = () => {
                     </div>
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
                       <button
-                        className="h-[46px] w-fit rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
-                        onClick={async () => {
-                          await handleCheckout(
+                        disabled={load}
+                        className="flex h-[46px] w-[150px] items-center justify-center rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
+                        onClick={() => {
+                          void handleCheckouthandler(
                             fullCartItems as ChectOutItem[],
-                            userId,
                           );
                         }}
                       >
-                        Checkout
+                        {load ? <LoadingComponent /> : "Checkout"}
                       </button>
                     </div>
                   </section>

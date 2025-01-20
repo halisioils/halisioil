@@ -38,7 +38,7 @@ export const handleCheckout = async (
       },
       body: JSON.stringify({
         cartItems: cartItemsData,
-        userId,
+        userId: userId,
       }),
     });
 

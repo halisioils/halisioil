@@ -1,4 +1,8 @@
-import { privateAdminProcedure, privateProcedure } from "./../trpc";
+import {
+  privateAdminProcedure,
+  privateProcedure,
+  publicProcedure,
+} from "./../trpc";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { orderSchema } from "~/lib/types";
@@ -6,7 +10,7 @@ import { orderSchema } from "~/lib/types";
 import { createTRPCRouter } from "~/server/api/trpc";
 
 export const orderRouter = createTRPCRouter({
-  create: privateProcedure
+  create: publicProcedure
     .input(orderSchema)
     .mutation(async ({ ctx, input }) => {
       try {

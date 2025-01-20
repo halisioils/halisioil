@@ -76,7 +76,7 @@ const ProfileNav = () => {
           Logout
         </LogoutLink>
       ) : (
-        <div className="grid grid-cols-1 gap-[2rem]">
+        <div className="grid grid-cols-1">
           <LoginLink
             className="flex h-[40px] cursor-pointer items-center gap-[1rem] rounded-[0.5rem] px-[1rem] py-[0.625rem] text-[0.875rem] transition-all duration-300 ease-in-out hover:bg-gray-100"
             onClick={closeProfile}
