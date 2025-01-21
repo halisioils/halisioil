@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCartContext } from "~/context/CartContext";
 import type { ChectOutItem, IProductCardSchema } from "~/lib/types";
 import { api } from "~/trpc/react";
@@ -14,6 +14,13 @@ import toast from "react-hot-toast";
 
 const CartTable = ({ userId }: { userId: string }) => {
   const [load, setLoad] = useState(false);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
 
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
 
@@ -56,7 +63,7 @@ const CartTable = ({ userId }: { userId: string }) => {
     }
   }
 
-  return (
+  return mounted ? (
     <section>
       <div className="mx-auto mt-4 w-full py-4 text-[#253D4E]">
         {cartQuantity > 0 ? (
@@ -199,7 +206,7 @@ const CartTable = ({ userId }: { userId: string }) => {
         )}
       </div>
     </section>
-  );
+  ) : null;
 };
 
 export default CartTable;

@@ -1,36 +1,27 @@
 "use client";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import Confetti from "react-confetti";
 import { useRedirectAfterPayment } from "~/hooks/useRedirectAfterPayment";
 import LoadingComponent from "~/utils/LoadingComponent";
 
-// Confetti Component for handling confetti effect based on window size
-const ConfettiEffect = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useLayoutEffect(() => {
-    // Set mounted to true after the component has mounted
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null; // Don't render Confetti on the server side
-  }
-
-  return <Confetti className="h-[100%] w-[100%]" />;
-};
-
 const SuccessComponent = () => {
   // Call the custom hook to redirect to "/dashboard" after 2 seconds
   useRedirectAfterPayment("/dashboard", 2000);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
 
   return (
     <section
       className={`mx-auto flex h-[100%] min-h-screen w-[100%] max-w-[1440px] items-center justify-center gap-[1rem] bg-bgGray px-[1rem] pb-[2rem] pt-[1rem] md:px-[2rem]`}
     >
-      <ConfettiEffect />
+      {mounted && <Confetti className="h-[100%] w-[100%]" />}
 
       <section className="relative flex h-[310px] w-[90vw] max-w-[465px] flex-col items-center justify-center gap-6 rounded-lg border-[1px] border-[#B88E2F] px-6 py-5 md:w-[465px]">
         <span className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#B88E2F] bg-[#e7d5ac]">

@@ -37,7 +37,7 @@ export default async function RootLayout({
                       <Header />
                     </header>
                     <Modal />
-
+                    <MiniCart />
                     <Toaster position="top-right" />
                     {children}
                     <footer className="border-t-[1px] border-t-[#cacaca] bg-bgGray">

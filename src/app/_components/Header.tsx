@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo_image from "~/assets/halisioils_logo.png";
 import { useCartContext } from "~/context/CartContext";
 import { useHeaderContext } from "~/context/HeaderContext";
@@ -15,6 +15,7 @@ import ProfileNav from "~/utils/ProfileNav";
 import { AccountIcon, userLinks } from "~/utils/UserListIconts";
 
 const Header = () => {
+  const [mounted, setMounted] = useState(false);
   const { mobileNav, setMobileNav } = useHeaderContext();
   const { cartQuantity } = useCartContext();
 
@@ -28,7 +29,11 @@ const Header = () => {
     setMobileNav(true);
   };
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted ? (
     <section
       className={`relative flex h-[60px] w-full items-center justify-between gap-8 py-[0.5rem] md:h-[80px] ${poppins.className} mx-auto max-w-[1440px] px-[1rem] md:px-[2rem] lg:px-[3rem]`}
     >
@@ -108,7 +113,7 @@ const Header = () => {
                 {link.svg}
                 {link.href === "/cart" && (
                   <span className="absolute right-[-8px] top-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-[#B88E2F] text-xs text-white">
-                    {cartQuantity > 0 ? cartQuantity : 0}
+                    {cartQuantity > 0 && cartQuantity}
                   </span>
                 )}
                 {link.href === "/wishlist" && (
@@ -122,6 +127,10 @@ const Header = () => {
         </ul>
       </section>
     </section>
+  ) : (
+    <section
+      className={`relative flex h-[60px] w-full items-center justify-between gap-8 py-[0.5rem] md:h-[80px] ${poppins.className} mx-auto max-w-[1440px] px-[1rem] md:px-[2rem] lg:px-[3rem]`}
+    ></section>
   );
 };
 

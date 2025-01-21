@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import { renderArrayCapitalizedContent } from "./renderArrayCapitalizedContent";
@@ -24,8 +24,15 @@ const ProductCard = ({
     description: string;
   }[];
 }) => {
+  const [mounted, setMounted] = useState(false);
+
   const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
     useCartContext();
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
 
   const router = useRouter();
 
@@ -33,7 +40,7 @@ const ProductCard = ({
     router.push(`/shop/${id}`);
   };
 
-  return (
+  return mounted ? (
     <section>
       {products.map((item) => {
         const itemQuantity = getItemQuantity(item.id);
@@ -111,12 +118,11 @@ const ProductCard = ({
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent the card click event
                       increaseCartQuantity(item.id);
+                      openCart();
                     }}
                     className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                   >
-                    <span>
-                      <CartIcon />
-                    </span>
+                    <CartIcon />
                     Add to Cart
                   </button>
                 )}
@@ -126,7 +132,7 @@ const ProductCard = ({
         );
       })}
     </section>
-  );
+  ) : null;
 };
 
 export default ProductCard;

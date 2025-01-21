@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCartContext } from "~/context/CartContext";
 import { raleway } from "~/utils/font";
 import NumberInput from "./ShopDetailPage/NumberInput";
@@ -15,16 +15,23 @@ import { handleCheckout } from "~/actions/actions";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 const MiniCart = () => {
-  const { closeCart, isOpen, cartItems, cartQuantity, removeFromCart } =
-    useCartContext();
+  const [mounted, setMounted] = useState(false);
 
   const { user, isLoading } = useKindeBrowserClient();
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
 
   let userId = "";
 
   if (user) {
     userId = user.id;
   }
+
+  const { closeCart, isOpen, cartItems, cartQuantity, removeFromCart } =
+    useCartContext();
 
   const ids = cartItems.map((item) => item.id);
 
@@ -35,7 +42,7 @@ const MiniCart = () => {
     },
   );
 
-  const products = data.data as unknown as IProductCardSchema[];
+  const products = (data.data as unknown as IProductCardSchema[]) ?? [];
 
   const fullCartItems = cartItems.map((cartItem) => {
     const product = products.find((p) => p.id === cartItem.id) ?? {
@@ -50,7 +57,7 @@ const MiniCart = () => {
     };
   });
 
-  return (
+  return mounted ? (
     <>
       {isOpen && cartQuantity > 0 && (
         <dialog
@@ -239,7 +246,7 @@ const MiniCart = () => {
         </dialog>
       )}
     </>
-  );
+  ) : null;
 };
 
 export default MiniCart;

@@ -128,6 +128,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 <button
                   onClick={() => {
                     increaseCartQuantity(id);
+                    openCart();
                   }}
                   className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                 >
