@@ -112,6 +112,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
                     type="checkbox"
                     checked={selectedItems.size === entries?.length}
                     onChange={toggleSelectAll}
+                    className="h-[0.75rem] w-[0.75rem]"
                   />
                 </p>
 
@@ -128,6 +129,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
                         type="checkbox"
                         checked={selectedItems.has(data.id)}
                         onChange={() => toggleSelectItem(data.id)}
+                        className="h-[0.75rem] w-[0.75rem]"
                       />
                     </p>
 

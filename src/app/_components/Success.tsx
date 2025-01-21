@@ -8,7 +8,7 @@ import LoadingComponent from "~/utils/LoadingComponent";
 
 const SuccessComponent = () => {
   // Call the custom hook to redirect to "/dashboard" after 2 seconds
-  useRedirectAfterPayment("/dashboard", 2000);
+  useRedirectAfterPayment("/dashboard", 5000);
 
   const [mounted, setMounted] = useState(false);
 
