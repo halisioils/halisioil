@@ -52,7 +52,7 @@ const ProductCard = ({
             className="mb-[6rem] flex cursor-pointer flex-col justify-center gap-[1rem] md:mb-[3rem] md:flex-row md:gap-[2rem]"
           >
             {/* Image Container */}
-            <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[50%] md:h-[220px] md:max-w-[353px]">
+            <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] sm:w-[353px] md:h-[220px]">
               {item.imagePaths &&
               Array.isArray(item.imagePaths) &&
               item.imagePaths[0] ? (
