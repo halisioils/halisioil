@@ -139,24 +139,20 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                 </button>
               )}
 
-              {itemQuantity <= 0 && (
-                <div>
-                  {isAddedToWishList ? (
-                    <button
-                      onClick={() => removeFromWishList(id)}
-                      className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
-                    >
-                      <WishlistIcon />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => addToWishList(id)}
-                      className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
-                    >
-                      <WishlistIcon />
-                    </button>
-                  )}
-                </div>
+              {isAddedToWishList ? (
+                <button
+                  onClick={() => removeFromWishList(id)}
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                >
+                  <WishlistIcon />
+                </button>
+              ) : (
+                <button
+                  onClick={() => addToWishList(id)}
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                >
+                  <WishlistIcon />
+                </button>
               )}
             </div>
           </section>

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { type IProductCardSchema } from "~/lib/types";
 import { api } from "~/trpc/react";
 import LoadingComponent from "~/utils/LoadingComponent";
@@ -11,10 +11,17 @@ import { useWishListContext } from "~/context/WishListContext";
 import { useCartContext } from "~/context/CartContext";
 
 const WishList = () => {
+  const [mounted, setMounted] = useState(false);
+
   const { removeFromWishList, WishListItems, WishListQuantity } =
     useWishListContext();
 
   const { increaseCartQuantity } = useCartContext();
+
+  useEffect(() => {
+    // Set mounted to true after the component has mounted
+    setMounted(true);
+  }, []);
 
   const ids = WishListItems.map((item) => item.id);
 
@@ -27,7 +34,7 @@ const WishList = () => {
 
   const products = data.data as unknown as IProductCardSchema[];
 
-  return (
+  return mounted ? (
     <section>
       <div className="mt-4 w-full py-4 text-[#253D4E]">
         {WishListQuantity > 0 ? (
@@ -133,7 +140,7 @@ const WishList = () => {
         )}
       </div>
     </section>
-  );
+  ) : null;
 };
 
 export default WishList;
