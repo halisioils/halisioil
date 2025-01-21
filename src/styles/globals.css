@@ -57,6 +57,12 @@ label {
   justify-content: space-between;
 }
 
+.order-table {
+  display: grid;
+  grid-template-columns: 10% 40% 10% 15% 15% 10%;
+  justify-content: space-between;
+}
+
 .category-table {
   display: grid;
   grid-template-columns: 10% 70% 20%;

@@ -160,7 +160,8 @@ export type TablePaginationProps = {
     | IProductSchema[]
     | IProductPageSchema[]
     | ICategorySchema[]
-    | IUserSchema[];
+    | IUserSchema[]
+    | IOrderSchema[];
 };
 
 export type TableProps = {
