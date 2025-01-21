@@ -8,6 +8,7 @@ import { type DashboardProps } from "~/lib/types";
 const DropdownComponent: FC<DashboardProps> = ({
   id,
   viewL,
+  imagePaths,
   updateL,
   deleteL,
 }) => {
@@ -19,7 +20,7 @@ const DropdownComponent: FC<DashboardProps> = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("product_delete", id);
     params.set("case", "product_delete");
-    // params.set("product_images", imagePaths.map((i) => i.key).toString());
+    params.set("product_images", imagePaths.map((i) => i.key).toString());
 
     const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl);
