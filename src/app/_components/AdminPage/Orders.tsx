@@ -86,7 +86,7 @@ const Orders = () => {
       properties: [], // Default empty array for properties
     })) ?? [];
 
-  console.log(entries);
+  console.log(orders.data);
 
   return (
     <>

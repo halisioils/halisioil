@@ -76,16 +76,14 @@ export const orderSchema = z.object({
   userId: z.string(),
   status: z.string().optional(),
   amount_paid: z.number().optional(),
-  cartItems: z
-    .array(
-      z.object({
-        id: z.string(), // Product ID
-        name: z.string(), // Product name
-        quantity: z.number(), // Quantity of the product
-        price: z.number(), // Price of the product
-      }),
-    )
-    .optional(), // Optional for cases where there are no items
+  cartItems: z.array(
+    z.object({
+      id: z.string(), // Product ID
+      name: z.string(), // Product name
+      quantity: z.number(), // Quantity of the product
+      price: z.number(), // Price of the product
+    }),
+  ),
   name: z.string().optional(),
   email: z.string().optional(),
   line1: z.string().optional(),

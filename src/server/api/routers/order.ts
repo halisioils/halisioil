@@ -17,31 +17,17 @@ export const orderRouter = createTRPCRouter({
         // Create the new order
         const newOrder = await ctx.db.order.create({
           data: {
-            status: input.status,
-            paid: true,
-            amount_paid: input.amount_paid,
             user: {
               connect: { id: input.userId },
             },
-            lineItems:
-              input.cartItems && input.cartItems.length > 0
-                ? {
-                    create: input.cartItems.map((item) => ({
-                      productId: item.id,
-                      name: item.name,
-                      quantity: item.quantity,
-                      price: item.price,
-                    })),
-                  }
-                : undefined, // Skip creating line items if cartItems is undefined or empty
-            // Shipping details
-            shipping_name: input.name,
-            shipping_email: input.email,
-            shipping_street: input.line1,
-            shipping_city: input.city,
-            shipping_state: input.state ?? null,
-            shipping_zipCode: input.postal_code,
-            shipping_country: input.country,
+            lineItems: {
+              create: input.cartItems.map((item) => ({
+                productId: item.id,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+              })),
+            },
           },
         });
 
@@ -57,7 +43,7 @@ export const orderRouter = createTRPCRouter({
     }),
 
   // Update an order
-  updateOrder: privateAdminProcedure
+  updateOrder: publicProcedure
     .input(
       z.object({
         id: z.string(), // ID of the order to update

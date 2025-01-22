@@ -31,39 +31,17 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object;
 
-        console.log(session);
-
         // Check if the payment was successful
         if (session.payment_status === "paid") {
           const userId = session.client_reference_id; // Assumes you passed userId in the session
-          const productIds = session.metadata?.productIds?.split(","); // Assumes product IDs are stored in metadata
           const totalAmount = session.amount_total; // Total amount in the smallest currency unit (e.g., cents)
 
           if (
             userId &&
-            productIds &&
             totalAmount &&
             session.shipping_details?.address &&
             session.metadata?.orderId
           ) {
-            // await api.order.create({
-            //   userId,
-            //   pricePaid: totalAmount,
-            //   productIds,
-            //   paid: true,
-            //   street: [
-            //     session.shipping_details.address.line1,
-            //     session.shipping_details.address.line2, // This will be included only if it exists
-            //   ]
-            //     .filter(Boolean) // Removes falsy values like undefined or null
-            //     .join(" ")
-            //     .trim(),
-            //   city: session.shipping_details.address.city ?? "",
-            //   state: session.shipping_details.address.state ?? "",
-            //   zipCode: session.shipping_details.address.postal_code ?? "",
-            //   country: session.shipping_details.address.country ?? "",
-            // });
-
             await api.order.updateOrder({
               id: session.metadata.orderId, // Ensure `id` corresponds to the order ID
               amount_paid: totalAmount, // Correct field name
