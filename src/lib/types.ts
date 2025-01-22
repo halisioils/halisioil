@@ -73,17 +73,25 @@ export const clientProductSchema = z.object({
 });
 
 export const orderSchema = z.object({
-  pricePaid: z.number().min(0, "Price paid must be greater than or equal to 0"),
-  status: z.string().optional().default("pending"),
   userId: z.string(),
-  productIds: z.array(z.string()),
-  paid: z.boolean().optional().default(false),
-
-  // Address fields
-  street: z.string().optional(),
+  status: z.string().optional(),
+  amount_paid: z.number().optional(),
+  cartItems: z
+    .array(
+      z.object({
+        id: z.string(), // Product ID
+        name: z.string(), // Product name
+        quantity: z.number(), // Quantity of the product
+        price: z.number(), // Price of the product
+      }),
+    )
+    .optional(), // Optional for cases where there are no items
+  name: z.string().optional(),
+  email: z.string().optional(),
+  line1: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
-  zipCode: z.string().optional(),
+  postal_code: z.string().optional(),
   country: z.string().optional(),
 });
 

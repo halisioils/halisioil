@@ -31,6 +31,8 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object;
 
+        console.log(session);
+
         // Check if the payment was successful
         if (session.payment_status === "paid") {
           const userId = session.client_reference_id; // Assumes you passed userId in the session
@@ -41,24 +43,46 @@ export async function POST(req: NextRequest) {
             userId &&
             productIds &&
             totalAmount &&
-            session.shipping_details?.address
+            session.shipping_details?.address &&
+            session.metadata?.orderId
           ) {
-            await api.order.create({
-              userId,
-              pricePaid: totalAmount,
-              productIds,
-              paid: true,
-              street: [
-                session.shipping_details.address.line1,
-                session.shipping_details.address.line2, // This will be included only if it exists
-              ]
-                .filter(Boolean) // Removes falsy values like undefined or null
-                .join(" ")
-                .trim(),
-              city: session.shipping_details.address.city ?? "",
-              state: session.shipping_details.address.state ?? "",
-              zipCode: session.shipping_details.address.postal_code ?? "",
-              country: session.shipping_details.address.country ?? "",
+            // await api.order.create({
+            //   userId,
+            //   pricePaid: totalAmount,
+            //   productIds,
+            //   paid: true,
+            //   street: [
+            //     session.shipping_details.address.line1,
+            //     session.shipping_details.address.line2, // This will be included only if it exists
+            //   ]
+            //     .filter(Boolean) // Removes falsy values like undefined or null
+            //     .join(" ")
+            //     .trim(),
+            //   city: session.shipping_details.address.city ?? "",
+            //   state: session.shipping_details.address.state ?? "",
+            //   zipCode: session.shipping_details.address.postal_code ?? "",
+            //   country: session.shipping_details.address.country ?? "",
+            // });
+
+            await api.order.updateOrder({
+              id: session.metadata.orderId, // Ensure `id` corresponds to the order ID
+              amount_paid: totalAmount, // Correct field name
+              status: "pending", // Update the status
+              paid: true, // Indicate the order is paid
+              shippingDetails: {
+                name: session.shipping_details?.name ?? "Unknown",
+                email: session.customer_email ?? "Unknown",
+                street: [
+                  session.shipping_details?.address?.line1,
+                  session.shipping_details?.address?.line2, // Optional line 2
+                ]
+                  .filter(Boolean)
+                  .join(" "), // Combine street lines into a single string
+                city: session.shipping_details?.address?.city ?? "",
+                state: session.shipping_details?.address?.state ?? "",
+                zipCode: session.shipping_details?.address?.postal_code ?? "",
+                country: session.shipping_details?.address?.country ?? "",
+              },
             });
 
             console.log("Order created successfully after payment.");

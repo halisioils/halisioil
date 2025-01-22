@@ -23,8 +23,7 @@ model Product {
 
     productCategories ProductCategory[] // Many-to-many relationship
 
-    orders       Order[]        @relation("OrderProducts")
-    productOrder ProductOrder[]
+    LineItem LineItem[]
 }
 
 enum ProductStatus {
@@ -68,32 +67,32 @@ enum UserPermission {
 }
 
 model Order {
-    id        String   @id @default(cuid())
-    pricePaid Decimal
-    status    String   @default("pending")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    paid      Boolean  @default(false)
+    id               String   @id @default(cuid())
+    status           String   @default("pending")
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+    paid             Boolean  @default(false)
+    amount_paid      Decimal?
+    userId           String
+    user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    shipping_name    String?
+    shipping_email   String?
+    shipping_street  String?
+    shipping_city    String?
+    shipping_state   String?
+    shipping_zipCode String?
+    shipping_country String?
 
-    userId   String
-    user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    products Product[] @relation("OrderProducts")
-
-    productOrder ProductOrder[]
-
-    street  String?
-    city    String?
-    state   String?
-    zipCode String?
-    country String?
+    lineItems LineItem[] // Relation to the LineItem model
 }
 
-model ProductOrder {
+model LineItem {
+    id        String  @id @default(cuid())
     orderId   String
+    order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
     productId String
-
-    order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-    @@id([orderId, productId]) // Composite primary key for the many-to-many relationship
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    quantity  Int
+    name      String
+    price     Decimal
 }

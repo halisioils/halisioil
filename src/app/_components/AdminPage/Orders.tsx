@@ -22,33 +22,56 @@ const Orders = () => {
     orders.data?.slice(start, end).map((order) => {
       const {
         id,
-        pricePaid,
+        amount_paid,
         userId,
         paid,
         status,
         createdAt,
         updatedAt,
-        street,
-        city,
-        state,
-        zipCode,
-        country,
+        shipping_name,
+        shipping_email,
+        shipping_street,
+        shipping_city,
+        shipping_state,
+        shipping_zipCode,
+        shipping_country,
+        lineItems,
       } = order;
 
-      // Combine the address fields into a single string
-      const address = [street, city, state, zipCode, country]
-        .filter((field) => field) // Filter out null/undefined fields
-        .join(", "); // Join with a comma and space
+      // Combine address fields
+      const address = [
+        shipping_name,
+        shipping_email,
+        shipping_street,
+        shipping_city,
+        shipping_state,
+        shipping_zipCode,
+        shipping_country,
+      ]
+        .filter(Boolean)
+        .join(", ");
+
+      // Map line items
+      const items =
+        lineItems?.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })) || [];
 
       return {
         id,
-        pricePaid,
-        status,
-        paid,
+        amount_paid,
         userId,
+        paid,
+        status,
         createdAt,
         updatedAt,
-        address, // Add the combined address
+        shipping_name,
+        shipping_email,
+        address,
+        items,
       };
     });
 
@@ -58,7 +81,7 @@ const Orders = () => {
       status: order.status || "AVAILABLE", // Provide a default status if missing
       description: "No description provided", // Placeholder for description
       name: "Unnamed Product", // Placeholder for name
-      price: order.pricePaid || 0, // Use pricePaid or 0 as default
+      price: order.amount_paid ?? 0, // Use pricePaid or 0 as default
       categoryIds: [], // Default empty array for categoryIds
       properties: [], // Default empty array for properties
     })) ?? [];
@@ -118,7 +141,7 @@ const Orders = () => {
                     </p>
 
                     <p className="break-words p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                      {formatCurrency(Number(data.pricePaid))}
+                      {formatCurrency(Number(data.amount_paid))}
                     </p>
                     <p
                       className={`my-[0.5rem] h-fit truncate rounded-[5rem] px-[1rem] py-[0.2rem] text-left text-[0.875rem] font-[400] ${

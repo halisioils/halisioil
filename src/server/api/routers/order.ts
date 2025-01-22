@@ -14,41 +14,109 @@ export const orderRouter = createTRPCRouter({
     .input(orderSchema)
     .mutation(async ({ ctx, input }) => {
       try {
+        // Create the new order
         const newOrder = await ctx.db.order.create({
           data: {
-            pricePaid: input.pricePaid,
             status: input.status,
             paid: true,
+            amount_paid: input.amount_paid,
             user: {
-              connect: { id: input.userId }, // Connect to the existing user
+              connect: { id: input.userId },
             },
-            products: {
-              connect: input.productIds.map((id) => ({ id })), // Connect to multiple products by their IDs
-            },
-            // Include address fields
-            street: input.street,
-            city: input.city,
-            state: input.state,
-            zipCode: input.zipCode,
-            country: input.country,
+            lineItems:
+              input.cartItems && input.cartItems.length > 0
+                ? {
+                    create: input.cartItems.map((item) => ({
+                      productId: item.id,
+                      name: item.name,
+                      quantity: item.quantity,
+                      price: item.price,
+                    })),
+                  }
+                : undefined, // Skip creating line items if cartItems is undefined or empty
+            // Shipping details
+            shipping_name: input.name,
+            shipping_email: input.email,
+            shipping_street: input.line1,
+            shipping_city: input.city,
+            shipping_state: input.state ?? null,
+            shipping_zipCode: input.postal_code,
+            shipping_country: input.country,
           },
         });
 
         return newOrder;
       } catch (error) {
-        // Error handling for Prisma errors
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === "P2002") {
             throw new Error("Unique constraint violation.");
           }
         }
-        throw error; // Rethrow unexpected errors
+        throw error;
       }
+    }),
+
+  // Update an order
+  updateOrder: privateAdminProcedure
+    .input(
+      z.object({
+        id: z.string(), // ID of the order to update
+        status: z.string().optional(), // Optional status update
+        amount_paid: z.number().optional(),
+        paid: z.boolean(),
+
+        shippingDetails: z
+          .object({
+            name: z.string().optional(),
+            email: z.string().optional(),
+            street: z.string().optional(),
+            city: z.string().optional(),
+            state: z.string().optional(),
+            zipCode: z.string().optional(),
+            country: z.string().optional(),
+          })
+          .optional(), // Optional shipping details update
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, status, amount_paid, shippingDetails } = input;
+
+      // Fetch the existing order
+      const order = await ctx.db.order.findUnique({
+        where: { id },
+        include: { lineItems: true },
+      });
+
+      if (!order) {
+        throw new Error(`Order with ID ${id} not found`);
+      }
+
+      // Update the order fields
+      const updatedOrder = await ctx.db.order.update({
+        where: { id },
+        data: {
+          status,
+          paid: true,
+          amount_paid,
+          shipping_name: shippingDetails?.name ?? order.shipping_name,
+          shipping_email: shippingDetails?.email ?? order.shipping_email,
+          shipping_street: shippingDetails?.street ?? order.shipping_street,
+          shipping_city: shippingDetails?.city ?? order.shipping_city,
+          shipping_state: shippingDetails?.state ?? order.shipping_state,
+          shipping_zipCode: shippingDetails?.zipCode ?? order.shipping_zipCode,
+          shipping_country: shippingDetails?.country ?? order.shipping_country,
+        },
+      });
+
+      return updatedOrder;
     }),
 
   getAllOrders: privateAdminProcedure.query(async ({ ctx }) => {
     const order = await ctx.db.order.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        lineItems: true,
+      },
     });
 
     return order ?? null;

@@ -24,6 +24,8 @@ export async function POST(req: NextRequest) {
     // Parse the request body
     const { cartItems, userId } = (await req.json()) as RawBody;
 
+    console.log(userId);
+
     // Validate the structure of the request body
     if (!cartItems || !Array.isArray(cartItems)) {
       console.error("Invalid request body:", cartItems);
@@ -45,12 +47,17 @@ export async function POST(req: NextRequest) {
       quantity: item.quantity,
     }));
 
+    const data = await api.order.create({
+      userId,
+      cartItems,
+    });
+
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "paypal"],
       line_items: lineItems,
-      mode: "payment",
       client_reference_id: userId,
+      mode: "payment",
       billing_address_collection: "required",
       shipping_address_collection: {
         allowed_countries: [
@@ -296,7 +303,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/cancel`, // Add product IDs to the cancel URL
       metadata: {
-        productIds: cartItems.map((item) => item.id).join(","), // Store product IDs as a comma-separated string
+        orderId: data.id,
       },
     });
 
