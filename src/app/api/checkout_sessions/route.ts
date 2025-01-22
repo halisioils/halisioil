@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { api } from "~/trpc/server";
 import { type Address } from "~/lib/types";
+import { api } from "~/trpc/server";
 
-// Initialize Stripe
+// Initialize  Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
 interface RawBody {
@@ -24,19 +24,11 @@ export async function POST(req: NextRequest) {
     // Parse the request body
     const { cartItems, userId } = (await req.json()) as RawBody;
 
-    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+    // Validate the structure of the request body
+    if (!cartItems || !Array.isArray(cartItems)) {
+      console.error("Invalid request body:", cartItems);
       return NextResponse.json(
-        {
-          error:
-            "Invalid request format. 'cartItems' must be a non-empty array.",
-        },
-        { status: 400 },
-      );
-    }
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "Invalid request format. 'userId' is required." },
+        { error: "Invalid request format. Expected 'cartItems' array." },
         { status: 400 },
       );
     }
@@ -53,20 +45,10 @@ export async function POST(req: NextRequest) {
       quantity: item.quantity,
     }));
 
-    // Create an order in the database
-    let data;
-    try {
-      data = await api.order.create({
-        userId,
-        cartItems,
-      });
-    } catch (err) {
-      console.error("Error creating order:", err);
-      return NextResponse.json(
-        { error: "Failed to create order." },
-        { status: 500 },
-      );
-    }
+    const data = await api.order.create({
+      userId,
+      cartItems,
+    });
 
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -76,10 +58,10 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       billing_address_collection: "required",
       shipping_address_collection: {
-        allowed_countries: ["GB", "US", "CA", "FR", "DE"], // Use a smaller list unless required
+        allowed_countries: ["GB", "US", "CA", "FR", "DE"],
       },
       success_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/cancel`,
+      cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/cancel`, // Add product IDs to the cancel URL
       metadata: {
         orderId: data.id,
       },
@@ -89,6 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url }, { status: 200 });
   } catch (error) {
     console.error("Error creating Stripe session:", error);
+
     return NextResponse.json(
       { error: "Failed to create Stripe session." },
       { status: 500 },

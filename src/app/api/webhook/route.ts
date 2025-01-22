@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
               status: "pending", // Update the status
               paid: true, // Indicate the order is paid
               shippingDetails: {
-                name: session.shipping_details?.name ?? "Unknown",
-                email: session.customer_email ?? "Unknown",
+                name: session.shipping_details?.name ?? "",
+                email: session.customer_email ?? "",
                 street: [
                   session.shipping_details?.address?.line1,
                   session.shipping_details?.address?.line2, // Optional line 2
