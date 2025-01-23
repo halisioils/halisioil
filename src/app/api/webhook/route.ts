@@ -31,45 +31,23 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed": {
         const session = event.data.object;
 
-        // Check if the payment was successful
-        if (session.payment_status === "paid") {
-          const userId = session.client_reference_id; // Assumes you passed userId in the session
-          const totalAmount = session.amount_total; // Total amount in the smallest currency unit (e.g., cents)
+        const userId = session.client_reference_id; // Assumes you passed userId
 
-          if (
-            userId &&
-            totalAmount &&
-            session.shipping_details?.address &&
-            session.metadata?.orderId
-          ) {
-            await api.order.updateOrder({
-              id: session.metadata.orderId, // Ensure `id` corresponds to the order ID
-              amount_paid: totalAmount, // Correct field name
-              status: "pending", // Update the status
-              paid: true, // Indicate the order is paid
-              shippingDetails: {
-                name: session.shipping_details?.name ?? "",
-                email: session.customer_email ?? "",
-                street: [
-                  session.shipping_details?.address?.line1,
-                  session.shipping_details?.address?.line2, // Optional line 2
-                ]
-                  .filter(Boolean)
-                  .join(" "), // Combine street lines into a single string
-                city: session.shipping_details?.address?.city ?? "",
-                state: session.shipping_details?.address?.state ?? "",
-                zipCode: session.shipping_details?.address?.postal_code ?? "",
-                country: session.shipping_details?.address?.country ?? "",
-              },
-            });
+        try {
+          // Create the order with explicit typing for stripe_Session
+          await api.order.create({
+            userId: userId ?? "",
+            stripe_Session: session as unknown as Record<string, unknown>,
+          });
 
-            console.log("Order created successfully after payment.");
-          } else {
-            console.error("Missing required information in session metadata.");
-          }
-        } else {
-          console.log("Payment failed, no order created.");
+          console.log("Order created successfully after payment.");
+        } catch (parseError) {
+          console.error(
+            "Missing required information in session metadata.",
+            parseError,
+          );
         }
+
         break;
       }
 

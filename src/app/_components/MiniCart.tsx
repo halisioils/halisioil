@@ -12,23 +12,14 @@ import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import Link from "next/link";
 import { formatCurrency } from "~/utils/formatCurrency";
 import { handleCheckout } from "~/actions/actions";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-const MiniCart = () => {
+const MiniCart = ({ userId }: { userId: string }) => {
   const [mounted, setMounted] = useState(false);
-
-  const { user, isLoading } = useKindeBrowserClient();
 
   useEffect(() => {
     // Set mounted to true after the component has mounted
     setMounted(true);
   }, []);
-
-  let userId = "";
-
-  if (user) {
-    userId = user.id;
-  }
 
   const { closeCart, isOpen, cartItems, cartQuantity, removeFromCart } =
     useCartContext();
@@ -115,7 +106,7 @@ const MiniCart = () => {
 
               <div className="mt-4 w-[100%]">
                 {cartQuantity > 0 ? (
-                  data.isLoading || isLoading ? (
+                  data.isLoading ? (
                     <LoadingComponent />
                   ) : (
                     <div>

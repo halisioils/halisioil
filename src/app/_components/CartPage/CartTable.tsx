@@ -135,7 +135,7 @@ const CartTable = ({ userId }: { userId: string }) => {
                                 {product.name}
                               </p>
                               <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                                {formatCurrency(product.price / 100)}
+                                {formatCurrency(product.price)}
                               </p>
                               <div className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
                                 <NumberInput id={product.id} />

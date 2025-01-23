@@ -17,17 +17,8 @@ export const orderRouter = createTRPCRouter({
         // Create the new order
         const newOrder = await ctx.db.order.create({
           data: {
-            user: {
-              connect: { id: input.userId },
-            },
-            lineItems: {
-              create: input.cartItems.map((item) => ({
-                productId: item.id,
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-              })),
-            },
+            userId: input.userId ?? "", // Handle optional userId
+            stripe_Session: input.stripe_Session ?? {}, // Store the session object if provided
           },
         });
 
@@ -46,52 +37,26 @@ export const orderRouter = createTRPCRouter({
   updateOrder: publicProcedure
     .input(
       z.object({
-        id: z.string(), // ID of the order to update
-        status: z.string().optional(), // Optional status update
-        amount_paid: z.number().optional(),
-        paid: z.boolean(),
-
-        shippingDetails: z
-          .object({
-            name: z.string().optional(),
-            email: z.string().optional(),
-            street: z.string().optional(),
-            city: z.string().optional(),
-            state: z.string().optional(),
-            zipCode: z.string().optional(),
-            country: z.string().optional(),
-          })
-          .optional(), // Optional shipping details update
+        id: z.string(), // Order ID to update
+        status: z.string(), // New status to set
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, status, amount_paid, shippingDetails } = input;
+      const { id, status } = input;
 
       // Fetch the existing order
       const order = await ctx.db.order.findUnique({
         where: { id },
-        include: { lineItems: true },
       });
 
       if (!order) {
         throw new Error(`Order with ID ${id} not found`);
       }
 
-      // Update the order fields
+      // Update the order with the new status
       const updatedOrder = await ctx.db.order.update({
         where: { id },
-        data: {
-          status,
-          paid: true,
-          amount_paid,
-          shipping_name: shippingDetails?.name ?? order.shipping_name,
-          shipping_email: shippingDetails?.email ?? order.shipping_email,
-          shipping_street: shippingDetails?.street ?? order.shipping_street,
-          shipping_city: shippingDetails?.city ?? order.shipping_city,
-          shipping_state: shippingDetails?.state ?? order.shipping_state,
-          shipping_zipCode: shippingDetails?.zipCode ?? order.shipping_zipCode,
-          shipping_country: shippingDetails?.country ?? order.shipping_country,
-        },
+        data: { status },
       });
 
       return updatedOrder;
@@ -100,9 +65,6 @@ export const orderRouter = createTRPCRouter({
   getAllOrders: privateAdminProcedure.query(async ({ ctx }) => {
     const order = await ctx.db.order.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
-        lineItems: true,
-      },
     });
 
     return order ?? null;

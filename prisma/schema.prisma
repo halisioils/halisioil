@@ -22,8 +22,6 @@ model Product {
     updatedAt   DateTime      @updatedAt
 
     productCategories ProductCategory[] // Many-to-many relationship
-
-    LineItem LineItem[]
 }
 
 enum ProductStatus {
@@ -67,32 +65,13 @@ enum UserPermission {
 }
 
 model Order {
-    id               String   @id @default(cuid())
-    status           String   @default("pending")
-    createdAt        DateTime @default(now())
-    updatedAt        DateTime @updatedAt
-    paid             Boolean  @default(false)
-    amount_paid      Decimal?
-    userId           String
-    user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    shipping_name    String?
-    shipping_email   String?
-    shipping_street  String?
-    shipping_city    String?
-    shipping_state   String?
-    shipping_zipCode String?
-    shipping_country String?
+    id        String   @id @default(cuid())
+    status    String   @default("pending")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-    lineItems LineItem[] // Relation to the LineItem model
-}
+    userId String? // Optional userId
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model LineItem {
-    id        String  @id @default(cuid())
-    orderId   String
-    order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-    productId String
-    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-    quantity  Int
-    name      String
-    price     Decimal
+    stripe_Session Json
 }

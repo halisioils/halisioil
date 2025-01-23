@@ -5,6 +5,7 @@ import { formatCurrency } from "~/utils/formatCurrency";
 import Skeleton from "~/utils/Skeleton";
 import dayjs from "~/utils/dayjsConfig";
 import TablePagination from "~/utils/TablePagination";
+import LoadingComponent from "~/utils/LoadingComponent";
 
 const Orders = () => {
   const searchParams = useSearchParams();
@@ -17,63 +18,63 @@ const Orders = () => {
   const start = (Number(page) - 1) * Number(per_page);
   const end = start + Number(per_page);
 
-  const entries =
-    orders &&
-    orders.data?.slice(start, end).map((order) => {
-      const {
-        id,
-        amount_paid,
-        userId,
-        paid,
-        status,
-        createdAt,
-        updatedAt,
-        shipping_name,
-        shipping_email,
-        shipping_street,
-        shipping_city,
-        shipping_state,
-        shipping_zipCode,
-        shipping_country,
-        lineItems,
-      } = order;
+  // const entries =
+  //   orders &&
+  //   orders.data?.slice(start, end).map((order) => {
+  //     const {
+  //       id,
+  //       amount_paid,
+  //       userId,
+  //       paid,
+  //       status,
+  //       createdAt,
+  //       updatedAt,
+  //       shipping_name,
+  //       shipping_email,
+  //       shipping_street,
+  //       shipping_city,
+  //       shipping_state,
+  //       shipping_zipCode,
+  //       shipping_country,
+  //       lineItems,
+  //     } = order;
 
-      // Combine address fields
-      const address = [
-        shipping_name,
-        shipping_email,
-        shipping_street,
-        shipping_city,
-        shipping_state,
-        shipping_zipCode,
-        shipping_country,
-      ]
-        .filter(Boolean)
-        .join(", ");
+  //     // Combine address fields
+  //     const address = [
+  //       shipping_name,
+  //       shipping_email,
+  //       shipping_street,
+  //       shipping_city,
+  //       shipping_state,
+  //       shipping_zipCode,
+  //       shipping_country,
+  //     ]
+  //       .filter(Boolean)
+  //       .join(", ");
 
-      // Map line items
-      const items =
-        lineItems?.map((item) => ({
-          productId: item.productId,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-        })) || [];
+  //     // Map line items
+  //     const items =
+  //       lineItems?.map((item) => ({
+  //         productId: item.productId,
+  //         name: item.name,
+  //         quantity: item.quantity,
+  //         price: item.price,
+  //       })) || [];
 
-      return {
-        id,
-        amount_paid,
-        userId,
-        paid,
-        status,
-        createdAt,
-        updatedAt,
-        shipping_name,
-        shipping_email,
-        address,
-        items,
-      };
-    });
+  //     return {
+  //       id,
+  //       amount_paid,
+  //       userId,
+  //       paid,
+  //       status,
+  //       createdAt,
+  //       updatedAt,
+  //       shipping_name,
+  //       shipping_email,
+  //       address,
+  //       items,
+  //     };
+  //   });
 
   const transformedOrders =
     orders.data?.map((order) => ({
@@ -81,12 +82,15 @@ const Orders = () => {
       status: order.status || "AVAILABLE", // Provide a default status if missing
       description: "No description provided", // Placeholder for description
       name: "Unnamed Product", // Placeholder for name
-      price: order.amount_paid ?? 0, // Use pricePaid or 0 as default
       categoryIds: [], // Default empty array for categoryIds
       properties: [], // Default empty array for properties
     })) ?? [];
 
   console.log(orders.data);
+
+  if (orders.isLoading) {
+    return <LoadingComponent />;
+  }
 
   return (
     <>
@@ -115,7 +119,7 @@ const Orders = () => {
                   Created At
                 </p>
               </div>
-              {entries?.map((data) => (
+              {/* {entries?.map((data) => (
                 <div key={data.id} className="relative">
                   <div className="order-table border-t-[1px] border-t-[#1C1C1C1A] text-[#252c32]">
                     <p className="break-words p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
@@ -141,7 +145,7 @@ const Orders = () => {
                     </p>
 
                     <p className="break-words p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                      {formatCurrency(Number(data.amount_paid))}
+                      {formatCurrency(Number(data.amount_paid) / 100)}
                     </p>
                     <p
                       className={`my-[0.5rem] h-fit truncate rounded-[5rem] px-[1rem] py-[0.2rem] text-left text-[0.875rem] font-[400] ${
@@ -164,7 +168,7 @@ const Orders = () => {
                     </p>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </section>
           <section className="flex w-[100%] flex-wrap items-center justify-between gap-[1rem] pt-[1rem]">

@@ -1,4 +1,4 @@
-import React, { type FC, useState } from "react";
+import React, { type FC, useState, useEffect } from "react";
 import { useCartContext } from "~/context/CartContext";
 
 type NumberInputProps = {
@@ -9,10 +9,13 @@ const NumberInput: FC<NumberInputProps> = ({ id }) => {
   const { increaseCartQuantity, decreaseCartQuantity, getItemQuantity } =
     useCartContext();
 
-  const [value, setValue] = useState<number>(1); // Initialize state with a minimum value of 1
+  // Initialize state with the current quantity in the cart
+  const [value, setValue] = useState<number>(getItemQuantity(id));
 
-  // Get the quantity of the item from the cart context
-  const quantityInCart = getItemQuantity(id);
+  // Sync value with the quantity in the cart on mount and when the id changes
+  useEffect(() => {
+    setValue(getItemQuantity(id));
+  }, [id, getItemQuantity]);
 
   // Increment the value by 1
   const handleIncrement = () => {
@@ -41,7 +44,7 @@ const NumberInput: FC<NumberInputProps> = ({ id }) => {
         -
       </button>
 
-      <span className="flex h-[47px] w-[120px] items-center justify-center rounded-[8px] border-[2px] border-[#B88E2F] px-[1rem] text-center text-[#7E7E7E]">{`${quantityInCart} in cart`}</span>
+      <span className="flex h-[47px] w-[120px] items-center justify-center rounded-[8px] border-[2px] border-[#B88E2F] px-[1rem] text-center text-[#7E7E7E]">{`${value} in cart`}</span>
       <button
         type="button"
         onClick={handleIncrement}

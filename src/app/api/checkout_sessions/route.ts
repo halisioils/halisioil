@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { type Address } from "~/lib/types";
-import { api } from "~/trpc/server";
 
 // Initialize  Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
@@ -9,7 +8,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 interface RawBody {
   cartItems: CheckoutItem[];
   userId: string;
-  address: Address;
 }
 
 type CheckoutItem = {
@@ -45,10 +43,8 @@ export async function POST(req: NextRequest) {
       quantity: item.quantity,
     }));
 
-    const data = await api.order.create({
-      userId,
-      cartItems,
-    });
+    // Serialize cartItems to a JSON string for metadata
+    const serializedCartItems = JSON.stringify(cartItems);
 
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -63,7 +59,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/cancel`, // Add product IDs to the cancel URL
       metadata: {
-        orderId: data.id,
+        cartItems: serializedCartItems,
       },
     });
 
