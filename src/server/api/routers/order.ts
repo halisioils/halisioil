@@ -78,10 +78,12 @@ export const orderRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { userId } = input;
-      return ctx.db.order.findMany({
+      const order = ctx.db.order.findMany({
+        orderBy: { createdAt: "desc" },
         where: {
           userId: userId,
         },
       });
+      return order ?? null;
     }),
 });
