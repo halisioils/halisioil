@@ -51,9 +51,6 @@ const CartTable = ({ userId }: { userId: string }) => {
   async function handleCheckouthandler(fullCartItems: ChectOutItem[]) {
     setLoad(true);
 
-    if (!userId) {
-      throw new Error("User auth missing");
-    }
     try {
       await handleCheckout(fullCartItems, userId);
     } catch (error) {

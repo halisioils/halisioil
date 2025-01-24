@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         try {
           // Create the order with explicit typing for stripe_Session
           await api.order.create({
-            userId: userId ?? "",
+            userId: userId,
             stripe_Session: session as unknown as Record<string, unknown>,
           });
 

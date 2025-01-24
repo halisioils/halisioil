@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { type Address } from "~/lib/types";
 
 // Initialize  Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");

@@ -33,7 +33,7 @@ const ShopPage = async () => {
     <section className="h-full min-h-[100vh] w-full">
       <MobileSortButton />
 
-      <section className="flex justify-between gap-[1rem] py-[2rem]">
+      <section className="flex justify-start gap-[1rem] py-[2rem]">
         <div>
           <ShopPageNav />
           <MobileShopPageNav />

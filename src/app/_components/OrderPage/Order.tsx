@@ -47,19 +47,23 @@ const Order = ({ userId }: { userId: string }) => {
     }) ?? [];
 
   if (orders.isLoading) {
-    return <LoadingComponent />;
+    return (
+      <section className="my-[2rem] max-w-[1000px]">
+        <LoadingComponent />
+      </section>
+    );
   }
 
   return (
-    <section className="max-w-[1000px] py-[2rem]">
+    <section className="my-[2rem] max-w-[1000px]">
       {entries.map((entry) => (
         <div key={entry.id}>
-          <div className="pb-[1rem]">
+          <div className="my-[1rem]">
             <h3 className="text-[1.2rem] font-semibold">
               {dayjs(entry.createdAt).format("YYYY-MM-DD HH:mm:ss")}
             </h3>
           </div>
-          <div className="relative flex-col gap-[2rem] border-b-[1px] border-b-[#1C1C1C1A] pb-[1rem] text-[#252c32] md:flex-row md:gap-[1rem]">
+          <div className="relative flex flex-col gap-[2rem] border-b-[1px] border-b-[#1C1C1C1A] pb-[1rem] text-[#252c32] md:flex-row md:gap-[1rem]">
             <div className="pb-[0.5rem]">
               <p
                 className={`mb-[1rem] w-fit rounded-[1rem] px-[1rem] font-[400] ${statusStyles(entry.status)}`}

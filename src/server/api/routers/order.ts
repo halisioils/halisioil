@@ -17,7 +17,7 @@ export const orderRouter = createTRPCRouter({
         // Create the new order
         const newOrder = await ctx.db.order.create({
           data: {
-            userId: input.userId ?? "", // Handle optional userId
+            userId: input.userId, // Handle optional userId
             stripe_Session: input.stripe_Session ?? {}, // Store the session object if provided
           },
         });

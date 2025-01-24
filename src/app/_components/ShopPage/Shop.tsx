@@ -60,7 +60,7 @@ const ShopComponent = ({
   if (products.length === 0) {
     return (
       <div className="flex min-h-[100vh] justify-center py-[2rem] md:h-[248px]">
-        <p className="text-[1rem] text-[#898989]">No data found</p>;
+        <p className="text-[1rem] text-[#898989]">No data found</p>
       </div>
     );
   }
