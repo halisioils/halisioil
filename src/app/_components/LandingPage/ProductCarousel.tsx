@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import image_skeleton from "~/assets/dashboard_skeleton_image.png";
 import type { IProductPageSchema, ImageContent } from "~/lib/types";
+import { capitalizeFirstLetter } from "~/utils/capitalizeFirstLetter";
 import CarouselButton from "~/utils/CarouselButton";
 import { raleway } from "~/utils/font";
 import { formatCurrency } from "~/utils/formatCurrency";
@@ -64,56 +65,60 @@ const ProductCarousel = ({
           />
         </div>
         <div className="no-scrollbar flex h-full w-full gap-4 overflow-x-auto overflow-y-hidden lg:overflow-hidden">
-          {products?.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => handleCardClick(item.id)}
-              className="cursor-pointer rounded-[1rem] border-[1px] border-[#ECECEC] shadow-sm transition-transform ease-in-out"
-              style={{
-                transform: `translateX(${translateX}px)`,
-              }}
-            >
-              <div className="relative h-[250px] w-[220px] rounded-t-[1rem] border-[1px] border-[#ECECEC] md:w-[285px] md:rounded-t-[0.75rem]">
-                {item.imagePaths &&
-                  Array.isArray(item.imagePaths) &&
-                  item.imagePaths[0] && (
-                    <Image
-                      src={item.imagePaths[0]?.url || image_skeleton}
-                      alt={`Image for ${item.name}`}
-                      sizes="(min-width: 768px) 100vw, 700px"
-                      priority
-                      fill
-                      style={{
-                        objectFit: "contain",
-                        objectPosition: "center",
-                      }}
-                      className="rounded-[1rem]"
-                    />
-                  )}
-              </div>
+          {products ? (
+            products?.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => handleCardClick(item.id)}
+                className="cursor-pointer rounded-[1rem] border-[1px] border-[#ECECEC] shadow-sm transition-transform ease-in-out"
+                style={{
+                  transform: `translateX(${translateX}px)`,
+                }}
+              >
+                <div className="relative h-[250px] w-[220px] rounded-t-[1rem] border-[1px] border-[#ECECEC] md:w-[285px] md:rounded-t-[0.75rem]">
+                  {item.imagePaths &&
+                    Array.isArray(item.imagePaths) &&
+                    item.imagePaths[0] && (
+                      <Image
+                        src={item.imagePaths[0]?.url || image_skeleton}
+                        alt={`Image for ${item.name}`}
+                        sizes="(min-width: 768px) 100vw, 700px"
+                        priority
+                        fill
+                        style={{
+                          objectFit: "contain",
+                          objectPosition: "center",
+                        }}
+                        className="rounded-[1rem]"
+                      />
+                    )}
+                </div>
 
-              <div className="flex flex-col justify-between gap-2 p-4">
-                {/* Product Name */}
-                <p
-                  className={`${raleway.className} text-[1rem] font-bold leading-[48px] text-[#253D4E] md:text-[1.2rem]`}
-                >
-                  {item.name}
-                </p>
-
-                {/* Properties */}
-                {item.properties?.length > 0 && (
-                  <p className="truncate text-sm font-medium text-[#7E7E7E]">
-                    {renderArrayCapitalizedContent(item.properties)}
+                <div className="flex flex-col justify-between gap-2 p-4">
+                  {/* Product Name */}
+                  <p
+                    className={`${raleway.className} text-[1rem] font-bold leading-[48px] text-[#253D4E] md:text-[1.2rem]`}
+                  >
+                    {capitalizeFirstLetter(item.name)}
                   </p>
-                )}
 
-                {/* Price */}
-                <p className="truncate text-base font-bold text-[#B88E2F]">
-                  {formatCurrency(item.price)}
-                </p>
+                  {/* Properties */}
+                  {item.properties?.length > 0 && (
+                    <p className="truncate text-sm font-medium text-[#7E7E7E]">
+                      {renderArrayCapitalizedContent(item.properties)}
+                    </p>
+                  )}
+
+                  {/* Price */}
+                  <p className="truncate text-base font-bold text-[#B88E2F]">
+                    {formatCurrency(item.price)}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="font-medium text-[#7E7E7E]">Opps! No data found</p>
+          )}
         </div>
       </div>
     </article>

@@ -6,6 +6,7 @@ import { useCartContext } from "~/context/CartContext";
 import { useWishListContext } from "~/context/WishListContext";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
+import { capitalizeFirstLetter } from "~/utils/capitalizeFirstLetter";
 import { raleway } from "~/utils/font";
 import { formatCurrency } from "~/utils/formatCurrency";
 import LoadingComponent from "~/utils/LoadingComponent";
@@ -80,7 +81,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
         <p
           className={`flex items-center justify-center gap-[0.5rem] border-l-[1px] border-l-[#333333] px-[1rem] text-center text-[1rem] font-semibold text-[#253D4E] ${raleway.className} `}
         >
-          {product.data?.name}
+          {capitalizeFirstLetter(product.data?.name)}
         </p>
       </section>
       {product && product.data && (
@@ -94,7 +95,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               <h2
                 className={`${raleway.className} pb-[1rem] text-[1.5rem] font-bold leading-[48px] text-[#253D4E] md:text-[2.5rem]`}
               >
-                {product.data.name}
+                {capitalizeFirstLetter(product.data.name)}
               </h2>
 
               <p className="text-[2.125rem] font-bold leading-[58px] text-[#B88E2F] md:text-[3.125rem]">
@@ -102,7 +103,7 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               </p>
             </div>
             <h3 className="text-[1rem] leading-[24px] text-[#7E7E7E]">
-              {product.data.description}
+              {capitalizeFirstLetter(product.data.description)}
             </h3>
 
             <div className="flex flex-wrap items-center gap-[0.5rem]">
@@ -142,14 +143,14 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
               {isAddedToWishList ? (
                 <button
                   onClick={() => removeFromWishList(id)}
-                  className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-all duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
                 >
                   <WishlistIcon />
                 </button>
               ) : (
                 <button
                   onClick={() => addToWishList(id)}
-                  className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-colors duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
+                  className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-all duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
                 >
                   <WishlistIcon />
                 </button>

@@ -63,7 +63,7 @@ const Order = ({ userId }: { userId: string }) => {
               {dayjs(entry.createdAt).format("YYYY-MM-DD HH:mm:ss")}
             </h3>
           </div>
-          <div className="relative flex flex-col gap-[2rem] border-b-[1px] border-b-[#1C1C1C1A] pb-[1rem] text-[#252c32] md:flex-row md:gap-[1rem]">
+          <div className="relative grid grid-cols-1 gap-[1rem] border-b-[1px] border-b-[#1C1C1C1A] pb-[1rem] text-[#252c32] md:grid-cols-2 md:gap-[2rem]">
             <div className="pb-[0.5rem]">
               <p
                 className={`mb-[1rem] w-fit rounded-[1rem] px-[1rem] font-[400] ${statusStyles(entry.status)}`}

@@ -29,14 +29,14 @@ const Failed = () => {
           support.
         </p>
         <Link
-          href="/dashboard"
-          className="mt-4 w-full rounded-full bg-[#B88E2F] px-6 py-3 text-center text-base text-white transition-colors duration-300 ease-in-out hover:brightness-75"
+          href="/shop"
+          className="mt-4 w-full rounded-full bg-[#B88E2F] px-6 py-3 text-center text-base text-white transition-all duration-300 ease-in-out hover:brightness-75"
         >
-          Dashboard
+          Back to Shop
         </Link>
         <Link
           href="/contact"
-          className="mt-2 w-full rounded-full bg-gray-300 px-6 py-3 text-center text-base text-gray-800 transition-colors duration-300 ease-in-out hover:brightness-75"
+          className="mt-2 w-full rounded-full bg-gray-300 px-6 py-3 text-center text-base text-gray-800 transition-all duration-300 ease-in-out hover:brightness-75"
         >
           Contact Support
         </Link>

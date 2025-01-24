@@ -29,17 +29,18 @@ const AboutPage = async () => {
         </section>
         <section className="flex w-[100%] flex-col justify-start gap-[0.5rem] md:w-[70%] md:gap-[1rem]">
           <h2
-            className={`${raleway.className}text-[1.75rem] font-bold leading-[48px] text-[#253D4E] md:text-[2rem]`}
+            className={`${raleway.className} text-[2rem] font-bold leading-[48px] text-[#253D4E]`}
           >
             Welcome to Halisi
           </h2>
-          <p className="text-justify text-[0.875rem] leading-[24px] text-[#333333]">
+
+          <p className="text-justify text-[1rem] leading-[24px] text-[#7E7E7E]">
             Welcome to Halisi, where we craft pure, effective organic oils.
             Guided by our belief in nature&apos;s power for true wellness, we
             source the finest organic ingredients to nurture your body and
             spirit.
           </p>
-          <p className="text-justify text-[0.875rem] leading-[24px] text-[#333333]">
+          <p className="text-justify text-[1rem] leading-[24px] text-[#7E7E7E]">
             At Halisi, our mission is to provide high-quality natural oils that
             promote health and well-being. Committed to sustainability and
             ethics, we ensure our products benefit both our customers and the

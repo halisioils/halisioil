@@ -10,6 +10,7 @@ import { raleway } from "./font";
 import { useCartContext } from "~/context/CartContext";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
 import { formatCurrency } from "./formatCurrency";
+import { capitalizeFirstLetter } from "./capitalizeFirstLetter";
 
 const ProductCard = ({
   products,
@@ -83,10 +84,10 @@ const ProductCard = ({
               <h2
                 className={`${raleway.className} truncate text-[1.5rem] font-bold leading-[38.4px] text-[#253D4E] md:text-[2rem]`}
               >
-                {item.name}
+                {capitalizeFirstLetter(item.name)}
               </h2>
               <p className="line-clamp-2 text-[1rem] font-medium leading-[24px] text-[#7E7E7E]">
-                {item.description}
+                {capitalizeFirstLetter(item.description)}
               </p>
               {item.properties && item.properties.length > 0 && (
                 <p className="truncate text-sm font-medium text-[#253D4E]">

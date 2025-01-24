@@ -49,7 +49,7 @@ const SuccessComponent = () => {
           </p>
           <Link
             href="/dashboard"
-            className="mt-4 w-full rounded-full bg-[#B88E2F] px-6 py-3 text-center text-base text-white transition-colors duration-300 ease-in-out"
+            className="mt-4 w-full rounded-full bg-[#B88E2F] px-6 py-3 text-center text-base text-white transition-all duration-300 ease-in-out"
           >
             Go to Dashboard
           </Link>

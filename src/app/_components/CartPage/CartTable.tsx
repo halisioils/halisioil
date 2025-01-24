@@ -177,7 +177,7 @@ const CartTable = ({ userId }: { userId: string }) => {
                     <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
                       <button
                         disabled={load}
-                        className="flex h-[46px] w-[150px] items-center justify-center rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-colors duration-300 ease-in-out hover:brightness-75"
+                        className="flex h-[46px] w-[150px] items-center justify-center rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-all duration-300 ease-in-out hover:brightness-75"
                         onClick={() => {
                           void handleCheckouthandler(
                             fullCartItems as ChectOutItem[],
