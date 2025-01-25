@@ -16,6 +16,7 @@ import StatusToggle from "~/utils/StatusToggle";
 const Orders = () => {
   const searchParams = useSearchParams();
   const orders = api.order.getAllOrders.useQuery();
+  const [statusToggle, setStatusToggle] = useState<string>(""); // State to hold the selected status
 
   const [orderStatuses, setOrderStatuses] = useState(
     orders.data?.reduce(
@@ -30,12 +31,18 @@ const Orders = () => {
   const page = parseInt(searchParams.get("page") ?? "1", 10); // Ensure page is a number
   const perPage = 10;
 
+  // Filter orders by selected status
+  const filteredOrders = statusToggle
+    ? orders.data?.filter((order) => order.status === statusToggle)
+    : orders.data; // Show all orders if no status is selected
+
   // Calculate pagination values
   const start = (page - 1) * perPage;
   const end = start + perPage;
 
+  // Paginate and process the filtered orders
   const entries =
-    orders.data?.slice(start, end).map((order) => {
+    filteredOrders?.slice(start, end).map((order) => {
       const { id, userId, status, createdAt, stripe_Session } = order;
 
       // Validate and parse stripe_Session
@@ -74,12 +81,37 @@ const Orders = () => {
       properties: [], // Default empty array for properties
     })) ?? [];
 
+  // Handle status change from the <select> input
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusToggle(e.target.value);
+  };
+
   if (orders.isLoading) {
     return <LoadingComponent />;
   }
 
   return (
-    <>
+    <section className="max-w-[1000px]">
+      {orders.data && orders.data?.length > 0 && (
+        <div className="my-[2rem]">
+          <label htmlFor="status" className="text-gray-700">
+            Filter by Status:
+          </label>
+          <select
+            id="status"
+            value={statusToggle}
+            onChange={handleStatusChange}
+            className="rounded-md border border-gray-300 px-4 py-2 text-[#84919A]"
+          >
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="shipped">Shipped</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="delivered">Delivered</option>
+          </select>
+        </div>
+      )}
+
       {entries.length > 0 ? (
         <section className="max-w-[1000px]">
           <section className="z-10 min-h-[50vh] overflow-x-auto pb-[6rem]">
@@ -153,7 +185,7 @@ const Orders = () => {
       ) : (
         <Skeleton />
       )}
-    </>
+    </section>
   );
 };
 

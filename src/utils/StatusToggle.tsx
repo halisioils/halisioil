@@ -23,7 +23,7 @@ const StatusToggleComponent = ({
 
   const updateStatus = api.order.updateOrder.useMutation({
     onSuccess: async (data) => {
-      await utils.product.invalidate();
+      await utils.order.invalidate();
       toast.success(`Order updated to ${data.status}`);
       onStatusChange(data.status); // Lift status change up to parent
     },
