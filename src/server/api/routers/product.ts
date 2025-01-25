@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { productSchema, updateProductSchema } from "~/lib/types";
+import {
+  type ImageContent,
+  productSchema,
+  updateProductSchema,
+} from "~/lib/types";
 import { UTApi } from "uploadthing/server";
 
 import {
@@ -34,8 +38,6 @@ export const productRouter = createTRPCRouter({
   update: privateAdminProcedure
     .input(updateProductSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
-
       try {
         const product = await ctx.db.product.update({
           where: {
@@ -73,6 +75,104 @@ export const productRouter = createTRPCRouter({
       }
     }),
 
+  addImages: privateAdminProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Product ID is required"), // Validate 'id' is non-empty
+        images: z
+          .array(
+            z.object({
+              key: z.string().min(1, "Image key is required"), // Validate 'key' is non-empty
+              url: z.string().min(1, "Image url is required"), // Validate 'url' is non-empty
+              size: z.number().min(0, "Image size is required"), // Validate 'size' is a positive number
+              name: z.string().min(1, "Image name is required"), // Validate 'name' is non-empty
+            }),
+          )
+          .min(1, "At least one image is required"), // Ensure at least one image is provided
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, images } = input;
+
+      // Fetch the existing product to get its current imagePaths
+      const product = await ctx.db.product.findUnique({
+        where: { id },
+      });
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      // Type assertion to treat imagePaths as an array of ImageContent
+      const existingImagePaths = product.imagePaths as
+        | ImageContent[]
+        | null
+        | undefined;
+
+      if (!existingImagePaths) {
+        throw new Error("No existing image paths found for this product.");
+      }
+
+      // Add the new images to the existing imagePaths
+      const updatedImagePaths = [...existingImagePaths, ...images];
+
+      // Update the product with the new imagePaths array
+      const updatedProduct = await ctx.db.product.update({
+        where: { id },
+        data: {
+          imagePaths: updatedImagePaths, // Append new images
+        },
+      });
+
+      return updatedProduct;
+    }),
+
+  deleteImage: privateAdminProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Product ID is required"), // Validate 'id' is non-empty
+        key: z.string().min(1, "Image key is required"), // Validate 'key' is non-empty
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, key } = input;
+
+      // Fetch the product to update its imagePaths
+      const product = await ctx.db.product.findUnique({
+        where: { id },
+      });
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      // Type assertion to treat imagePaths as an array of ImageContent
+      const imagePaths = product.imagePaths as
+        | ImageContent[]
+        | null
+        | undefined;
+
+      if (!imagePaths) {
+        throw new Error("No image paths found for this product.");
+      }
+
+      // Filter out the image based on the key
+      const updatedImagePaths: ImageContent[] = imagePaths.filter(
+        (image: ImageContent) => image.key !== key,
+      );
+
+      // Update the product with the modified imagePaths array
+      const updatedProduct = await ctx.db.product.update({
+        where: { id },
+        data: { imagePaths: updatedImagePaths },
+      });
+
+      // Delete the image file using the external API
+      await utapi.deleteFiles(key);
+
+      return updatedProduct;
+    }),
+
   delete: privateAdminProcedure
     .input(
       z.object({
@@ -103,28 +203,34 @@ export const productRouter = createTRPCRouter({
   deleteMany: privateAdminProcedure
     .input(
       z.object({
-        id: z.string().min(1, "Product ID is required"), // Validate 'name' is non-empty
-        key: z
+        ids: z
+          .array(z.string().min(1, "Product ID is required"))
+          .min(1, "At least one product ID is required"), // Validate 'ids' is non-empty
+        keys: z
           .array(z.string().min(1, "Image key is required"))
-          .min(1, "At least one image is required"),
+          .min(1, "At least one image is required"), // Validate 'keys' is non-empty
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, key } = input;
+      const { ids, keys } = input;
+
       // Execute both operations in parallel
-      const [deleteProductResponse] = await Promise.all([
-        // Delete the product from the database
+      const [deleteProductsResponse] = await Promise.all([
+        // Delete the products from the database (based on ids)
         ctx.db.product.deleteMany({
           where: {
-            id,
+            id: {
+              in: ids, // Delete products whose ids are in the 'ids' array
+            },
           },
         }),
 
-        // Delete the file using the external API
-        utapi.deleteFiles(key),
+        // Delete the files using the external API (based on keys)
+        utapi.deleteFiles(keys),
       ]);
 
-      return deleteProductResponse;
+      // Return the response after deletion
+      return deleteProductsResponse;
     }),
 
   getAllProducts: publicProcedure.query(async ({ ctx }) => {

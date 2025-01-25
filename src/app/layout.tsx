@@ -7,7 +7,6 @@ import { AuthProvider } from "./auth/AuthProvider";
 import { poppins } from "~/utils/font";
 import { Toaster } from "react-hot-toast";
 import { ImageProvider } from "~/context/ImageFormContext";
-import Modal from "~/utils/Modal";
 import { HeaderProvider } from "~/context/HeaderContext";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
@@ -52,7 +51,7 @@ export default async function RootLayout({
                     <header className="sticky top-0 z-40 bg-[#333333]">
                       <Header />
                     </header>
-                    <Modal />
+
                     <MiniCart userId={userId} />
                     <Toaster position="top-right" />
                     {children}

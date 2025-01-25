@@ -34,8 +34,9 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const user = await getUser();
 
   const adminUser =
-    admin_permission?.isGranted ?? super_admin_permission?.isGranted;
-  const superAdminUser = super_admin_permission?.isGranted;
+    admin_permission?.isGranted === true ||
+    super_admin_permission?.isGranted === true;
+  const superAdminUser = super_admin_permission?.isGranted === true;
 
   return {
     db,

@@ -17,8 +17,6 @@ const Orders = () => {
   const searchParams = useSearchParams();
   const orders = api.order.getAllOrders.useQuery();
 
-  console.log(orders.data);
-
   const [orderStatuses, setOrderStatuses] = useState(
     orders.data?.reduce(
       (acc, order) => {

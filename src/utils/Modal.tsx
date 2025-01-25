@@ -16,16 +16,10 @@ const ModalComponent = () => {
     switch (active_section) {
       case "product_delete":
         return <DeleteProducts />;
-      case "bulk_product_delete":
-        return <p>xx</p>;
       case "category_delete":
         return <DeleteCategory />;
-      case "bulk_category_delete":
-        return <p>xx</p>;
       case "admin_remove":
         return <RemoveAdmin />;
-      case "bulk_admin_remove":
-        return <p>xx</p>;
 
       default:
         return null;

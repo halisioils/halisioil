@@ -15,6 +15,11 @@ export async function middleware(request: NextRequest) {
   const super_admin_permission = await getPermission("SUPER_ADMIN");
   const admin_permission = await getPermission("ADMIN_USER");
 
+  const adminUser =
+    admin_permission?.isGranted === true ||
+    super_admin_permission?.isGranted === true;
+  const superAdminUser = super_admin_permission?.isGranted === true;
+
   // Handle /admin path
   if (pathname === "/admin") {
     // If user is not logged in, redirect to login with post_login_redirect URL
@@ -27,7 +32,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check permissions and redirect if not granted
-    if (!(admin_permission?.isGranted || super_admin_permission?.isGranted)) {
+    if (!(adminUser || superAdminUser)) {
       const unauthorizedUrl = new URL(`/`, request.url);
       return NextResponse.redirect(unauthorizedUrl, { status: 303 });
     }

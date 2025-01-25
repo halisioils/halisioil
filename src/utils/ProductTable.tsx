@@ -7,8 +7,13 @@ import TablePagination from "./TablePagination";
 import Skeleton from "./Skeleton";
 import Dropdown from "./Dropdown";
 import { useDropdown } from "~/hooks/useDropdown";
+import BulkDeleteModal from "./BulkDeleteModal";
 
 const ProductTable: FC<TableProps> = ({ page, per_page }) => {
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const products = api.product.getAllProducts.useQuery();
 
@@ -50,9 +55,19 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
     setDropdownId((prevId) => (prevId === productId ? "" : productId));
   };
 
-  const handleBulkDelete = () => {
-    // // Call your bulk delete function with the selected items
-    console.log("Delete these items: ", Array.from(selectedItems));
+  const handleModalToggle = () => {
+    const ids = Array.from(selectedItems);
+    const keys: string[] = [];
+
+    entries?.forEach((entry) => {
+      if (ids.includes(entry.id)) {
+        entry.imagePaths.forEach((image) => keys.push(image.key));
+      }
+    });
+
+    setSelectedId(ids); // For bulk delete, pass a comma-separated list
+    setSelectedKeys(keys);
+    setDeleteModal(true); // Open the modal
   };
 
   if (products.isPending)
@@ -64,13 +79,22 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
 
   return (
     <>
+      {deleteModal && (
+        <BulkDeleteModal
+          ids={selectedId}
+          keys={selectedKeys}
+          onClose={() => setDeleteModal(false)}
+          onSelected={() => setSelectedItems(new Set())}
+        />
+      )}
+
       {products && products.data && products.data.length > 0 ? (
         <section className="max-w-[1000px]">
           <section className="my-[1rem]">
             {selectedItems && selectedItems.size > 0 && (
               <button
                 className="flex h-[40px] w-fit cursor-pointer items-center gap-[1rem] border-none px-[1rem] py-[0.625rem] hover:bg-gray-100 focus:outline-none"
-                onClick={handleBulkDelete}
+                onClick={handleModalToggle}
               >
                 <span>
                   <svg

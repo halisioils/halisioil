@@ -20,7 +20,8 @@ const ProfileNav = () => {
   const admin_permission = getPermission("ADMIN_USER");
 
   const is_Admin =
-    super_admin_permission?.isGranted ?? admin_permission?.isGranted;
+    admin_permission?.isGranted === true ||
+    super_admin_permission?.isGranted === true;
 
   const { closeProfile } = useProfileToggle();
 

@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import DashboardHeader from "./DashboardHeader";
 import LoadingComponent from "~/utils/LoadingComponent";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 
 const AdminNavComponent = () => {
   const pathname = usePathname();
@@ -25,10 +26,6 @@ const AdminNavComponent = () => {
     " bg-highlight text-black rounded-sm hover:bg-gray-200 transition-all ease-in-out duration-300";
   const inactiveIcon = "w-6 h-6";
   const activeIcon = inactiveIcon + " text-primary";
-
-  async function logout() {
-    console.log("logout");
-  }
 
   return (
     <aside
@@ -129,7 +126,7 @@ const AdminNavComponent = () => {
           Orders
         </button>
 
-        <button onClick={logout} className={inactiveLink}>
+        <LogoutLink className={inactiveLink}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -145,7 +142,7 @@ const AdminNavComponent = () => {
             />
           </svg>
           Logout
-        </button>
+        </LogoutLink>
       </nav>
     </aside>
   );

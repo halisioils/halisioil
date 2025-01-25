@@ -342,7 +342,7 @@ const ProductForm = () => {
           type="submit"
           className={`btn-primary ${isSubmitting && "cursor-not-allowed"}`}
         >
-          {(isSubmitting ?? isUploading) ? <LoadingComponent /> : "Submit"}
+          {isSubmitting || isUploading ? <LoadingComponent /> : "Submit"}
         </button>
       </form>
     </section>
