@@ -6,7 +6,7 @@ import MobileAdminNav from "../_components/AdminPage/MobileAdminNav";
 
 const AdminPage = async () => {
   return (
-    <section className="flex">
+    <section className="flex flex-col gap-[1rem] md:flex-row">
       <div>
         <AdminNav />
         <MobileAdminNav />

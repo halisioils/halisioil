@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import { z } from "zod";
 
 // Define the enum for product status
@@ -219,4 +220,12 @@ export type Address = {
   state: string;
   zipCode: string;
   country: string;
+};
+
+export type Order = {
+  id: string;
+  userId: string | null; // Allow userId to be null
+  status: string;
+  createdAt: Date;
+  stripe_Session: Stripe.Checkout.Session | null; // Allow stripe_Session to be null
 };

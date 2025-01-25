@@ -6,6 +6,7 @@ import LoadingComponent from "~/utils/LoadingComponent";
 import Categories from "./Categories";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Orders from "./Orders";
+import Statistics from "./Statistics";
 
 const DashboardComponent = () => {
   const searchParams = useSearchParams();
@@ -21,7 +22,7 @@ const DashboardComponent = () => {
   const renderComponent = () => {
     switch (active_section) {
       case "dashboard":
-        return <div>Dashboard</div>;
+        return <Statistics />;
       case "products":
         return <Products />;
       case "categories":
@@ -30,7 +31,7 @@ const DashboardComponent = () => {
         return <Orders />;
 
       default:
-        return <div>default</div>;
+        return <Statistics />;
     }
   };
 
