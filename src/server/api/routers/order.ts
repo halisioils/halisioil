@@ -34,7 +34,7 @@ export const orderRouter = createTRPCRouter({
     }),
 
   // Update an order
-  updateOrder: publicProcedure
+  updateOrder: privateAdminProcedure
     .input(
       z.object({
         id: z.string(), // Order ID to update
