@@ -78,7 +78,7 @@ const Order = ({ userId }: { userId: string }) => {
                     : null,
                 )}, ${entry.stripe_Session?.customer_details?.email} ${entry.stripe_Session?.customer_details?.phone ? entry.stripe_Session?.customer_details?.phone : ""}`}
               </p>
-              <p className="font-[400]">{`Order ref: ${entry.stripe_Session?.id}`}</p>
+              <p className="whitespace-normal break-words font-[400]">{`Order ref: ${entry.stripe_Session?.id}`}</p>
             </div>
 
             <p className="font-medium text-[#333333]">
