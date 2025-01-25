@@ -3,7 +3,7 @@ import { raleway } from "~/utils/font";
 
 const Overview = () => {
   return (
-    <section className="mt-[2rem] rounded-[15px] bg-black py-10 sm:py-16 lg:py-24">
+    <section className="mt-[2rem] h-full w-full rounded-[15px] border-[1px] border-[#ECECEC] bg-[#ECECEC] bg-opacity-10 bg-clip-padding py-10 backdrop-blur-sm backdrop-filter sm:py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 text-center md:grid-cols-3 lg:gap-y-16">
           <div>
@@ -20,7 +20,7 @@ const Overview = () => {
               </svg>
 
               <svg
-                className="absolute h-9 w-9 text-gray-600"
+                className="absolute h-9 w-9 text-[#7E7E7E]"
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -46,11 +46,11 @@ const Overview = () => {
               </svg>
             </div>
             <h3
-              className={`${raleway.className} mt-8 text-lg font-semibold text-[#B88E2F]`}
+              className={`${raleway.className} mt-8 text-[1.5rem] font-bold text-[#333333]`}
             >
               100% Organic
             </h3>
-            <p className="mt-4 text-base text-white">
+            <p className="mt-4 text-base text-[#7E7E7E]">
               We believe in the power of nature to provide the best for your
               well-being. Our products are made with 100% organic ingredients.
             </p>
@@ -96,11 +96,11 @@ const Overview = () => {
               </svg>
             </div>
             <h3
-              className={`${raleway.className} mt-8 text-lg font-semibold text-[#B88E2F]`}
+              className={`${raleway.className} mt-8 text-[1.5rem] font-bold text-[#333333]`}
             >
               Biological Safe
             </h3>
-            <p className="mt-4 text-base text-white">
+            <p className="mt-4 text-base text-[#7E7E7E]">
               Your safety is our priority at Halisi. Our products are
               biologically safe, meaning they are gentle on your skin and body.
             </p>
@@ -145,11 +145,11 @@ const Overview = () => {
               </svg>
             </div>
             <h3
-              className={`${raleway.className} mt-8 text-lg font-semibold text-[#B88E2F]`}
+              className={`${raleway.className} mt-8 text-[1.5rem] font-bold text-[#333333]`}
             >
               Improve Health
             </h3>
-            <p className="mt-4 text-base text-white">
+            <p className="mt-4 text-base text-[#7E7E7E]">
               Enhance your well-being with Halisi&apos;s organic oils, designed
               to support and improve your health naturally.
             </p>

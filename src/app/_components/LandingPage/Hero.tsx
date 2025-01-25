@@ -19,13 +19,9 @@ const Hero = () => {
     (source) => source?.src,
   );
 
-  if (!heroImagesArray.length) {
-    return <div>No images available</div>;
-  }
-
   return (
     <section
-      className={`relative h-[608px] w-full md:min-h-[605px] ${poppins.className} `}
+      className={`relative h-[508px] w-full md:min-h-[605px] ${poppins.className} `}
     >
       {/* Text Content */}
       <div className="absolute left-0 top-1/2 z-30 flex -translate-y-1/2 transform flex-col gap-[1.5rem] px-[1rem] text-white md:px-[3rem] xl:gap-[2.5rem] xl:pl-[7.5rem]">
@@ -58,13 +54,10 @@ const Hero = () => {
           src={heroImagesArray[currentIndex].src}
           priority
           alt="background image"
-          className={`absolute inset-0 object-cover ease-in ${
+          className={`absolute inset-0 object-cover object-right ease-in md:object-top ${
             isAnimating ? "opacity-0" : "opacity-100"
           } transition-opacity duration-1000`}
           onLoad={() => setIsAnimating(false)}
-          style={{
-            objectPosition: "top 5%",
-          }}
         />
       )}
       {heroImagesArray[nextIndex]?.src && (

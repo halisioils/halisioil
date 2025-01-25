@@ -45,6 +45,7 @@ const Footer = () => {
           {helpLinks.map((link, index) => (
             <li key={index}>
               <Link
+                scroll={true}
                 className={`text-[1rem] text-[#253D4E] transition-all duration-300 ease-in-out hover:text-[#a9acbb]`}
                 href={link.href}
               >

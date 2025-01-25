@@ -18,7 +18,8 @@ const Accordian: FC = () => {
   return (
     <div className="relative mt-[3rem]">
       {faqs.map((faq, index) => (
-        <div
+        <section
+          id={faq.id}
           key={faq.id}
           onClick={() => toggleHandler(index)}
           className={`my-[1rem] w-[100%] cursor-pointer gap-[1rem] rounded-[0.75rem] border-[1px] border-[#ECECEC] px-[2rem] py-[1rem] transition-all duration-[300ms] ease-in-out ${
@@ -71,7 +72,7 @@ const Accordian: FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       ))}
     </div>
   );
