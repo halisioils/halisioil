@@ -6,7 +6,6 @@ import { api } from "~/trpc/server";
 export async function GET(request: NextRequest) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const apiUrl = `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}`;
 
   if (!user?.email) {
     throw new Error("Something went wrong");
@@ -20,6 +19,10 @@ export async function GET(request: NextRequest) {
     dbUser = await api.user.create({ email: user.email });
   }
 
-  // Redirect to the root pathname
-  return NextResponse.redirect(new URL(apiUrl, request.url));
+  // Get the redirect URL from the query parameters (if it exists)
+  const redirectTo =
+    request.nextUrl.searchParams.get("halisi_redirectTo") ?? "/";
+
+  // Redirect to the specified URL (or root if not specified)
+  return NextResponse.redirect(new URL(redirectTo, request.url));
 }

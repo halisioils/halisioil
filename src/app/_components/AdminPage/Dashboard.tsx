@@ -4,7 +4,6 @@ import React, { Suspense } from "react";
 import Products from "./Products";
 import LoadingComponent from "~/utils/LoadingComponent";
 import Categories from "./Categories";
-import Admins from "./Admins";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Orders from "./Orders";
 
@@ -29,8 +28,6 @@ const DashboardComponent = () => {
         return <Categories />;
       case "orders":
         return <Orders />;
-      case "admins":
-        return <Admins />;
 
       default:
         return <div>default</div>;

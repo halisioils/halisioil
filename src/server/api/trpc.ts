@@ -26,33 +26,16 @@ import { db } from "~/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const { getUser } = getKindeServerSession();
+  const { getUser, getPermission } = getKindeServerSession();
+
+  const super_admin_permission = await getPermission("SUPER_ADMIN");
+  const admin_permission = await getPermission("ADMIN_USER");
 
   const user = await getUser();
 
-  let adminUser = false;
-  let superAdminUser = false;
-
-  if (user?.email) {
-    const response = await db.user.findUnique({
-      where: {
-        email: user.email,
-      },
-      select: {
-        id: true,
-        email: true,
-        permission: true,
-      },
-    });
-
-    if (response?.permission) {
-      const userPermissions: string = response.permission;
-
-      adminUser =
-        userPermissions === "ADMIN_USER" || userPermissions === "SUPER_ADMIN";
-      superAdminUser = userPermissions === "SUPER_ADMIN";
-    }
-  }
+  const adminUser =
+    admin_permission?.isGranted ?? super_admin_permission?.isGranted;
+  const superAdminUser = super_admin_permission?.isGranted;
 
   return {
     db,

@@ -1,9 +1,8 @@
 import React, { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LoadingComponent from "~/utils/LoadingComponent";
-import AdminForm from "./AdminForm";
+
 import AdminsTable from "~/utils/AdminsTable";
-import AdminUpdateForm from "./AdminUpdateForm";
 
 const AdminsComponent = () => {
   const searchParams = useSearchParams();
@@ -25,10 +24,10 @@ const AdminsComponent = () => {
   // Function to render the component based on `toggled url state`
   const renderComponent = () => {
     switch (active_section) {
-      case "create":
-        return <AdminForm />;
-      case "update":
-        return <AdminUpdateForm />;
+      // case "create":
+      //   return <AdminForm />;
+      // case "update":
+      //   return <AdminUpdateForm />;
       default:
         return (
           <div>
