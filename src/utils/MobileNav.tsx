@@ -145,7 +145,7 @@ const MobileNav = () => {
               <Link
                 href={`/dashboard`}
                 onClick={closeDropdown}
-                className={`mb-[2rem] flex items-center gap-[1.5rem]`}
+                className={`my-[2rem] flex items-center gap-[1.5rem]`}
               >
                 <span>
                   <svg
