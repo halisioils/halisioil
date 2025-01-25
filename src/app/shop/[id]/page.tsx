@@ -12,6 +12,7 @@ import { formatCurrency } from "~/utils/formatCurrency";
 import LoadingComponent from "~/utils/LoadingComponent";
 import { renderArrayCapitalizedContent } from "~/utils/renderArrayCapitalizedContent";
 import { CartIcon, DeleteIcon, WishlistIcon } from "~/utils/UserListIconts";
+import ShopDetailPageLoading from "./loading";
 
 const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
