@@ -75,7 +75,7 @@ const ProductCarousel = ({
                   transform: `translateX(${translateX}px)`,
                 }}
               >
-                <div className="relative h-[250px] w-[220px] rounded-t-[1rem] md:w-[285px] md:rounded-t-[0.75rem]">
+                <div className="relative h-[250px] w-[220px] rounded-t-[1rem] border-b-[1px] border-b-[#ECECEC] md:w-[285px] md:rounded-t-[0.75rem]">
                   {item.imagePaths &&
                     Array.isArray(item.imagePaths) &&
                     item.imagePaths[0] && (
