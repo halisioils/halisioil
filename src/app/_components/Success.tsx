@@ -7,8 +7,8 @@ import { useRedirectAfterPayment } from "~/hooks/useRedirectAfterPayment";
 import LoadingComponent from "~/utils/LoadingComponent";
 
 const SuccessComponent = () => {
-  // Call the custom hook to redirect to "/dashboard" after 2 seconds
-  useRedirectAfterPayment("/dashboard", 5000);
+  // Call the custom hook to redirect to "/shop" after 2 seconds
+  useRedirectAfterPayment("/shop", 5000);
 
   const [mounted, setMounted] = useState(false);
 
