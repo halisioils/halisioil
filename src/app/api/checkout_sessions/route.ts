@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card", "paypal"],
       line_items: lineItems,
-      client_reference_id: userId,
+      client_reference_id: userId ? userId : "not_logged_in",
       mode: "payment",
       billing_address_collection: "required",
       shipping_address_collection: {
