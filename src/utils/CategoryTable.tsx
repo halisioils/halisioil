@@ -38,7 +38,7 @@ const CategoryTable: FC<TableProps> = ({ page, per_page }) => {
   return (
     <>
       {categories && categories.data && categories.data.length > 0 ? (
-        <section className="max-w-[1000px]">
+        <section className="mt-[1rem] max-w-[1000px]">
           <div className="z-10 min-h-[50vh] overflow-y-hidden overflow-x-scroll pb-[6rem]">
             <div
               ref={dropdownRef}
