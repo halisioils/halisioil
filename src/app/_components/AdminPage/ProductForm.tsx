@@ -1,4 +1,4 @@
-import Select from "react-select";
+import Select, { type MultiValue } from "react-select";
 import { Controller, type FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
@@ -17,8 +17,11 @@ import MultiInput from "~/utils/MultiInput";
 const ProductForm = () => {
   const categories = api.category.getAllCategories.useSuspenseQuery()[0];
 
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
+
+  const [selectedCategories, setSelectedCategories] = useState<
+    { categoryId: string; price: number }[]
+  >([]);
 
   const {
     setIsUploading,
@@ -40,6 +43,7 @@ const ProductForm = () => {
     control,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm({
     resolver: zodResolver(clientProductSchema),
   });
@@ -49,7 +53,7 @@ const ProductForm = () => {
       await utils.product.invalidate();
       toast.success(`Product - ${data.name} added successfully`);
       reset();
-      setSelectedOption([]);
+      setSelectedCategories([]);
       setFiles([]);
       setPreviews([]);
       setIsUploading(false);
@@ -122,6 +126,28 @@ const ProductForm = () => {
       label: capitalizeFirstLetter(category.name),
     })) ?? [];
 
+  const handleCategoryChange = (
+    selected: MultiValue<{ value: string; label: string }>,
+  ) => {
+    setSelectedCategories(
+      selected.map((option) => ({
+        categoryId: option.value,
+        price: 0, // Default price for new selections
+      })),
+    );
+  };
+
+  const handlePriceChange = (categoryId: string, newPrice: number) => {
+    setSelectedCategories((prev) => {
+      const updatedCategories = prev.map((item) =>
+        item.categoryId === categoryId ? { ...item, price: newPrice } : item,
+      );
+
+      setValue("categories", updatedCategories); // Update form state
+      return updatedCategories;
+    });
+  };
+
   // Transform the availability array to match React Select's structure
   const statusOptions = [
     { value: "AVAILABLE", label: "Available" },
@@ -161,8 +187,7 @@ const ProductForm = () => {
         createProduct.mutate({
           name: data.name,
           description: data.description,
-          price: data.price,
-          categoryIds: data.categoryIds,
+          categories: selectedCategories,
           imagePaths: imageShape,
           properties: data.properties,
           status: data.status,
@@ -215,61 +240,72 @@ const ProductForm = () => {
           )}
         </div>
 
-        <div className="mb-[1rem]">
-          <label>Price (in Pounds)</label>
-          <input
-            type="number"
-            placeholder="Enter price"
-            {...register("price", {
-              valueAsNumber: true,
-              min: {
-                value: 1,
-                message: "Price must be positve",
-              },
-            })}
-          />
-          {errors.price?.message && (
-            <p className="mt-1 text-sm text-red-500">
-              {typeof errors.price.message === "string"
-                ? errors.price.message
-                : "Invalid input"}
-            </p>
-          )}
-        </div>
-
         <div className="mb-[1.5rem]">
           <label>Category</label>
 
           <Controller
             name="categoryIds"
             control={control}
-            defaultValue={[]} // Default to an empty array
             render={({ field }) => (
               <Select
-                {...selectedOption}
-                options={categoryOptions} // Ensure this has valid `value` and `label`
+                {...field}
+                options={categoryOptions}
                 isMulti
-                className="z-30 text-[0.875rem]"
                 placeholder="Select categories"
+                value={categoryOptions.filter((option) =>
+                  selectedCategories.some(
+                    (sc) => sc.categoryId === option.value,
+                  ),
+                )}
                 onChange={(selected) => {
-                  const ids = selected.map(
-                    (option: { value: string }) => option.value,
-                  ); // Extract IDs
-                  const values = selected.map((option) => option.label); // Extract IDs
-                  setSelectedOption(values);
-                  field.onChange(ids); // Update the form state
+                  const updatedCategories = selected.map((option) => {
+                    const existingCategory = selectedCategories.find(
+                      (c) => c.categoryId === option.value,
+                    );
+                    return {
+                      categoryId: option.value,
+                      price: existingCategory ? existingCategory.price : 0, // Preserve existing price if available
+                    };
+                  });
+
+                  setSelectedCategories(updatedCategories);
+                  field.onChange(updatedCategories);
                 }}
               />
             )}
           />
 
-          {errors.categoryIds?.message && (
+          {errors.productCategories?.message && (
             <p className="mt-1 text-sm text-red-500">
-              {typeof errors.categoryIds.message === "string"
-                ? errors.categoryIds.message
+              {typeof errors.productCategories.message === "string"
+                ? errors.productCategories.message
                 : "Invalid input"}
             </p>
           )}
+
+          {selectedCategories.map(({ categoryId, price }) => {
+            const categoryLabel =
+              categoryOptions.find((option) => option.value === categoryId)
+                ?.label ?? "Unknown Category";
+
+            return (
+              <div key={categoryId} className="mt-[1.5rem]">
+                <label>Price (in Pounds)</label>
+                <div>
+                  <span className="text-sm">{categoryLabel}:</span>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) =>
+                      handlePriceChange(categoryId, Number(e.target.value))
+                    }
+                    placeholder="Enter price"
+                    required
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="mb-[1.5rem]">

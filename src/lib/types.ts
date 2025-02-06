@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { z } from "zod";
 
 // Define the enum for product status
@@ -18,7 +18,6 @@ export const userPermissionEnum = z.enum([
 export const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
-  price: z.number().min(0.01, "Price is required, must be a positive number"),
   imagePaths: z
     .array(
       z.object({
@@ -31,14 +30,20 @@ export const productSchema = z.object({
     .min(1, "At least one image is required"),
   status: ProductStatusEnum.optional().default("AVAILABLE"),
   properties: z.array(z.string()).optional(),
-  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  categories: z.array(
+    z.object({
+      categoryId: z.string().min(1, "At least one category is required"),
+      price: z
+        .number()
+        .min(0.01, "Price is required, must be a positive number"),
+    }),
+  ),
 });
 
 export const adminProductSchema = z.object({
   id: z.string().min(1, "Product id is required"),
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
-  price: z.number().min(0.01, "Price is required, must be a positive number"),
   imagePaths: z
     .array(
       z.object({
@@ -51,24 +56,43 @@ export const adminProductSchema = z.object({
     .min(1, "At least one image is required"),
   status: ProductStatusEnum.optional().default("AVAILABLE"),
   properties: z.array(z.string()).optional(),
-  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  categories: z.array(
+    z.object({
+      categoryId: z.string().min(1, "At least one category is required"),
+      price: z
+        .number()
+        .min(0.01, "Price is required, must be a positive number"),
+    }),
+  ),
 });
 
 export const updateProductSchema = z.object({
   id: z.string().min(1, "Product id is required"),
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
-  price: z.number().min(0.01, "Price is required, must be a positive number"),
   status: ProductStatusEnum.optional().default("AVAILABLE"),
   properties: z.array(z.string()).optional(),
-  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  categories: z.array(
+    z.object({
+      categoryId: z.string().min(1, "At least one category is required"),
+      price: z
+        .number()
+        .min(0.01, "Price is required, must be a positive number"),
+    }),
+  ),
 });
 
 export const clientProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().min(1, "Product description is required"),
-  price: z.number().min(0.01, "Price is required, must be a positive number"),
-  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  categories: z.array(
+    z.object({
+      categoryId: z.string().min(1, "At least one category is required"),
+      price: z
+        .number()
+        .min(0.01, "Price is required, must be a positive number"),
+    }),
+  ),
   status: ProductStatusEnum.optional().default("AVAILABLE"),
   properties: z.array(z.string()).optional(),
 });
@@ -88,6 +112,11 @@ export const addressSchema = z.object({
 });
 
 export const categorySchema = z.object({
+  name: z.string().min(1, "Category name is required"), // Ensure the category name is provided
+  productIds: z.array(z.string()).optional(), // Optionally pass an array of product IDs to associate
+});
+
+export const productCategorySchema = z.object({
   name: z.string().min(1, "Category name is required"), // Ensure the category name is provided
   productIds: z.array(z.string()).optional(), // Optionally pass an array of product IDs to associate
 });
@@ -192,10 +221,10 @@ export type BannerProps = {
   head: string;
 };
 
+// Export the updated IProductCardSchema
 export type IProductCardSchema = {
   status: string;
   name: string;
-  price: number;
   imagePaths: {
     name: string;
     key: string;
@@ -204,6 +233,14 @@ export type IProductCardSchema = {
   }[];
   id: string;
   properties?: string[];
+  productCategories: {
+    category: {
+      name: string;
+      id: number;
+    };
+    categoryId: string;
+    price: number;
+  }[];
 };
 
 export type ChectOutItem = {

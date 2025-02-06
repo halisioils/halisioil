@@ -18,12 +18,18 @@ const ProductCarousel = ({
     id: string;
     name: string;
     imagePaths: ImageContent[];
-    price: number;
+    productCategories: {
+      categoryId: string;
+      price: number;
+      category: { name: string };
+    }[];
     status: string;
     properties: string[];
+    description: string;
   }[];
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+
   const router = useRouter();
 
   // Default card width
@@ -109,9 +115,19 @@ const ProductCarousel = ({
                     </p>
                   )}
 
-                  {/* Price */}
+                  {/* Price Range */}
                   <p className="truncate text-base font-bold text-[#B88E2F]">
-                    {formatCurrency(item.price)}
+                    {formatCurrency(
+                      Math.min(
+                        ...item.productCategories.map((cat) => cat.price),
+                      ),
+                    )}{" "}
+                    -{" "}
+                    {formatCurrency(
+                      Math.max(
+                        ...item.productCategories.map((cat) => cat.price),
+                      ),
+                    )}
                   </p>
                 </div>
               </div>

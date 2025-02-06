@@ -3,35 +3,38 @@ import { useCartContext } from "~/context/CartContext";
 
 type NumberInputProps = {
   id: string;
+  categoryId: string; // ✅ Use categoryId instead of category name
+  categoryName: string;
 };
 
-const NumberInput: FC<NumberInputProps> = ({ id }) => {
+const NumberInput: FC<NumberInputProps> = ({
+  id,
+  categoryId,
+  categoryName,
+}) => {
   const { increaseCartQuantity, decreaseCartQuantity, getItemQuantity } =
     useCartContext();
 
   // Initialize state with the current quantity in the cart
-  const [value, setValue] = useState<number>(getItemQuantity(id));
+  const [value, setValue] = useState<number>(0);
 
-  // Sync value with the quantity in the cart on mount and when the id changes
+  // Sync value with the quantity in the cart when mounted
   useEffect(() => {
-    setValue(getItemQuantity(id));
-  }, [id, getItemQuantity]);
+    setValue(getItemQuantity(id, categoryId));
+  }, [id, categoryId, getItemQuantity]); // ✅ Ensure dependencies only include `id` and `categoryId`
 
-  // Increment the value by 1
+  // Increment quantity
   const handleIncrement = () => {
-    const newValue = value + 1;
-    setValue(newValue);
-    increaseCartQuantity(id); // Assuming this function increases the cart quantity
+    setValue((prev) => prev + 1);
+    increaseCartQuantity(id, categoryId, categoryName); // ✅ Use categoryId instead of category name
   };
 
-  // Decrement the value by 1
+  // Decrement quantity
   const handleDecrement = () => {
     if (value > 1) {
-      const newValue = value - 1;
-      setValue(newValue);
-      decreaseCartQuantity(id); // Assuming this function decreases the cart quantity
+      setValue((prev) => prev - 1);
+      decreaseCartQuantity(id, categoryId);
     }
-    // Prevent going below 1, no item removal if it's already at 1
   };
 
   return (
@@ -44,7 +47,10 @@ const NumberInput: FC<NumberInputProps> = ({ id }) => {
         -
       </button>
 
-      <span className="flex h-[47px] w-[120px] items-center justify-center rounded-[8px] border-[2px] border-[#B88E2F] px-[1rem] text-center text-[#7E7E7E]">{`${value} in cart`}</span>
+      <span className="flex h-[47px] w-[120px] items-center justify-center rounded-[8px] border-[2px] border-[#B88E2F] px-[1rem] text-center text-[#7E7E7E]">
+        {`${value} in cart`}
+      </span>
+
       <button
         type="button"
         onClick={handleIncrement}

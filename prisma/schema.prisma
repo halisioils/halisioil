@@ -14,7 +14,6 @@ model Product {
     id          String        @id @default(cuid())
     name        String
     description String
-    price       Decimal
     imagePaths  Json
     status      ProductStatus @default(AVAILABLE)
     properties  String[]      @default([])
@@ -44,6 +43,7 @@ model ProductCategory {
 
     product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
     category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    price    Decimal
 
     @@id([productId, categoryId]) // Composite primary key
 }

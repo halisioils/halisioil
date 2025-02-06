@@ -11,6 +11,7 @@ import { useCartContext } from "~/context/CartContext";
 import NumberInput from "~/app/_components/ShopDetailPage/NumberInput";
 import { formatCurrency } from "./formatCurrency";
 import { capitalizeFirstLetter } from "./capitalizeFirstLetter";
+import { useProductCategory } from "~/hooks/useProductCategory";
 
 const ProductCard = ({
   products,
@@ -19,13 +20,19 @@ const ProductCard = ({
     id: string;
     name: string;
     imagePaths: ImageContent[];
-    price: number;
+    productCategories: {
+      categoryId: string;
+      price: number;
+      category: { name: string };
+    }[];
     status: string;
     properties: string[];
     description: string;
   }[];
 }) => {
   const [mounted, setMounted] = useState(false);
+
+  const { getSelectedCategory, handleCategorySelect } = useProductCategory();
 
   const { increaseCartQuantity, removeFromCart, getItemQuantity, openCart } =
     useCartContext();
@@ -44,13 +51,24 @@ const ProductCard = ({
   return mounted ? (
     <section>
       {products.map((item) => {
-        const itemQuantity = getItemQuantity(item.id);
+        const productCategories = item.productCategories.map((category) => ({
+          ...category,
+          price: Number(category.price), // Convert price from Decimal to number
+        }));
+
+        const selectedCategory = getSelectedCategory(
+          item.id,
+          productCategories,
+        );
+        const itemQuantity = selectedCategory
+          ? getItemQuantity(item.id, selectedCategory.categoryId)
+          : 0;
 
         return (
           <div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="mb-[6rem] flex cursor-pointer flex-col justify-start gap-[1rem] md:mb-[3rem] md:flex-row md:gap-[2rem]"
+            className="mb-[6rem] flex cursor-pointer flex-col justify-start gap-[1rem] md:mb-[3rem] md:gap-[2rem] lg:flex-row"
           >
             {/* Image Container */}
             <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] md:h-[220px] md:max-w-[220px]">
@@ -94,39 +112,82 @@ const ProductCard = ({
                   {renderArrayCapitalizedContent(item.properties)}
                 </p>
               )}
-              <p className="truncate text-[1.5rem] font-bold leading-[24px] text-[#B88E2F]">
-                {formatCurrency(item.price)}
-              </p>
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="absolute -bottom-[4rem] left-0 md:-bottom-[1rem]"
-              >
-                {itemQuantity > 0 ? (
-                  <div className="flex items-center justify-between gap-[1rem]">
-                    <NumberInput id={item.id} />
+
+              {/* Category Selection */}
+              <div className="relative">
+                <div className="my-[1rem] flex gap-2">
+                  {item.productCategories.map((category) => (
+                    <button
+                      key={category.categoryId}
+                      className={`rounded border px-3 py-1 ${
+                        selectedCategory?.categoryId === category.categoryId
+                          ? "bg-[#B88E2F] text-white"
+                          : "border-gray-300"
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCategorySelect(item.id, category);
+                      }}
+                    >
+                      {category.category.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Price Display */}
+                <p className="truncate text-[1.5rem] font-bold leading-[24px] text-[#B88E2F]">
+                  {formatCurrency(selectedCategory?.price ?? 0)}
+                </p>
+
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute -bottom-[4rem] left-0 md:-bottom-[4rem]"
+                >
+                  {itemQuantity > 0 ? (
+                    <div className="flex items-center justify-between gap-[1rem]">
+                      {selectedCategory && itemQuantity > 0 && (
+                        <NumberInput
+                          id={item.id}
+                          categoryId={selectedCategory.categoryId}
+                          categoryName={selectedCategory.category.name}
+                        />
+                      )}
+
+                      {selectedCategory && itemQuantity > 0 && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent the card click event
+                            removeFromCart(
+                              item.id,
+                              selectedCategory.categoryId,
+                            );
+                          }}
+                          className="flex h-[47px] w-full items-center justify-center gap-[0.5rem] text-red-500 transition-all duration-300 ease-in-out hover:brightness-75"
+                        >
+                          <DeleteIcon />
+                        </button>
+                      )}
+                    </div>
+                  ) : (
                     <button
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent the card click event
-                        removeFromCart(item.id);
+                        if (selectedCategory) {
+                          increaseCartQuantity(
+                            item.id,
+                            selectedCategory.categoryId,
+                            selectedCategory.category.name,
+                          );
+                          openCart();
+                        }
                       }}
-                      className="flex h-[47px] w-full items-center justify-center gap-[0.5rem] text-red-500 transition-all duration-300 ease-in-out hover:brightness-75"
+                      className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
                     >
-                      <DeleteIcon />
+                      <CartIcon />
+                      Add to Cart
                     </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent the card click event
-                      increaseCartQuantity(item.id);
-                      openCart();
-                    }}
-                    className="flex h-[47px] w-full max-w-[165px] items-center justify-center gap-[0.5rem] rounded-[4px] bg-[#B88E2F] px-[1rem] text-white transition-all duration-300 ease-in-out hover:brightness-75"
-                  >
-                    <CartIcon />
-                    Add to Cart
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>

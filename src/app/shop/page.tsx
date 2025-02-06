@@ -13,16 +13,23 @@ async function fetchAllProducts() {
   // Convert Decimal fields (like price) to numbers
   return products.map((product) => ({
     ...product,
-    price: product.price.toNumber(), // Convert Decimal to number
+    productCategories: product.productCategories.map((category) => ({
+      ...category,
+      price: Number(category.price), // Convert Decimal to Number
+    })),
   })) as unknown as {
     id: string;
     name: string;
     imagePaths: ImageContent[];
+    productCategories: {
+      categoryId: string;
+      price: number;
+      category: { name: string };
+    }[];
     status: string;
     properties: string[];
     description: string;
     createdAt: Date;
-    price: number;
   }[];
 }
 

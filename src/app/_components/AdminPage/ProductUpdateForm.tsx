@@ -26,8 +26,14 @@ const ProductUpdateFormComponent = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // General error message
 
   // Memoize category IDs to avoid unnecessary changes
-  const categoryIds = useMemo(
-    () => product?.productCategories.map((d) => d.category.id) ?? [],
+  const categoryData = useMemo(
+    () =>
+      product
+        ? product.productCategories.map((d) => ({
+            categoryId: d.categoryId,
+            price: Number(d.price),
+          }))
+        : [],
     [product],
   );
 
@@ -43,17 +49,15 @@ const ProductUpdateFormComponent = () => {
     resolver: zodResolver(clientProductSchema),
   });
 
-  const { selectedOption, setSelectedOption } = useProductUpdate(
-    categoryIds,
-    setValue,
-  );
+  const { selectedCategories, setSelectedCategories, handlePriceChange } =
+    useProductUpdate(categoryData, setValue);
 
   const createProduct = api.product.update.useMutation({
     onSuccess: async (data) => {
       await utils.product.invalidate();
       toast.success(`Product - ${data.name} updated successfully`);
       reset();
-      setSelectedOption([]);
+      setSelectedCategories([]);
       router.back();
     },
     onError: (error) => {
@@ -140,8 +144,7 @@ const ProductUpdateFormComponent = () => {
           id: product.id,
           name: data.name,
           description: data.description,
-          price: data.price,
-          categoryIds: data.categoryIds,
+          categories: data.categories,
           properties: data.properties,
           status: data.status,
         });
@@ -194,29 +197,6 @@ const ProductUpdateFormComponent = () => {
             )}
           </div>
 
-          <div className="mb-[1rem]">
-            <label>Price (in Pounds)</label>
-            <input
-              type="number"
-              defaultValue={Number(product.price) || 0}
-              placeholder="Enter price"
-              {...register("price", {
-                valueAsNumber: true,
-                min: {
-                  value: 1,
-                  message: "Price must be positve",
-                },
-              })}
-            />
-            {errors.price?.message && (
-              <p className="mt-1 text-sm text-red-500">
-                {typeof errors.price.message === "string"
-                  ? errors.price.message
-                  : "Invalid input"}
-              </p>
-            )}
-          </div>
-
           <div className="mb-[1.5rem]">
             <label>Category</label>
             <Controller
@@ -227,29 +207,57 @@ const ProductUpdateFormComponent = () => {
                   {...field}
                   options={categoryOptions}
                   isMulti
-                  className="z-30 text-[0.875rem]"
                   placeholder="Select categories"
-                  value={categoryOptions.filter(
-                    (option) => selectedOption.includes(option.value), // Pre-select categories based on `selectedOption`
+                  value={categoryOptions.filter((option) =>
+                    selectedCategories.some(
+                      (sc) => sc.categoryId === option.value,
+                    ),
                   )}
                   onChange={(selected) => {
-                    const ids = selected.map(
-                      (option: { value: string }) => option.value,
-                    );
-                    setSelectedOption(ids); // Update local state for selected categories
-                    field.onChange(ids); // Update react-hook-form state
+                    const updatedCategories = selected.map((option) => {
+                      const existingCategory = selectedCategories.find(
+                        (c) => c.categoryId === option.value,
+                      );
+                      return {
+                        categoryId: option.value,
+                        price: existingCategory ? existingCategory.price : 0, // Preserve existing price if available
+                      };
+                    });
+
+                    setSelectedCategories(updatedCategories);
+                    field.onChange(updatedCategories);
                   }}
                 />
               )}
             />
 
-            {errors.categoryIds?.message && (
+            {errors.productCategories?.message && (
               <p className="mt-1 text-sm text-red-500">
-                {typeof errors.categoryIds.message === "string"
-                  ? errors.categoryIds.message
+                {typeof errors.productCategories.message === "string"
+                  ? errors.productCategories.message
                   : "Invalid input"}
               </p>
             )}
+            {selectedCategories.map(({ categoryId, price }) => {
+              const categoryLabel =
+                categoryOptions.find((option) => option.value === categoryId)
+                  ?.label ?? "Unknown Category";
+
+              return (
+                <div key={categoryId} className="mt-[1.5rem]">
+                  <label>Price (in Pounds) - {categoryLabel}</label>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) =>
+                      handlePriceChange(categoryId, Number(e.target.value))
+                    }
+                    placeholder="Enter price"
+                    required
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className="mb-[1.5rem]">

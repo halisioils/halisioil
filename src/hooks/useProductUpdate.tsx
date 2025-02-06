@@ -1,21 +1,40 @@
 import { useEffect, useState } from "react";
 import type { UseFormSetValue, FieldValues } from "react-hook-form";
 
+interface Category {
+  categoryId: string;
+  price: number;
+}
+
 export const useProductUpdate = (
-  categoryIds: string[],
+  productCategories: Category[],
   setValue: UseFormSetValue<FieldValues>,
 ) => {
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    if (categoryIds) {
-      setSelectedOption(categoryIds); // Set pre-selected options
-      setValue("categoryIds", categoryIds);
+    if (productCategories.length > 0) {
+      setSelectedCategories(productCategories);
+      setValue("categories", productCategories); // Store the entire category object, including price
     }
-  }, [categoryIds, setValue]); // Only run when categoryIds changes
+  }, [productCategories, setValue]);
+
+  const handlePriceChange = (categoryId: string, newPrice: number) => {
+    setSelectedCategories((prev) => {
+      const updatedCategories = prev.map((category) =>
+        category.categoryId === categoryId
+          ? { ...category, price: newPrice }
+          : category,
+      );
+
+      setValue("categories", updatedCategories); // Update form state
+      return updatedCategories;
+    });
+  };
 
   return {
-    selectedOption,
-    setSelectedOption,
+    selectedCategories,
+    setSelectedCategories,
+    handlePriceChange,
   };
 };

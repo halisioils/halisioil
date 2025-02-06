@@ -6,10 +6,14 @@ import { useLocalStorage } from "~/hooks/useLocalStorage";
 type CartContextProps = {
   openCart: () => void;
   closeCart: () => void;
-  getItemQuantity: (id: string) => number;
-  increaseCartQuantity: (id: string) => void;
-  decreaseCartQuantity: (id: string) => void;
-  removeFromCart: (id: string) => void;
+  getItemQuantity: (id: string, categoryId: string) => number;
+  increaseCartQuantity: (
+    id: string,
+    categoryId: string,
+    categoryName: string,
+  ) => void;
+  decreaseCartQuantity: (id: string, categoryId: string) => void;
+  removeFromCart: (id: string, categoryId: string) => void;
   cartQuantity: number;
   cartItems: CartItem[];
   isOpen: boolean;
@@ -22,6 +26,8 @@ interface CartProviderProps {
 
 type CartItem = {
   id: string;
+  categoryId: string;
+  categoryName: string;
   quantity: number;
 };
 
@@ -43,42 +49,60 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
-  function getItemQuantity(id: string) {
-    return cartItems.find((item) => item.id === id)?.quantity ?? 0;
+  function getItemQuantity(id: string, categoryId: string) {
+    return (
+      cartItems.find((item) => item.id === id && item.categoryId === categoryId)
+        ?.quantity ?? 0
+    );
   }
-  function increaseCartQuantity(id: string) {
+
+  function increaseCartQuantity(
+    id: string,
+    categoryId: string,
+    categoryName: string,
+  ) {
     setCartItems((currItems) => {
-      if (currItems.find((item) => item.id === id) == null) {
-        return [...currItems, { id, quantity: 1 }];
+      const existingItem = currItems.find(
+        (item) => item.id === id && item.categoryId === categoryId,
+      );
+
+      if (!existingItem) {
+        return [...currItems, { id, categoryId, categoryName, quantity: 1 }];
       } else {
-        return currItems.map((item) => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1 };
-          } else {
-            return item;
-          }
-        });
+        return currItems.map((item) =>
+          item.id === id && item.categoryId === categoryId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
       }
     });
   }
-  function decreaseCartQuantity(id: string) {
+
+  function decreaseCartQuantity(id: string, categoryId: string) {
     setCartItems((currItems) => {
-      if (currItems.find((item) => item.id === id)?.quantity === 1) {
-        return currItems.filter((item) => item.id !== id);
+      const existingItem = currItems.find(
+        (item) => item.id === id && item.categoryId === categoryId,
+      );
+
+      if (existingItem?.quantity === 1) {
+        return currItems.filter(
+          (item) => item.id !== id || item.categoryId !== categoryId,
+        );
       } else {
-        return currItems.map((item) => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity - 1 };
-          } else {
-            return item;
-          }
-        });
+        return currItems.map((item) =>
+          item.id === id && item.categoryId === categoryId
+            ? { ...item, quantity: item.quantity - 1 }
+            : item,
+        );
       }
     });
   }
-  function removeFromCart(id: string) {
+
+  function removeFromCart(id: string, categoryId: string) {
     setCartItems((currItems) => {
-      return currItems.filter((item) => item.id !== id);
+      return currItems.filter(
+        (item) => item.id !== id || item.categoryId !== categoryId,
+      );
     });
   }
 
@@ -110,7 +134,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 const useCartContext = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error("useCartContext must be used within a CartContextProvider");
+    throw new Error("useCartContext must be used within a CartProvider");
   }
   return context;
 };

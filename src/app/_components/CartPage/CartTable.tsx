@@ -14,47 +14,63 @@ import toast from "react-hot-toast";
 
 const CartTable = ({ userId }: { userId: string }) => {
   const [load, setLoad] = useState(false);
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Set mounted to true after the component has mounted
     setMounted(true);
   }, []);
 
   const { cartItems, cartQuantity, removeFromCart } = useCartContext();
-
   const ids = cartItems.map((item) => item.id);
 
   const data = api.product.getProductsByIds.useQuery(
     { ids: ids as [string, ...string[]] },
-    {
-      enabled: ids.length > 0,
-    },
+    { enabled: ids.length > 0 },
   );
 
   const products = (data.data as unknown as IProductCardSchema[]) ?? [];
 
+  // Process cart items and ensure unique (id, categoryId) entries
   const fullCartItems = cartItems.map((cartItem) => {
     const product = products.find((p) => p.id === cartItem.id) ?? {
       id: "",
       name: "",
-      price: 0,
+      imagePaths: [
+        {
+          name: "",
+          key: "",
+          url: "",
+          size: "",
+        },
+      ],
+      productCategories: [
+        { category: { name: "", id: "" }, categoryId: "", price: 0 },
+      ],
     };
+
+    const matchedCategory = product.productCategories.find(
+      (category) => category.categoryId === cartItem.categoryId,
+    );
+
     return {
       ...cartItem,
-      name: product.name,
-      price: Number(product.price),
+      name: `${matchedCategory?.category.name} ${product.name}`,
+      price: matchedCategory?.price ?? 0,
+      image:
+        product.imagePaths &&
+        Array.isArray(product.imagePaths) &&
+        product.imagePaths[0]
+          ? product.imagePaths[0].url
+          : image_skeleton,
     };
   });
 
   async function handleCheckouthandler(fullCartItems: ChectOutItem[]) {
     setLoad(true);
-
     try {
       await handleCheckout(fullCartItems, userId);
     } catch (error) {
-      toast.error(`An error occured`);
+      toast.error("An error occurred");
     } finally {
       setLoad(false);
     }
@@ -68,12 +84,11 @@ const CartTable = ({ userId }: { userId: string }) => {
             <LoadingComponent />
           ) : (
             <div>
-              {products && products.length > 0 ? (
-                <div className="flex flex-col justify-between gap-[1rem] md:flex-row">
-                  <section className="z-10 min-h-[30vh] max-w-[900px] overflow-y-hidden overflow-x-scroll pb-[6rem] md:min-h-[50vh]">
-                    <div className="relative h-auto w-[100%] min-w-[900px]">
+              {fullCartItems.length > 0 ? (
+                <div className="flex flex-col gap-[1rem] md:flex-row">
+                  <section className="z-10 min-h-[30vh] max-w-[900px] overflow-x-scroll pb-[6rem] md:min-h-[50vh]">
+                    <div className="relative min-w-[900px]">
                       <div className="cart-table h-[40px] bg-[#F9F1E7] text-[#253D4E]">
-                        <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
                         <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
                           Product
                         </p>
@@ -86,103 +101,68 @@ const CartTable = ({ userId }: { userId: string }) => {
                         <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
                           Subtotal
                         </p>
-                        <p className="p-[0.75rem] text-center"></p>
+                        <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]"></p>
                       </div>
-                      <div>
-                        {products.map((product) => {
-                          const cartItem = cartItems.find(
-                            (item) => item.id === product.id,
-                          );
-                          return (
-                            <div
-                              key={product.id}
-                              className="cart-table my-[2rem]"
-                            >
-                              <div className="relative h-[76px] w-[76px]">
-                                {product.imagePaths &&
-                                Array.isArray(product.imagePaths) &&
-                                product.imagePaths[0] ? (
-                                  <Image
-                                    src={
-                                      product.imagePaths[0].url ||
-                                      image_skeleton
-                                    }
-                                    alt={`Image for ${product.name}`}
-                                    sizes="(min-width: 768px) 50vw, 100vw"
-                                    priority
-                                    fill
-                                    style={{
-                                      objectFit: "contain",
-                                      objectPosition: "center",
-                                    }}
-                                    className={`cursor-pointer rounded-lg border-[1px] border-[#ECECEC] transition duration-300`}
-                                  />
-                                ) : (
-                                  <Image
-                                    src={image_skeleton}
-                                    alt="Skeleton loading image"
-                                    width={76}
-                                    height={76}
-                                    className="rounded-lg object-contain object-center"
-                                  />
-                                )}
-                              </div>
-
-                              <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                                {product.name}
-                              </p>
-                              <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                                {formatCurrency(product.price)}
-                              </p>
-                              <div className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                                <NumberInput id={product.id} />
-                              </div>
-                              <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                                {cartItem?.quantity} x
-                                <span>{formatCurrency(product.price)}</span>
-                              </p>
-                              <p className="truncate p-[0.75rem] text-center text-[0.875rem] font-[400] text-[#252c32]">
-                                <button
-                                  onClick={() => removeFromCart(product.id)}
-                                  className="text-sm text-red-500 hover:brightness-75"
-                                >
-                                  <DeleteIcon />
-                                </button>
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
+                      {fullCartItems.map((item) => (
+                        <div
+                          key={`${item.id}-${item.categoryId}`}
+                          className="cart-table my-[2rem]"
+                        >
+                          <Image
+                            src={item.image}
+                            alt={`Image for ${item.name}`}
+                            width={76}
+                            height={76}
+                            className="rounded-lg object-contain"
+                          />
+                          <p className="p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
+                            {item.name}
+                          </p>
+                          <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
+                            {formatCurrency(item.price)}
+                          </p>
+                          <NumberInput
+                            id={item.id}
+                            categoryName={item.categoryName}
+                            categoryId={item.categoryId}
+                          />
+                          <p className="truncate p-[0.75rem] text-center text-[0.875rem] font-[400] text-[#252c32]">
+                            {formatCurrency(item.price * item.quantity)}
+                          </p>
+                          <button
+                            className="text-sm text-red-500 hover:brightness-75"
+                            onClick={() =>
+                              removeFromCart(item.id, item.categoryId)
+                            }
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   </section>
                   <section className="h-[200px] w-[100%] bg-[#F9F1E7] p-[1rem] md:w-[300px]">
                     <p className="text-center text-[1.5rem] text-[#253D4E]">
                       Cart Total
                     </p>
-                    <div className="mt-4 flex items-center justify-center gap-[1rem] text-gray-600">
+                    <div className="mt-4 flex justify-center gap-[1rem] text-gray-600">
                       <p>Total:</p>
                       <span className="font-bold text-gray-800">
                         {formatCurrency(
-                          cartItems.reduce((total, cartItem) => {
-                            const item = products.find(
-                              (i) => i.id === cartItem.id,
-                            );
-                            return (
-                              total + (item?.price ?? 0) * cartItem.quantity
-                            );
-                          }, 0),
+                          fullCartItems.reduce(
+                            (total, item) => total + item.price * item.quantity,
+                            0,
+                          ),
                         )}
                       </span>
                     </div>
-                    <div className="flex items-center justify-center gap-[1rem] pt-[2rem]">
+                    <div className="flex justify-center pt-[2rem]">
                       <button
                         disabled={load}
-                        className="flex h-[46px] w-[150px] items-center justify-center rounded-[15px] border-[1px] border-[#B88E2F] px-[1rem] py-[0.2rem] text-[1c1c1c] text-gray-600 transition-all duration-300 ease-in-out hover:brightness-75"
-                        onClick={() => {
-                          void handleCheckouthandler(
-                            fullCartItems as ChectOutItem[],
-                          );
-                        }}
+                        className="h-[46px] w-[150px] rounded-[15px] border border-[#B88E2F] text-gray-600 hover:brightness-75"
+                        onClick={() =>
+                          handleCheckouthandler(fullCartItems as ChectOutItem[])
+                        }
                       >
                         {load ? <LoadingComponent /> : "Checkout"}
                       </button>
@@ -191,7 +171,7 @@ const CartTable = ({ userId }: { userId: string }) => {
                 </div>
               ) : (
                 <p className="text-center text-[1rem] text-gray-600">
-                  No items data found.
+                  No items found.
                 </p>
               )}
             </div>

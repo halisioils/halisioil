@@ -10,14 +10,18 @@ const ShopComponent = ({
   products,
 }: {
   products: {
-    createdAt: Date;
     id: string;
     name: string;
     imagePaths: ImageContent[];
-    price: number;
+    productCategories: {
+      categoryId: string;
+      price: number;
+      category: { name: string };
+    }[];
     status: string;
     properties: string[];
     description: string;
+    createdAt: Date;
   }[];
 }) => {
   const productsLength = products?.length;
@@ -50,7 +54,7 @@ const ShopComponent = ({
     id: entry.id,
     name: entry.name,
     imagePaths: entry.imagePaths,
-    price: entry.price as unknown as number,
+    productCategories: entry.productCategories,
     status: entry.status,
     properties: entry.properties,
     createdAt: entry.createdAt,
@@ -87,14 +91,18 @@ const Shop = ({
   products,
 }: {
   products: {
-    createdAt: Date;
     id: string;
     name: string;
     imagePaths: ImageContent[];
-    price: number;
+    productCategories: {
+      categoryId: string;
+      price: number;
+      category: { name: string };
+    }[];
     status: string;
     properties: string[];
     description: string;
+    createdAt: Date;
   }[];
 }) => {
   return (

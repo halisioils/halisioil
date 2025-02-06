@@ -22,12 +22,12 @@ export const productRouter = createTRPCRouter({
         data: {
           name: input.name,
           description: input.description,
-          price: input.price,
           imagePaths: input.imagePaths, // Ensured it has at least one image path
           status: input.status,
           properties: input.properties,
           productCategories: {
-            create: input.categoryIds.map((categoryId) => ({
+            create: input.categories.map(({ categoryId, price }) => ({
+              price: price,
               category: { connect: { id: categoryId } },
             })),
           },
@@ -46,19 +46,21 @@ export const productRouter = createTRPCRouter({
           data: {
             name: input.name,
             description: input.description,
-            price: input.price,
             status: input.status,
             properties: input.properties,
             productCategories: {
-              upsert: input.categoryIds.map((categoryId) => ({
+              upsert: input.categories.map(({ categoryId, price }) => ({
                 where: {
                   productId_categoryId: {
                     productId: input.id,
                     categoryId: categoryId,
                   },
                 },
-                update: {},
+                update: {
+                  price: price, // Ensure price updates
+                },
                 create: {
+                  price: price,
                   category: { connect: { id: categoryId } },
                 },
               })),

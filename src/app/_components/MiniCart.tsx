@@ -35,16 +35,38 @@ const MiniCart = ({ userId }: { userId: string }) => {
 
   const products = (data.data as unknown as IProductCardSchema[]) ?? [];
 
+  // Process cart items and ensure unique (id, categoryId) entries
   const fullCartItems = cartItems.map((cartItem) => {
     const product = products.find((p) => p.id === cartItem.id) ?? {
       id: "",
       name: "",
-      price: 0,
+      imagePaths: [
+        {
+          name: "",
+          key: "",
+          url: "",
+          size: "",
+        },
+      ],
+      productCategories: [
+        { category: { name: "", id: "" }, categoryId: "", price: 0 },
+      ],
     };
+
+    const matchedCategory = product.productCategories.find(
+      (category) => category.categoryId === cartItem.categoryId,
+    );
+
     return {
       ...cartItem,
-      name: product.name,
-      price: Number(product.price),
+      name: `${matchedCategory?.category.name} ${product.name}`,
+      price: matchedCategory?.price ?? 0,
+      image:
+        product.imagePaths &&
+        Array.isArray(product.imagePaths) &&
+        product.imagePaths[0]
+          ? product.imagePaths[0].url
+          : image_skeleton,
     };
   });
 
@@ -110,92 +132,65 @@ const MiniCart = ({ userId }: { userId: string }) => {
                     <LoadingComponent />
                   ) : (
                     <div>
-                      {products && products.length > 0 ? (
+                      {fullCartItems.length > 0 ? (
                         <div>
-                          <div>
-                            {products?.map((product) => {
-                              const cartItem = cartItems.find(
-                                (item) => item.id === product.id,
-                              );
-                              return (
-                                <div
-                                  key={product.id}
-                                  className="flex items-center justify-between border-b py-2"
-                                >
-                                  <div className="relative mb-2 h-[76px] w-[76px]">
-                                    {product.imagePaths &&
-                                    Array.isArray(product.imagePaths) &&
-                                    product.imagePaths[0] ? (
-                                      <Image
-                                        src={
-                                          product.imagePaths[0].url ||
-                                          image_skeleton
-                                        }
-                                        alt={`Image for ${product.name}`}
-                                        sizes="(min-width: 768px) 50vw, 100vw"
-                                        priority
-                                        fill
-                                        style={{
-                                          objectFit: "contain",
-                                          objectPosition: "center",
-                                        }}
-                                        className={`cursor-pointer rounded-lg border-[1px] border-[#ECECEC] transition duration-300`}
-                                      />
-                                    ) : (
-                                      <Image
-                                        src={image_skeleton}
-                                        alt="Skeleton loading image"
-                                        sizes="(min-width: 768px) 50vw, 100vw"
-                                        priority
-                                        fill
-                                        style={{
-                                          objectFit: "contain",
-                                          objectPosition: "center",
-                                        }}
-                                        className={`cursor-pointer rounded-lg border-[1px] border-[#ECECEC] transition duration-300`}
-                                      />
-                                    )}
-                                  </div>
-                                  <div>
-                                    <p className="font-medium text-gray-800">
-                                      {product.name}
-                                    </p>
+                          {fullCartItems.map((item) => (
+                            <div
+                              key={`${item.id}-${item.categoryId}`}
+                              className="flex items-center justify-between border-b py-2"
+                            >
+                              <div className="relative mb-2 h-[76px] w-[76px]">
+                                <Image
+                                  src={item.image}
+                                  alt={`Image for ${item.name}`}
+                                  sizes="(min-width: 768px) 50vw, 100vw"
+                                  priority
+                                  fill
+                                  style={{
+                                    objectFit: "contain",
+                                    objectPosition: "center",
+                                  }}
+                                  className={`cursor-pointer rounded-lg border-[1px] border-[#ECECEC] transition duration-300`}
+                                />
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  {item.name}
+                                </p>
 
-                                    <div className="my-[0.5rem] flex items-center gap-2">
-                                      <NumberInput id={product.id} />
-                                      <button
-                                        onClick={() =>
-                                          removeFromCart(product.id)
-                                        }
-                                        className="text-sm text-red-500 hover:brightness-75"
-                                      >
-                                        <DeleteIcon />
-                                      </button>
-                                    </div>
-                                    <p className="flex items-center justify-start gap-[0.2rem] text-sm text-gray-500">
-                                      {cartItem?.quantity} x
-                                      <span>
-                                        {formatCurrency(product.price)}
-                                      </span>
-                                    </p>
-                                  </div>
+                                <div className="my-[0.5rem] flex items-center gap-2">
+                                  <NumberInput
+                                    id={item.id}
+                                    categoryName={item.categoryName}
+                                    categoryId={item.categoryId}
+                                  />
+
+                                  <button
+                                    onClick={() =>
+                                      removeFromCart(item.id, item.categoryId)
+                                    }
+                                    className="text-sm text-red-500 hover:brightness-75"
+                                  >
+                                    <DeleteIcon />
+                                  </button>
                                 </div>
-                              );
-                            })}
-                          </div>
+                                <p className="flex items-center justify-start gap-[0.2rem] text-sm text-gray-500">
+                                  {item.quantity} x
+                                  <span>{formatCurrency(item.price ?? 0)}</span>
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+
                           <div className="mt-[2rem] flex w-[100%] items-center justify-between gap-[1rem] text-gray-600">
                             <p>Total:</p>
                             <span className="font-bold text-gray-800">
                               {formatCurrency(
-                                cartItems.reduce((total, cartItem) => {
-                                  const item = products.find(
-                                    (i) => i.id === cartItem.id,
-                                  );
-                                  return (
-                                    total +
-                                    (item?.price ?? 0) * cartItem.quantity
-                                  );
-                                }, 0),
+                                fullCartItems.reduce(
+                                  (total, item) =>
+                                    total + item.price * item.quantity,
+                                  0,
+                                ),
                               )}
                             </span>
                           </div>

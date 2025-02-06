@@ -8,6 +8,7 @@ import Skeleton from "./Skeleton";
 import Dropdown from "./Dropdown";
 import { useDropdown } from "~/hooks/useDropdown";
 import BulkDeleteModal from "./BulkDeleteModal";
+import dayjs from "~/utils/dayjsConfig";
 
 const ProductTable: FC<TableProps> = ({ page, per_page }) => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
@@ -29,8 +30,8 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
       id: entry.id,
       name: entry.name,
       imagePaths: entry.imagePaths as ImageContent[],
-      price: entry.price,
       status: entry.status as string,
+      createdAt: entry.createdAt,
     }));
 
   const toggleSelectAll = () => {
@@ -147,7 +148,7 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
                   Product Name
                 </p>
                 <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
-                  Price
+                  Create At
                 </p>
                 <p className="truncate p-[0.75rem] text-left text-[0.75rem] font-semibold leading-[1rem] text-[#84919A]">
                   Status
@@ -170,7 +171,7 @@ const ProductTable: FC<TableProps> = ({ page, per_page }) => {
                       {data.name}
                     </p>
                     <p className="truncate p-[0.75rem] text-left text-[0.875rem] font-[400] text-[#252c32]">
-                      &#163; {Number(data.price).toFixed(2)}
+                      {dayjs(data.createdAt).format("YYYY-MM-DD HH:mm:ss")}
                     </p>
 
                     <p
