@@ -1,5 +1,6 @@
 "use client";
 import React, { use } from "react";
+import { useProductCategory } from "~/hooks/useProductCategory";
 import { type ImageContent } from "~/lib/types";
 import { api } from "~/trpc/react";
 import AdminImageComponent from "~/utils/AdminImageComponent";
@@ -16,6 +17,7 @@ const AdminProductDetailPage = ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = use(params);
+  const { getSelectedCategory } = useProductCategory();
 
   const product = api.product.getSingleProduct.useQuery({
     id,
@@ -36,6 +38,13 @@ const AdminProductDetailPage = ({
       </section>
     );
   }
+
+  const productCategories = product.data.productCategories.map((category) => ({
+    ...category,
+    price: Number(category.price), // Convert price from Decimal to number
+  }));
+
+  const selectedCategory = getSelectedCategory(id, productCategories);
 
   return (
     <section className="relative mx-auto h-full min-h-[100vh] w-full pt-[2rem]">
@@ -92,7 +101,7 @@ const AdminProductDetailPage = ({
               </h2>
 
               <p className="text-[2.125rem] font-bold leading-[58px] text-[#B88E2F] md:text-[3.125rem]">
-                {formatCurrency(Number(product.data.price))}
+                {formatCurrency(selectedCategory?.price ?? 0)}
               </p>
             </div>
             <h3 className="text-[1rem] leading-[24px] text-[#7E7E7E]">
