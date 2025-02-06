@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 
 type WishListContextProps = {
-  addToWishList: (id: string) => void;
-  removeFromWishList: (id: string) => void;
-  isInWishList: (id: string) => boolean;
+  addToWishList: (id: string, categoryId: string, categoryName: string) => void;
+  removeFromWishList: (id: string, categoryId: string) => void;
+  isInWishList: (id: string, categoryId: string) => boolean;
   WishListQuantity: number;
   WishListItems: WishListItem[];
 };
@@ -17,6 +17,8 @@ interface WishListProviderProps {
 
 type WishListItem = {
   id: string;
+  categoryId: string;
+  categoryName: string;
 };
 
 // Create the context
@@ -31,23 +33,31 @@ const WishListProvider: React.FC<WishListProviderProps> = ({ children }) => {
   // Calculate the total number of items in the wishlist
   const WishListQuantity = WishListItems.length;
 
-  function addToWishList(id: string) {
+  function addToWishList(id: string, categoryId: string, categoryName: string) {
     setWishListItems((currItems) => {
-      if (!currItems.find((item) => item.id === id)) {
-        return [...currItems, { id }];
+      if (
+        !currItems.find(
+          (item) => item.id === id && item.categoryId === categoryId,
+        )
+      ) {
+        return [...currItems, { id, categoryId, categoryName }];
       }
       return currItems;
     });
   }
 
-  function removeFromWishList(id: string) {
+  function removeFromWishList(id: string, categoryId: string) {
     setWishListItems((currItems) => {
-      return currItems.filter((item) => item.id !== id);
+      return currItems.filter(
+        (item) => !(item.id === id && item.categoryId === categoryId),
+      );
     });
   }
 
-  function isInWishList(id: string) {
-    return WishListItems.some((item) => item.id === id);
+  function isInWishList(id: string, categoryId: string) {
+    return WishListItems.some(
+      (item) => item.id === id && item.categoryId === categoryId,
+    );
   }
 
   const appContextValue: WishListContextProps = {

@@ -51,7 +51,10 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
     ? getItemQuantity(id, selectedCategory.categoryId)
     : 0;
 
-  const isAddedToWishList = isInWishList(id);
+  const isAddedToWishList = isInWishList(
+    id,
+    selectedCategory?.categoryId ?? "",
+  );
 
   return (
     <section className="relative mx-auto h-full min-h-[100vh] w-full">
@@ -150,16 +153,26 @@ const ShopDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
             )}
 
             {/* Wishlist Button */}
-            {isAddedToWishList ? (
+            {selectedCategory && isAddedToWishList ? (
               <button
-                onClick={() => removeFromWishList(id)}
+                onClick={() =>
+                  removeFromWishList(id, selectedCategory.categoryId)
+                }
                 className="rounded-[8px] border-[1px] border-[#ECECEC] bg-red-500 p-[0.5rem] text-white transition-all duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
               >
                 <WishlistIcon />
               </button>
             ) : (
               <button
-                onClick={() => addToWishList(id)}
+                onClick={() => {
+                  if (selectedCategory) {
+                    addToWishList(
+                      id,
+                      selectedCategory.categoryId,
+                      selectedCategory.category.name,
+                    );
+                  }
+                }}
                 className="rounded-[8px] border-[1px] border-[#ECECEC] p-[0.5rem] text-gray-500 transition-all duration-300 ease-in-out hover:border-[#B88E2F] hover:text-[#B88E2F]"
               >
                 <WishlistIcon />
