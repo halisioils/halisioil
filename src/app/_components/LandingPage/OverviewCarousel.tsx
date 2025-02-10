@@ -11,16 +11,15 @@ const OverviewCarousel = () => {
             key={item.id}
             className={`group relative rounded-lg ${index === 2 ? "col-span-3 lg:col-span-1" : index === 1 ? "col-span-3 md:col-span-1" : index === 0 ? "col-span-3 md:col-span-1" : ""}`}
           >
-            <div className="relative h-[350px] w-[100%] cursor-pointer overflow-hidden rounded-[0.75rem] border-[1px] border-[#D5D5D5] sm:h-[450px]">
+            <div className="relative h-[450px] w-[100%] cursor-pointer overflow-hidden rounded-[0.75rem] border-[1px] border-[#D5D5D5]">
               <Image
                 src={item.image}
                 alt={`Image for ${item.text}`}
-                quality={100}
+                priority
                 fill
                 sizes="(min-width: 768px) 100vw, 700px"
-                priority
                 placeholder="blur"
-                className="transition duration-500 ease-in-out group-hover:scale-125"
+                className="object-cover object-center transition duration-500 ease-in-out group-hover:scale-125"
               />
               <div className="card-gradient absolute inset-0 rounded-[0.75rem]"></div>
             </div>

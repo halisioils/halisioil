@@ -68,17 +68,17 @@ const ProductCard = ({
           <div
             key={item.id}
             onClick={() => handleCardClick(item.id)}
-            className="mb-[6rem] flex cursor-pointer flex-col justify-start gap-[1rem] md:mb-[3rem] md:gap-[2rem] lg:flex-row"
+            className="flex w-[100%] cursor-pointer flex-col justify-between gap-[2rem] lg:flex-row"
           >
             {/* Image Container */}
-            <div className="relative h-[200px] w-[100%] overflow-hidden rounded-[15px] border border-[#ECECEC] md:h-[220px] md:max-w-[220px]">
+            <div className="relative h-[200px] w-[100%] flex-[0_0_220px] shrink-0 rounded-[15px] border border-[#ECECEC] bg-white md:h-[220px] md:w-[220px]">
               {item.imagePaths &&
               Array.isArray(item.imagePaths) &&
               item.imagePaths[0] ? (
                 <Image
                   src={item.imagePaths[0].url || image_skeleton}
                   alt={`Image for ${item.name}`}
-                  sizes="(min-width: 768px) 50vw, 100vw"
+                  sizes="(min-width: 768px) 100vw, 700px"
                   priority
                   fill
                   style={{
@@ -98,9 +98,10 @@ const ProductCard = ({
             </div>
 
             {/* Text Container */}
+
             <div className="relative flex flex-col gap-[1rem]">
               <h2
-                className={`${raleway.className} truncate text-[1.5rem] font-bold leading-[38.4px] text-[#253D4E] md:text-[2rem]`}
+                className={`${raleway.className} text-[1.5rem] font-bold leading-[38.4px] text-[#253D4E] md:text-[2rem]`}
               >
                 {capitalizeFirstLetter(item.name)}
               </h2>

@@ -27,7 +27,7 @@ const ShopPageNavComponent = () => {
   return (
     <aside
       className={
-        "hidden h-[200px] rounded-[15px] border-[1px] border-gray-300 px-[1rem] py-[1rem] shadow-md md:block"
+        "hidden h-[200px] rounded-[15px] border-[1px] border-gray-300 px-[1rem] py-[1rem] shadow-md lg:block"
       }
     >
       <div className="my-4 border-b-[1px] border-b-gray-300 pb-[0.5rem]">

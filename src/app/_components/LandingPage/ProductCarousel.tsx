@@ -71,12 +71,12 @@ const ProductCarousel = ({
           />
         </div>
         <div className="no-scrollbar flex h-full w-full gap-4 overflow-x-auto overflow-y-hidden lg:overflow-hidden">
-          {products ? (
+          {products.length > 0 ? (
             products?.map((item) => (
               <div
                 key={item.id}
                 onClick={() => handleCardClick(item.id)}
-                className="cursor-pointer rounded-[1rem] border-[1px] border-[#ECECEC] shadow-sm transition-transform ease-in-out"
+                className="cursor-pointer rounded-[1rem] border-[1px] border-[#ECECEC] bg-white shadow-sm transition-transform ease-in-out"
                 style={{
                   transform: `translateX(${translateX}px)`,
                 }}

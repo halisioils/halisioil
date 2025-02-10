@@ -36,7 +36,7 @@ const MobileShopPageNavComponent = () => {
   return (
     <aside
       onClick={closeMobileNav}
-      className={`fixed left-0 top-0 z-50 block h-[100vh] w-[100%] overflow-hidden bg-black bg-opacity-20 transition duration-[150ms] ease-in md:hidden ${
+      className={`fixed left-0 top-0 z-50 block h-[100vh] w-[100%] overflow-hidden bg-black bg-opacity-20 transition duration-[150ms] ease-in lg:hidden ${
         isMobile ? "translate-y-0" : "translate-y-[100%]"
       } `}
     >

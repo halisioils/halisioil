@@ -166,14 +166,14 @@ const AdminImageComponent = ({
   };
 
   return (
-    <section className="h-[100%] w-[100%] max-w-[400px] flex-col items-center justify-center gap-[1rem]">
+    <section className="h-[100%] w-[100%]">
       {/* Main Image Display */}
       {errorMessage && (
         <p className="my-4 w-full rounded-sm bg-red-100 p-[0.5rem] text-center text-sm text-red-500">
           {errorMessage}
         </p>
       )}
-      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:rounded-[0.75rem]">
+      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:w-[300px] md:rounded-[0.75rem] lg:w-[400px]">
         {selectedImage ? (
           <Image
             src={selectedImage.url}

@@ -71,10 +71,11 @@ const ShopComponent = ({
 
   return (
     <section className="w-[100%]">
-      <div className="min-h-[70vh] w-[100%]">
+      <div className="min-h-[70vh]">
         {entries && <ProductCard products={entries} />}
       </div>
-      <section className="py-[2rem]">
+
+      <section className="mt-[6rem] py-[2rem]">
         {productsLength && (
           <TablePagination
             totalEntries={products as unknown as IProductPageSchema[]}

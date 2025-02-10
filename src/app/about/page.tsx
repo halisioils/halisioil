@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { raleway } from "~/utils/font";
-import image_route from "~/assets/DSC00014.jpg";
+import image_route from "~/assets/IMG_2765.jpg";
 import Overview from "../_components/AboutPage/Overview";
 import Accordian from "~/utils/Accordian";
 import Link from "next/link";
