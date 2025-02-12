@@ -23,6 +23,8 @@ const ContactForm = () => {
 
   const onSubmit = async (dataValue: FieldValues) => {
     try {
+      console.log(dataValue);
+
       //   const serviceId = process.env.NEXT_PUBLIC_SERVICE_ID;
       //   const templateId = process.env.NEXT_PUBLIC_TEMPLATE_ID;
       //   const userId = process.env.NEXT_PUBLIC_USER_ID;
