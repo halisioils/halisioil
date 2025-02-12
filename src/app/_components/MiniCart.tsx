@@ -137,7 +137,7 @@ const MiniCart = ({ userId }: { userId: string }) => {
                           {fullCartItems.map((item) => (
                             <div
                               key={`${item.id}-${item.categoryId}`}
-                              className="flex items-center justify-between border-b py-2"
+                              className="flex justify-between gap-[1rem] border-b py-2"
                             >
                               <div className="relative mb-2 h-[76px] w-[76px]">
                                 <Image
