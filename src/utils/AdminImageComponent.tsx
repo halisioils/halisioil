@@ -173,7 +173,7 @@ const AdminImageComponent = ({
           {errorMessage}
         </p>
       )}
-      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] md:w-[300px] md:rounded-[0.75rem] lg:w-[400px]">
+      <div className="relative mx-auto mb-[2rem] h-[350px] w-[100%] rounded-[1rem] border-[1px] border-[#ECECEC] bg-white md:w-[300px] md:rounded-[0.75rem] lg:w-[400px]">
         {selectedImage ? (
           <Image
             src={selectedImage.url}

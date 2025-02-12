@@ -103,7 +103,7 @@ const ProductCarousel = ({
                 <div className="flex flex-col justify-between gap-2 p-4">
                   {/* Product Name */}
                   <p
-                    className={`${raleway.className} text-[1rem] font-bold leading-[48px] text-[#253D4E] md:text-[1.2rem]`}
+                    className={`${raleway.className} truncate text-[1rem] font-bold leading-[48px] text-[#253D4E] md:text-[1.2rem]`}
                   >
                     {capitalizeFirstLetter(item.name)}
                   </p>
