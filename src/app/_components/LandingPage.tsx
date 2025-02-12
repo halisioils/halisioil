@@ -35,7 +35,7 @@ const LandingPage = async () => {
   const data = await fetchLandingPageProducts();
 
   return (
-    <section className="bg-white">
+    <section className="min-h-[100vh] bg-white">
       <Hero />
       <Overview />
       <section className="mx-auto h-[100%] w-[100%] max-w-[1236px] overflow-hidden px-[1rem] md:px-[2rem]">

@@ -71,7 +71,7 @@ const ProductCard = ({
             className="flex w-[100%] cursor-pointer flex-col justify-between gap-[2rem] lg:flex-row"
           >
             {/* Image Container */}
-            <div className="relative h-[200px] w-[100%] flex-[0_0_220px] shrink-0 rounded-[15px] border border-[#ECECEC] bg-white md:h-[220px] md:w-[220px]">
+            <div className="relative h-[220px] w-[100%] flex-[0_0_220px] shrink-0 rounded-[15px] border border-[#ECECEC] bg-white md:h-[250px] md:w-[220px]">
               {item.imagePaths &&
               Array.isArray(item.imagePaths) &&
               item.imagePaths[0] ? (
@@ -99,7 +99,7 @@ const ProductCard = ({
 
             {/* Text Container */}
 
-            <div className="relative flex flex-col gap-[1rem]">
+            <div className="relative mb-[1rem] flex flex-col gap-[1rem]">
               <h2
                 className={`${raleway.className} text-[1.5rem] font-bold leading-[38.4px] text-[#253D4E] md:text-[2rem]`}
               >
@@ -116,7 +116,7 @@ const ProductCard = ({
 
               {/* Category Selection */}
               <div className="relative">
-                <div className="my-[1rem] flex gap-2">
+                <div className="mb-[1rem] flex gap-2">
                   {item.productCategories.map((category) => (
                     <button
                       key={category.categoryId}
@@ -140,12 +140,9 @@ const ProductCard = ({
                   {formatCurrency(selectedCategory?.price ?? 0)}
                 </p>
 
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute -bottom-[4rem] left-0 md:-bottom-[4rem]"
-                >
+                <div onClick={(e) => e.stopPropagation()} className="my-[1rem]">
                   {itemQuantity > 0 ? (
-                    <div className="flex items-center justify-between gap-[1rem]">
+                    <div className="flex items-center justify-start gap-[1rem]">
                       {selectedCategory && itemQuantity > 0 && (
                         <NumberInput
                           id={item.id}
@@ -163,7 +160,7 @@ const ProductCard = ({
                               selectedCategory.categoryId,
                             );
                           }}
-                          className="flex h-[47px] w-full items-center justify-center gap-[0.5rem] text-red-500 transition-all duration-300 ease-in-out hover:brightness-75"
+                          className="flex h-[47px] w-fit items-center justify-center gap-[0.5rem] text-red-500 transition-all duration-300 ease-in-out hover:brightness-75"
                         >
                           <DeleteIcon />
                         </button>
