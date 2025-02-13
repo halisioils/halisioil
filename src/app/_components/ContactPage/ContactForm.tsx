@@ -39,6 +39,7 @@ const ContactForm = () => {
     toast.success("Message sent successfully! 🎉✨");
 
     reset();
+    setErrorMessage(null);
   };
 
   return (
