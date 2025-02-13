@@ -3,12 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { type FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { sendEmail } from "~/actions/resend";
 import { contactSchema } from "~/lib/types";
 import LoadingComponent from "~/utils/LoadingComponent";
-import emailjs from "@emailjs/browser";
 
 const ContactForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [charCount, setCharCount] = useState<number>(0);
   const maxCharacterCount = 500;
 
@@ -22,24 +23,22 @@ const ContactForm = () => {
   });
 
   const onSubmit = async (dataValue: FieldValues) => {
-    try {
-      console.log(dataValue);
+    // Explicitly ensure the types
+    const name = String(dataValue.name);
+    const message = String(dataValue.message);
+    const email = String(dataValue.email);
 
-      //   const serviceId = process.env.NEXT_PUBLIC_SERVICE_ID;
-      //   const templateId = process.env.NEXT_PUBLIC_TEMPLATE_ID;
-      //   const userId = process.env.NEXT_PUBLIC_USER_ID;
+    // Call the server action directly
+    const res = await sendEmail(name, message, email);
 
-      //   if (!serviceId || !templateId || !userId) {
-      //     throw new Error("Email service configuration missing.");
-      //   }
-
-      //   await emailjs.send(serviceId, templateId, dataValue, userId);
-
-      reset();
-      toast.success("Message sent successfully! 🎉✨");
-    } catch (error) {
+    if (!res.success) {
       setErrorMessage("Failed to send the message, please try again later.");
+      return;
     }
+
+    toast.success("Message sent successfully! 🎉✨");
+
+    reset();
   };
 
   return (
@@ -89,6 +88,7 @@ const ContactForm = () => {
           <textarea
             className="mt-2 w-full rounded bg-transparent focus:outline-none"
             placeholder="Please enter your message here.."
+            minLength={20}
             maxLength={maxCharacterCount} // Prevents extra characters at input level
             {...register("message", {
               required: "Message is required",
