@@ -1,6 +1,6 @@
-import hero_image_1 from "~/assets/HAL-WB01.png";
-import hero_image_2 from "~/assets/HAL-WB02.png";
-import hero_image_3 from "~/assets/HAL-WB03.png";
+import hero_image_1 from "~/assets/HAL-WEB01.png";
+import hero_image_2 from "~/assets/HAL-WEB02.png";
+import hero_image_3 from "~/assets/HAL-WEB03.png";
 
 export const heroImageSources = {
   test_image1: hero_image_1,
