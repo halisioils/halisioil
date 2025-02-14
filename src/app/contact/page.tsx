@@ -49,7 +49,7 @@ const ContactPage = async () => {
             </h2>
             <div className="flex items-center gap-[1rem] pt-[0.5rem]">
               <a
-                href="https://www.tiktok.com/@halisioils"
+                href="https://www.tiktok.com/@halisi_24?_t=ZG-8tDxirodvUn&_r=1"
                 className="flex items-center gap-[1rem] text-[#253D4E]"
                 target="_blank"
                 rel="noopener noreferrer"
